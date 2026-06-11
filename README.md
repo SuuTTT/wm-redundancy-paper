@@ -1,6 +1,3 @@
-# When Is Explicit Abstraction Redundant for a World Model?
+# When Is Explicit Abstraction Redundant for a World Model? A Falsifiable Redundancy Criterion
 
-LaTeX source for the redundancy-criterion paper (TD-MPC-Glass campaign).
-**Import into Overleaf:** New Project → Import from GitHub → select this repo.
-LaTeX upload in progress — `main.tex` + `references.bib` + `evidence/` (JSON files backing every number) land shortly.
-Venue: ICLR Understanding track vs TMLR (undecided).
+This repository contains the standalone, Overleaf-ready LaTeX source for the paper "When Is Explicit Abstraction Redundant for a World Model? A Falsifiable Redundancy Criterion", which distills a 16-lever campaign of null explicit-abstraction results on TD-MPC2/SimNorm into a positive, falsifiable predictive criterion, with measured evidence across three latent classes (monolithic, token-transformer, and a synthetic entity-graph gate). To use with Overleaf: **New Project -> Import from GitHub** (the official TMLR style files `tmlr.sty`/`tmlr.bst` are bundled, so it compiles out of the box). To build locally: `pdflatex main && bibtex main && pdflatex main && pdflatex main`. The `evidence/` directory contains the persisted JSON result files (copied verbatim from the source experiment repository) that back every quantitative claim in the paper; footnotes in the text point to the specific file for each number. Venue is not yet decided: the two candidates are the ICLR Understanding track (negative/diagnostic results) and TMLR (claims-and-evidence); the manuscript currently uses the TMLR style in anonymous submission mode.
