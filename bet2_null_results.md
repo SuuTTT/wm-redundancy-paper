@@ -348,6 +348,31 @@ feudal's shaping was SELF-GENERATED (no privileged goal info) while this control
 upper bound) — so the surviving claim would be "a learned hierarchy can manufacture its own dense signal," not
 "hierarchy beats shaping." HOLD final verdict for n=6.
 
+### 🚩 SHAPED-FLAT FINAL (n=6, 2026-07-02) — the C-hierarchy positive RE-ATTRIBUTES to dense shaping
+`b3060b:exp/C_hier_new/{SHAPEDFLAT_DONE,runs_shapedflat/}` (6 JSONs, deterministic unshaped final eval, matched
+400k): flat TD3 + dense potential shaping to the TRUE goal solves fourroom **3/6 (finals 1,1,1,0,0,0)** ≈ feudal
+**4/6** (sparse flat: 0/6). Fisher 3/6-vs-4/6 = indistinguishable. VERDICT: **what carried the fourroom win was
+the dense signal, not hierarchy per se** — the "learned hierarchy beats flat" claim is RETIRED. Surviving honest
+claim (narrower, real): **a learned 2-level feudal hierarchy SELF-GENERATES its dense learning signal** (no
+privileged goal info; the control needed the true goal) and matches privileged shaping. Independently replicates
+Nachum et al. 2019 ("Why does hierarchy (sometimes) work" — HRL benefits largely reproduce via exploration/shaping
+on flat agents). Part 8 + scorecard updated.
+
+### ✅ PENDFIX (n=2, 2026-07-02) — the Pendulum "wall" WAS the config bug; wall-gen now confound-free
+Re-ran Pendulum PPO with the tuned override applied manually (action_repeat=4, num_updates_per_batch=4 — the
+branch the upstream PendulumSwingUp/Swingup case mismatch silently skipped). `b3060b:exp/ppo_wall_generalization/
+{PENDFIX_DONE,runs_pendfix/}`: **seed21 peak 842.5/final 806.1; seed22 peak 830.9/final 823.2** — both >0.8×
+TD-MPC2 anchor (961) in ~8 min wall-clock each. The original sweep's 2/3 walled Pendulum seeds (38.5/93.3) were
+the BUG, not exploration. FINAL wall-gen picture, no confounded cells: **the exploration wall exists ONLY on
+HopperHop (gait discovery)** — Finger 3/3, Pendulum 2/2 fixed, BallInCup discovery-luck-both-algos.
+
+### ⚠ SAC-20M UPDATE (2026-07-02, s11/s12 done, s13 @12.8M) — NO robust level gap; efficiency is the only robust lever
+`runs_20M/`: s11 414.0 final, s12 **277.2** final (@20M each); **s13 at 564.3 by 12.8M — ABOVE the TD-MPC2
+same-env anchor (480.9/473.1 @5M, n=2)**. SAC's 20M level spans 277–564 (huge seed variance), overlapping TD-MPC2's
+level. VERDICT (supersedes the "~2× attained level" phrasing): the world model's robust advantage is
+**sample-efficiency only (~4–5×: TD-MPC2 ~282@1M / ~480@4-5M vs SAC needing ~13–20M, seed-dependent)**; there is
+no reliable level gap at larger budgets. Seeds 14/15 launching for the level-distribution n. Part 8 updated.
+
 8. **Blog-history audit:** 4 HIGH orphaned claims found + now BANNERED in place (phase1b glass-win/74%-variance;
    iters-8-9 "credible lead"; Part 2 jumpy "+44/+80%" shaped-return win; Part 3 R²=0.9994 §8 re-affirmation + jumpy
    +1017). Thread A/E stale status boards fixed (A2/A3 NULL). Remaining MED items listed in the review doc (Part 4/5
