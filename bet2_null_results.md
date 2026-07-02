@@ -369,6 +369,14 @@ reward s3/4 confirm planner-only at n=4 (pi 225.5/188.7). PRECISE FINAL MECHANIS
 total failure); reward = planner-only; self-predictive consistency = the only merely-degrading component.
 Part 9 updated with final phrasing. Last 2 arms (policy s3/4) corroborative.
 
+### ✅✅ HOPPERHOP WM-ABLATION COMPLETE 20/20 (2026-07-02 ~20:55) — CAMPAIGN'S FINAL EXPERIMENT CLOSED
+Policy s3/4 finals: mppi 0.2/1.5, pi 1.5/0.0 — ≈0 both readouts, corroborating s1/2. FINAL n=4 TABLE (mppi_best
+per seed): none 570/513/287/372 | value 0/0/3/0 | policy 0.1/0/0.2/1.5 | reward ~0 (planner-dead by construction;
+pi 519/241/226/189 learns the gait) | consistency 201/194/245/185. MECHANISM (final): the value-learning pathway
+(TD value loss + policy trained from it) is individually necessary on the exploration task; reward = planner-only;
+self-predictive consistency = only merely-degrading component. Part 9 finalized (nothing pending).
+`b3060:helios_wmablate/exp/wm_head_ablation_hop/` (WM_ABLATION_HOP_DONE + WM_ABLATION_HOP_S34_DONE both present).
+
 ### ⚡ HOPPERHOP WM-ABLATION INTERIM (8/20 arms, 2026-07-02, disk jsonl) — value-ablation reproduces the WALL
 `b3060:helios_wmablate/exp/wm_head_ablation_hop/jsonl/` (@~1M, 4 evals/arm): **none (full, n=4): mppi best
 569.7/512.9/286.8/371.7 (all find the gait)**; **value-ablated (n=4, s3/4 at eval 3): 0.0/0.0/3.2/0.0 — TOTAL
