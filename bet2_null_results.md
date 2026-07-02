@@ -355,6 +355,13 @@ final ~477 (480.9/473.1 @5M, n=2). Honest final statement: SAC's mean 20M level 
 the distributions OVERLAP (1/5 finals, 2/5 peaks ≥ anchor) → **no clean level gap; the world-model's robust
 advantages are consistency + ~4-5× sample-efficiency.** Closes the SAC control series (n=3 @5M + n=5 @20M).
 
+### UPDATE 14/20 arms (post-outage; b3060 network outage ~17:00-18:35 did NOT kill the drivers — host never
+rebooted, jobs kept training): **consistency-ablated FIRMED n=4** (mppi 201.2/194.0/244.5/184.6, pi 236-319 —
+gait found 4/4 at ~half strength); **reward-ablated s1/2: mppi ~0 (planner dead, by construction) but pi 518.7 /
+241.0 — the POLICY still learns the gait without the reward loss** (same planner-only pattern as CheetahRun).
+Remaining: policy arms s1/2 (running), reward+policy s3/4. The n=4 mechanism story is now: value→0 (wall),
+consistency→~half, reward→planner-only. Part 9 updated.
+
 ### ⚡ HOPPERHOP WM-ABLATION INTERIM (8/20 arms, 2026-07-02, disk jsonl) — value-ablation reproduces the WALL
 `b3060:helios_wmablate/exp/wm_head_ablation_hop/jsonl/` (@~1M, 4 evals/arm): **none (full, n=4): mppi best
 569.7/512.9/286.8/371.7 (all find the gait)**; **value-ablated (n=4, s3/4 at eval 3): 0.0/0.0/3.2/0.0 — TOTAL
