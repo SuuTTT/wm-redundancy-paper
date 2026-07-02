@@ -1,0 +1,104 @@
+% ============================================================================
+% DRAFT section for wm-redundancy-paper — Theory/Mechanism + Scope.
+% Status: for review, NOT yet spliced into main.tex.
+% Purpose: supply the MECHANISM the current draft lacks (it measures the null
+% but does not explain it), in a way CONSISTENT with the dead R^2 probe.
+% ============================================================================
+
+\section{Why redundancy holds: abstraction is a basis change, not a capacity change}
+\label{sec:mechanism}
+
+The campaign establishes \emph{that} explicit representation abstraction is null on
+TD-MPC2/SimNorm; this section argues \emph{why}, and reconciles the mechanism with our
+negative methodological result that a linear value-decode $R^2$ cannot certify it
+(\S\ref{sec:criterion}).
+
+\paragraph{Abstraction redistributes complexity; it does not remove it.}
+An explicit abstraction $\psi$ added to a world model does not enlarge the realizable
+hypothesis class: a monolithic latent and an explicitly factored one can represent the same
+value function. What $\psi$ changes is the \emph{basis} in which control is expressed --- the
+analogue of \emph{separation of concerns} in software engineering, which never reduces a
+program's intrinsic complexity but reshapes where it lives to lower a bounded agent's
+search-and-maintenance cost. Writing a task's difficulty heuristically as
+$\mathcal{C}_{\text{task}} \approx \mathcal{C}_{\text{represent}} + \mathcal{C}_{\text{control}}$,
+an abstraction moves mass from $\mathcal{C}_{\text{control}}$ (a policy over a tidy abstract
+space) into $\mathcal{C}_{\text{represent}}$ (building and keeping the abstraction correct).
+It is a change of basis on a conserved total. It can only help a learner if the new basis is
+\emph{better conditioned for that learner on that task} --- i.e.\ if it lowers \emph{statistical
+or optimization} cost, never the information content.
+
+\paragraph{The capacity channel is closed by sufficiency (data processing).}
+TD-MPC2's SimNorm latent $\phi$ is trained, by its self-predictive, reward, and TD objectives,
+to be a sufficient statistic for value and dynamics: when this succeeds, $Q^\star(s,a)$ is
+measurable with respect to $\phi(s)$. Any explicit abstraction $\psi$ is a deterministic
+function of the state; if it factors through an already value-sufficient $\phi$, the
+\emph{data-processing inequality} forbids it from adding task-relevant information.
+
+\begin{proposition}[Capacity-channel redundancy, informal]
+\label{prop:dpi}
+If $\phi$ is value-sufficient ($Q^\star$ is $\sigma(\phi)$-measurable), then for any
+deterministic abstraction $\psi$, post-composing or adjoining $\psi$ cannot raise the realizable
+optimum. Hence any effect of explicit abstraction must act through the \emph{optimization /
+sample-complexity} channel, not the representational-capacity channel.
+\end{proposition}
+
+The reason the monolith reaches this regime \emph{without} an explicit module is the
+value-equivalence principle \citep{grimm2020value}: a model need only be correct for value and
+planning, not for full reconstruction, and end-to-end self-prediction on a single task already
+finds that value-equivalent (implicitly bisimulation-like; \citealp{ferns2004,castro2020,gelada2019})
+abstraction. The monolith \emph{implicitly modularizes}; an explicit module is then redundant ---
+the concern it would separate is already separated inside $\phi$.
+
+\paragraph{Reconciliation with the failed probe.}
+Proposition~\ref{prop:dpi} and our $R^2$ negative are complementary, not contradictory. The
+proposition explains the empirical null: the latent \emph{is} sufficient, so abstraction buys
+nothing on return. The methodological result (\S\ref{sec:criterion}) shows only that a
+\emph{linear decode} cannot \emph{certify} this sufficiency --- $V(z)$-decode is saturated by
+construction and return-to-go decode is variance-confounded. The honest joint statement is
+therefore: \emph{the latent is value-sufficient enough that explicit abstraction is redundant,
+but linear decodability is not a valid certificate of that sufficiency.} A valid certificate
+would need a decode whose accuracy is invariant to policy quality and not realized by the value
+head's own near-linearity --- which our experiments show the obvious probes are not.
+
+\paragraph{The cost axis is the empirical fingerprint of ``redistribute, not reduce.''}
+The basis-change account makes a prediction the pure-return null does not: an explicit
+abstraction should add representation-upkeep cost for no capacity gain. The matched DMC
+benchmark (\S\ref{sec:benchmark}) confirms it --- the structural-entropy abstraction
+(tdmpc-glass) matches the monolith on return within confidence intervals (no systematic
+difference either way at $n{=}4$) while costing $\sim$35\% more wall-clock per matched-budget run
+($1.35\times$). The conserved complexity was relocated into the abstraction, not removed.
+
+\paragraph{Caveat on the conservation heuristic.}
+$\mathcal{C}_{\text{task}}=\mathcal{C}_{\text{represent}}+\mathcal{C}_{\text{control}}$ is an
+intuition pump, not a proven identity; the rigorous core is Proposition~\ref{prop:dpi}
+(information cannot be created by post-processing) and the value-equivalence reduction. A formal
+version would decompose sample complexity into a representation-learning and a
+policy-optimization term and show the basis change trades between them.
+
+\section{Scope: when explicit/structured abstraction is \emph{not} redundant}
+\label{sec:scope}
+
+The redundancy claim is bounded, and the boundary follows from the mechanism:
+explicit abstraction is redundant exactly when end-to-end optimization is \emph{not} the
+bottleneck (the monolith already finds the value-sufficient latent). It stops being redundant
+when the optimization/sample channel binds --- and there the gain is on axes other than asymptotic
+return. Two regimes lie outside this paper's negative claim and are reported separately
+(companion work): (i) \emph{behavioral} priors in the action loop (an analytic controller with a
+learned residual, or a structured-skill-to-free-policy curriculum) beat a strong model-free
+baseline on \emph{sample-efficiency and stability} on exploration-/credit-assignment-limited
+manipulation tasks, where the naive learner is optimization-limited; and (ii) the same recipe
+\emph{backfires} when the injected prior is wrong (a weak controller on an underactuated
+swing-up becomes an anchor the policy must fight). A budget-matched control sharpens (i): on
+dense-reward continuous-control tasks that a strong baseline already solves at the matched step
+budget (a swept set of DMControl locomotion and reaching tasks), an analytic-controller-plus-residual
+yields \emph{no asymptotic gain} over a matched-budget model-free baseline --- it ties or loses on
+final return --- and its only robust advantage is sample-efficiency, and only when the prior captures
+the task's control-relevant substructure (the actuated degrees of freedom coincide with the goal
+degrees of freedom). The apparent ``beats the baseline'' wins in our interim notes were against an
+\emph{under-budgeted} baseline; against a step-matched one they reduce to a head-start, not a higher
+ceiling. This is itself a behavioral echo of the representational redundancy result: extra structure
+buys conditioning, not capacity. Both are consistent with the present account:
+abstraction helps only when it supplies structure the monolith genuinely lacks, and a value-
+sufficient single-task latent lacks none. This is the constructive complement to the negative
+campaign, and it scopes the redundancy result to \emph{representation} abstraction on a value-
+sufficient latent rather than to abstraction in general.

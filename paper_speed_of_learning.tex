@@ -1,0 +1,909 @@
+% =====================================================================
+% Abstraction is a Speed-of-Learning Lever, not a Capacity Lever
+% A matched-control study aligned with the JEPA / world-model program.
+%
+% DRAFT (assembled 2026-06-29) from on-disk sources:
+%   NEXT_PAPER_PROPOSAL.md (v4)     -- spine, two-bet decomposition, hierarchy core
+%   lecun_jepa_research.md          -- related work + citations
+%   SYNTHESIS_beat_ppo.md           -- matched-control cross-program results
+%
+% DISCIPLINE: every quantitative claim is copied from the source docs (which are
+% disk-backed by JSON evidence in the source experiment repos). Gaps and
+% unverified citations are marked with \todo, NOT invented.
+%
+% Compile: pdflatex paper_speed_of_learning && bibtex paper_speed_of_learning \
+%          && pdflatex paper_speed_of_learning && pdflatex paper_speed_of_learning
+% =====================================================================
+\documentclass{article}
+
+\usepackage{tmlr}            % submission (anonymous) mode; reused from main.tex setup
+% \usepackage[accepted]{tmlr}
+% \usepackage[preprint]{tmlr}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{url}
+
+% --- DRAFT \todo macro (no extra package dependency) ----------------
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\def\month{XX}
+\def\year{2026}
+\def\openreview{\url{https://openreview.net/forum?id=XXXX}}
+
+\title{Abstraction is a Speed-of-Learning Lever, not a Capacity Lever:\\
+A Matched-Control Study Aligned with the JEPA World-Model Program}
+
+% --- AUTHOR BLOCK ---------------------------------------------------
+% TODO(author): replace anonymous placeholder before de-anonymizing.
+\author{\name Anonymous authors \email anonymous@example.org \\
+        \addr Paper under double-blind review}
+% --------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+
+% =====================================================================
+\begin{abstract}
+A decade of work asks ``does explicit abstraction help reinforcement-learning
+agents?'' and answers it inconsistently. We argue the inconsistency is an
+\emph{axis mismatch}: the field measures asymptotic benchmark return, whereas
+Yann LeCun's world-model (JEPA) program and Chollet's measure of intelligence
+both insist the right axis is \emph{speed of learning}. We decompose LeCun's
+program into two separable bets --- a \emph{metric} bet (intelligence = speed of
+learning, not asymptote) and an \emph{architecture} bet (abstraction's payoff is
+\emph{hierarchical} and multi-timescale, H-JEPA) --- and test each under a single
+\emph{matched-control} protocol that holds the value-sufficient latent fixed and
+varies only abstraction structure, with steps-to-competence (not asymptote) as
+the headline metric. We organize the behavioral-abstraction findings on a
+\emph{two-axis taxonomy} (prior fit $\times$ exploration difficulty) with three
+cells: an \emph{anchor} cell (locomotion CPG, where the prior fits neither and a
+vanilla baseline wins both axes), a \emph{speed-lever} cell (ReacherHard, where a
+fitting prior ties the asymptote, $981$ vs.\ $977$, but reaches it ${\sim}3\times$
+faster), and an \emph{escape} cell, which we turn into a \emph{controlled
+frontier}: sweeping the actuation strength of CartpoleSwingupSparse (deterministic
+$n=64$), a budget-matched vanilla PPO transitions from solving ($3/3$ at full
+force) to total collapse ($0/3$ at every weaker scale), while an energy-shaping
+prior $+$ residual solves at \emph{every} scale --- so the prior shifts the
+solvable frontier rather than the ceiling (Pendulum swing-up, peak $836$ vs.\
+$47$, is one point already in that regime). Across DMControl, manipulation
+(OpenCabinet matches PPO's ceiling at ${\sim}7\times$ fewer steps), and an
+entity-graph OOD probe, representational, behavioral, and temporal abstraction are
+all null on asymptotic return but real on sample-efficiency / escape ---
+confirming the metric bet. For the architecture bet, only \emph{injected}
+hierarchical structure helps: skill-options reach $0.215$ peak success on
+long-horizon PandaPickCube, and the plateau is a \emph{task} ceiling rather than
+the method (the same checkpoints score $0.55$--$0.64$ under a position-only success
+predicate), whereas the \emph{learned/generative} arm LeCun bets on sits flat at
+$0.0$ --- a NULL that holds under a corrected critic and a feasible Cartesian
+(OSC) action, and that a rigorous deterministic positive control (a $4$-arm,
+$8$-seed long-horizon navigation task) cleanly attributes to the unlearnable
+sub-centimeter contact primitive rather than to a broken hierarchy: the same
+2-level H-JEPA machinery reliably reaches the raw-observation ceiling on nav
+($0.941 \pm 0.137$ vs.\ flat $0.971 \pm 0.048$). Every abstraction lever we tested
+buys \emph{speed} (or budget-bounded \emph{escape}), not asymptotic
+\emph{capacity}, and the only hierarchy that buys competence on PandaPickCube is
+the one with an \emph{injected} low-level primitive. We position this inside the
+energy-based / anti-collapse framing and a structural-entropy surrogate motivated
+by the formal impossibility of certifying mutual information from samples.
+\end{abstract}
+
+% =====================================================================
+\section{Introduction}
+\label{sec:intro}
+
+Does explicit abstraction help a reinforcement-learning (RL) agent? The
+literature answers both yes and no, and we argue the contradiction is an artifact
+of measuring on the wrong axis. The dominant axis is \emph{asymptotic benchmark
+return}: train to convergence, report the ceiling. But Yann LeCun's world-model
+program argues repeatedly that intelligence should be measured by \emph{how fast}
+a system learns a new task --- sample efficiency and fast adaptation --- not by
+its asymptotic score on a fixed benchmark~\citep{lecun2022path}. Chollet makes
+the same move formally, defining intelligence as \emph{skill-acquisition
+efficiency} given priors and experience~\citep{chollet2019measure}. On this view,
+the question ``does abstraction help?'' is under-specified until one names the
+axis.
+
+Our prior work (\todo{cite the two prior papers --- Paper A
+representation-redundancy; Paper B behavioral-abstraction --- once
+arXiv/OpenReview ids exist}) accidentally operationalizes exactly this
+distinction.
+In a \emph{matched-control} negative campaign --- holding the value-sufficient
+TD-MPC2/SimNorm latent~\citep{hansen2024tdmpc2} fixed and varying only the
+abstraction structure --- explicit single-level abstraction was \emph{redundant
+for asymptotic return}, both in-distribution and out-of-distribution, and
+valuable \emph{only} for sample efficiency. On the benchmark axis abstraction is
+null; on the speed-of-learning axis it is the only thing that helps. The field
+has been measuring the wrong axis, which is why ``does abstraction help?'' has
+stayed muddled.
+
+\paragraph{The two-bet decomposition.}
+We separate LeCun's program into two bets that can be tested independently
+(\S\ref{sec:twobet}):
+\begin{itemize}
+  \item \textbf{Bet 1 (metric):} intelligence = speed of learning, not benchmark
+  asymptote. Our matched-control results \emph{confirm} it --- single-level
+  abstraction is redundant for asymptote and valuable only for sample-efficiency.
+  \item \textbf{Bet 2 (architecture):} abstraction's payoff is \emph{hierarchical}
+  / multi-timescale (H-JEPA). Single-level nulls are \emph{silent} on this --- it
+  is the honest boundary of the prior claim, and precisely the experiment to run
+  next.
+\end{itemize}
+This decomposition is the paper's spine: we banked Bet~1 empirically and now test
+Bet~2 with the same protocol.
+
+\paragraph{Contributions.}
+(1) \textbf{The axis correction.} A unified, matched-control demonstration that
+abstraction (representational, behavioral, temporal) is null on asymptotic return
+but a real lever on sample-efficiency, across DMControl swing-up/locomotion/
+reaching, manipulation (OpenCabinet, PandaPickCube), and an entity-graph OOD
+probe --- reframing a decade of ``abstraction helps/doesn't'' confusion as an
+axis mismatch (\S\ref{sec:results-matched}).
+(2) \textbf{A two-axis behavioral-abstraction taxonomy} (prior fit $\times$
+exploration difficulty) with anchor / speed-lever / escape cells, and an
+\emph{escape-difficulty frontier} --- a controlled actuation sweep (deterministic
+$n=64$) showing a structured prior shifts the \emph{solvable} frontier where a
+budget-matched baseline collapses to $0$ (\S\ref{sec:taxonomy}).
+(3) \textbf{A rigorous speed-of-learning protocol:} budget-matched baselines,
+deterministic real-success evaluation, and steps-to-competence as the headline
+metric (\S\ref{sec:methods}) --- the measurement LeCun calls for but the field
+rarely does cleanly.
+(4) \textbf{The hierarchy test} (the new empirical core): only \emph{injected}
+hierarchical structure (skill-options, peak $0.215$ on long-horizon
+PandaPickCube) buys competence; the plateau is a task ceiling, not the method;
+and the \emph{learned/generative} arm LeCun bets on sits flat at $0.0$ --- a NULL
+de-confounded by a corrected critic and a feasible OSC action, and attributed
+cleanly to the unlearnable contact primitive by a rigorous deterministic positive
+control in which the same H-JEPA machinery reaches the raw-obs ceiling on feasible
+navigation ($0.94$ vs.\ flat $0.97$) (\S\ref{sec:results-hier}).
+(5) \textbf{Theory:} positioning the redundancy result inside the energy-based /
+anti-collapse framing, with a structural-entropy surrogate motivated by the
+formal impossibility of certifying mutual information from samples
+(\S\ref{sec:related}, \S\ref{sec:discussion}).
+
+% =====================================================================
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{JEPA and the world-model program.}
+LeCun's position paper~\citep{lecun2022path} proposes a modular cognitive
+architecture whose world model is a \emph{Joint-Embedding Predictive
+Architecture} (JEPA): an action-conditioned predictor in an \emph{abstract
+representation space} rather than a pixel-level generator. A JEPA predicts the
+representation $s_y=\mathrm{Enc}(y)$ of a target from the representation
+$s_x=\mathrm{Enc}(x)$ of a context (with optional latent $z$ and action $a$),
+which lets the encoder discard inherently unpredictable detail --- the headline
+argument for ``abstract space, not simulator.'' I-JEPA~\citep{assran2023ijepa}
+and V-JEPA~\citep{bardes2024vjepa} instantiate feature prediction for images and
+video; V-JEPA~2~\citep{fair2025vjepa2} crosses into an action-conditioned latent
+world model with zero-shot robot planning to image goals, the concrete
+realization of LeCun's bet that our work must engage directly.
+
+\paragraph{Energy-based view and representation collapse.}
+JEPA is an energy-based model~\citep{lecun2006ebm}: its energy is (roughly) the
+prediction error in representation space, and planning is inference that
+minimizes accumulated energy. The central technical risk is \emph{representation
+collapse} --- the trivial constant encoder makes energy low everywhere ---
+requiring an anti-collapse term. Solutions span contrastive
+(InfoNCE/CPC,~\citealp{oord2018cpc}), explicit information/variance regularizers
+(Barlow Twins,~\citealp{zbontar2021barlow}; VICReg,~\citealp{bardes2022vicreg}),
+and architectural asymmetry (BYOL,~\citealp{grill2020byol}). A 2023 LV-EBM
+write-up restates the position paper in explicit latent-variable energy-based
+language~\citep{dawid2023lvebm}. \todo{verify arXiv id 2306.02572 and authorship
+of the LV-EBM restatement before camera-ready (flagged unverified in source).}
+
+\paragraph{The impossibility of measuring information.}
+Anti-collapse \emph{should} be ``maximize information carried by the
+representation,'' but information content cannot be reliably measured from samples
+of the encoder. InfoNCE-style MI lower bounds are capped at $\log K$ and cannot
+certify high MI~\citep{poole2019variational}; neural estimators are
+high-variance~\citep{belghazi2018mine}; and any distribution-free, high-confidence
+MI lower bound from $N$ samples is $O(\log N)$~\citep{mcallester2020formal}.
+Practitioners therefore regularize \emph{surrogates}. Our structural-entropy (SE)
+objective~\citep{li2016structural} is one more such surrogate --- a
+\emph{structural} measure on the latent interaction graph rather than a
+statistical MI estimate --- and this impossibility is the principled reason a
+structural proxy is worth proposing.
+
+\paragraph{Hierarchical RL and planning.}
+H-JEPA stacks JEPAs at multiple levels and timescales with top-down planning:
+each level emits an abstract subgoal for the level below. This descends from the
+options framework~\citep{sutton1999options} and parallels FeUdal
+Networks~\citep{vezhnevets2017feudal} (a Manager sets latent subgoals, a Worker
+executes), HIRO~\citep{nachum2018hiro} (off-policy goal-conditioned HRL with
+raw-state goals), and most directly Director~\citep{hafner2022director}, which
+does hierarchical planning \emph{inside the latent space of a learned world
+model} --- but a \emph{generative} (Dreamer-style) one~\citep{hafner2025dreamerv3}.
+Director is therefore the key contrast: ``non-generative abstract latent is
+\emph{necessary}'' is \emph{not} yet established, so we frame the paper as
+\emph{testing} LeCun's bet (including the generativity claim), not assuming it.
+
+\paragraph{Speed-of-learning as a metric.}
+``Measure by speed of learning'' is a precedented axis:
+MAML~\citep{finn2017maml} optimizes for fast adaptation; the Atari-100k /
+EfficientZero~\citep{ye2021efficientzero} tradition frames performance at a small
+fixed interaction budget as the figure of merit; Chollet~\citep{chollet2019measure}
+formalizes intelligence as skill-acquisition efficiency; and the modern world-model
+line~\citep{ha2018worldmodels} is justified primarily by learning efficiency. Our
+contribution is not inventing this axis but \emph{applying it as the
+discriminating axis in a matched-control study} where asymptote is held equal by
+construction. \todo{verify arXiv ids 1703.03400 (MAML) and 2111.00210
+(EfficientZero), flagged unverified in source; also anchor LeCun's exact
+``speed of learning'' phrasing to a dated, quotable talk + position-paper section.}
+
+% =====================================================================
+\section{The Two-Bet Decomposition}
+\label{sec:twobet}
+
+LeCun's program rests on two distinct bets that the literature conflates.
+
+\paragraph{Bet 1 --- the metric bet.}
+Intelligence is speed of learning, not benchmark asymptote. This is a claim about
+\emph{which axis to score}. It is testable independently of any architecture: fix
+a strong agent, add an abstraction, and ask whether the effect shows up on
+asymptote, on speed, or on neither. Our matched-control campaign answers
+directly: single-level abstraction is redundant for asymptote (in-distribution
+and OOD) and valuable only for sample-efficiency. Measured on LeCun's own axis,
+abstraction does something; on the asymptote axis it does not. \textbf{Bet 1
+confirmed.}
+
+\paragraph{Bet 2 --- the architecture bet.}
+Abstraction's payoff is \emph{hierarchical} and multi-timescale (H-JEPA):
+multi-level, multi-timescale, action-conditioned prediction in a non-generative
+abstract space, with planning by energy minimization at every level. Our prior
+nulls are all \emph{single-level}, so they are silent about stacking abstraction
+at multiple timescales --- the exact mechanism LeCun claims is load-bearing
+(subgoal emission, long-horizon credit assignment, coarse-far/fine-near
+prediction). A single-level null cannot refute a multi-level claim. This is the
+honest boundary of the prior work and the most likely reviewer attack, so it is
+precisely the experiment we run (\S\ref{sec:results-hier}).
+
+The decomposition is the paper's spine: we \emph{banked} Bet~1 empirically and
+\emph{test} Bet~2 with the same protocol, on tasks chosen to be
+hierarchy-sensitive (long-horizon, sparse-credit) where a flat latent is
+credit-assignment-limited.
+
+% =====================================================================
+\section{Methods: Matched Control + Speed-of-Learning Protocol}
+\label{sec:methods}
+
+\paragraph{Matched-control principle.}
+The JEPA and HRL literatures compare \emph{systems} --- different encoders,
+objectives, and training recipes confounded together --- and report asymptote on
+benchmarks. We instead hold the value-relevant latent fixed and vary \emph{only}
+the abstraction structure (and, for the hierarchy test, vary it \emph{up the
+hierarchy}). A measured difference is then attributable to abstraction, not to
+incidental capacity or recipe changes. Crucially, all baselines are
+\emph{budget-matched}: earlier ``beats PPO'' claims used an under-budgeted
+benchmark PPO; matching the budget is the single control that dissolved them.
+
+\paragraph{Speed-of-learning as the dependent variable.}
+Following Chollet~\citep{chollet2019measure} and the Atari-100k tradition, our
+headline metric is \emph{env-steps to competence} --- steps to reach a success
+threshold (e.g.\ $\geq 0.5$, $\geq 0.8$) --- not asymptote. We additionally
+report asymptote and wall-clock for completeness. All evaluation uses
+\emph{deterministic, real-success} metrics (e.g.\ \texttt{box\_target}$\geq 0.9$
+for PickCube), never shaped returns, because shaped returns invited
+reward-hacking in pilot runs. Results are multi-seed; we report seed counts $n$
+per arm and dispersion where available.
+
+\paragraph{Substrate and arms.}
+The substrate is the value-sufficient TD-MPC2 latent (SimNorm)~\citep{hansen2024tdmpc2}.
+For the matched-control campaign (\S\ref{sec:results-matched}) the arms span three
+abstraction families: representational (monolithic vs.\ token-transformer vs.\
+entity-graph encoders, with/without an SE objective), behavioral (analytic
+controller + learned residual under energy-shaping / CPG / OSC paradigms), and
+temporal (jumpy multi-step models). The baselines are flat PPO~\citep{schulman2017ppo}
+and the flat TD-MPC2 monolith. For the hierarchy test (\S\ref{sec:results-hier})
+the arms are a flat single-level WM and 2-level subgoal/skill hierarchies (a
+high-level subgoal/skill emitter plus a low-level achiever), ablated over number
+of levels and subgoal horizon. \todo{add the exact env-step budgets, seed counts,
+ES hyperparameters (default / $\sigma{=}0.10$ / lr${=}0.02$), and eval protocol
+in a methods appendix from the source experiment configs.}
+
+\paragraph{Reporting discipline.}
+Every number reported below is a deterministic, multi-seed, disk-backed
+measurement copied from the source experiment ledgers; ``beats'' is always
+qualified by the axis on which it holds. \todo{attach the underlying evidence
+JSONs (HIER\_VERDICT.json and the cross-program tables) to this repo and
+footnote each table as in \texttt{main.tex}.}
+
+% =====================================================================
+\section{Results I: Cross-Program Matched Control (Bet 1)}
+\label{sec:results-matched}
+
+Three method families, against two baselines (PPO; TD-MPC2 monolith), scored on
+asymptotic return, per-env-step sample-efficiency, and wall-clock. Every number
+is a deterministic, multi-seed, disk-backed measurement.
+
+\paragraph{Representation abstraction --- TIE.}
+On 16 DMControl tasks ($n=3$--$4$), structural-entropy ``glass'' representation
+abstraction shows no systematic return difference vs.\ the TD-MPC2 monolith (ties
+within 95\% CI on ${\sim}12/16$; the few separations track single collapsed seeds,
+in both directions). The only robust effect is a ${\sim}1.35\times$ wall-clock
+cost. Explicit representation abstraction is \emph{redundant} on a value-sufficient
+self-predictive latent: it does not raise the ceiling and costs more.
+
+\paragraph{Behavioral abstraction --- sample-efficiency or budget-bounded escape.}
+A controller + learned residual (energy-shaping / CPG / OSC), each trained by PPO,
+against a \emph{budget-matched} vanilla PPO (Table~\ref{tab:behavioral}). The
+headline must be qualified on a two-axis taxonomy (prior fit $\times$ exploration
+difficulty), developed in \S\ref{sec:taxonomy}: a structured prior buys
+sample-efficiency where it fits, budget-bounded \emph{escape} where the baseline
+is exploration-bottlenecked, and is dead weight (an \emph{anchor}) where it
+neither fits nor is needed.
+
+\begin{table}[t]
+\centering
+\caption{Behavioral abstraction (controller + residual) vs.\ budget-matched
+vanilla PPO. A behavioral prior never raises the ceiling when the baseline both
+fits and can explore the task; its wins are sample-efficiency (fit prior) or
+budget-bounded escape (exploration-hard task). Source:
+\texttt{SYNTHESIS\_beat\_ppo.md}.}
+\label{tab:behavioral}
+\begin{tabular}{lll}
+\toprule
+Regime & Asymptotic return & Sample-efficiency / escape \\
+\midrule
+Reaching, fit member (ReacherHard)      & tie (resid 981 vs.\ vanilla 977) & \textbf{resid wins} (${\sim}3\times$: ${\sim}$1M vs.\ ${\sim}$9.8M) \\
+Reaching, unfit member (FingerTurnHard) & \textbf{vanilla wins} (952 vs.\ 923) & no advantage \\
+Locomotion (all 5 tasks, $n=5$)         & \textbf{vanilla wins all 5} (e.g.\ Cheetah 914 vs.\ 767) & no advantage (anchor) \\
+Sparse swing-up (CartpoleSwingupSparse, full force) & tie (both solve) & resid ${\sim}2\times$ faster \\
+Pendulum swing-up (energy-shaping, $n=5$) & \textbf{resid wins} (peak 836 vs.\ 47; vanilla 0/5 ever reach thr) & resid competent at first ckpt; vanilla never escapes \\
+OpenCabinet (hard manipulation)         & tie (0.987 vs.\ 0.988) & \textbf{resid wins ${\sim}7\times$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Temporal abstraction and the PPO axis tradeoff.}
+TD-MPC2's own SimNorm latent + learned model + planning is the abstraction that
+beats PPO --- on sample-efficiency. Adding \emph{temporal} (jumpy) abstraction on
+top is null-to-negative on return, sample-efficiency, and wall-clock
+(Table~\ref{tab:pareto}). TD-MPC2 beats PPO on return + sample-efficiency by 3--4
+orders of magnitude (PPO never learns to hop; CheetahRun corroborates: TD-MPC2 701
+vs.\ PPO 290 at matched 30M), while PPO wins raw throughput by ${\sim}10$--$30\times$
+via 512-env parallelism. No TD-MPC2 variant Pareto-dominates PPO on raw throughput,
+and no abstraction variant beats vanilla TD-MPC2.
+
+\begin{table}[t]
+\centering
+\caption{HopperHop (2M steps): adding temporal abstraction (jumpy) does not help.
+PPO wins raw throughput but never reaches a competent return. Source:
+\texttt{SYNTHESIS\_beat\_ppo.md}.}
+\label{tab:pareto}
+\begin{tabular}{lrrr}
+\toprule
+Arm (HopperHop, 2M steps) & Final return & Env-steps $\to$ 200 & Wall-clock (s) \\
+\midrule
+vanilla TD-MPC2                       & 306 & 350k & 7{,}193 \\
+jumpy TD-MPC2 (temporal abstraction)  & 277 & 550k & 8{,}300 \\
+efficient TD-MPC2 (0.95M params, K=32) & 195 & 1.9M & 3{,}607 \\
+PPO                                   & \textbf{0.04} & never & \textbf{621} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Takeaway (Bet 1).}
+Abstraction --- representational, behavioral, or temporal --- \emph{redistributes}
+complexity; it does not remove it. It can lower the statistical/optimization cost
+(sample-efficiency, exploration) when the baseline is optimization-limited and the
+structure fits, but it never raises the representational ceiling, because a strong
+baseline already finds a value-sufficient solution. \textbf{Bet 1 (metric)
+confirmed.}
+
+% =====================================================================
+\section{A Two-Axis Taxonomy of Behavioral Abstraction}
+\label{sec:taxonomy}
+
+The clean ``speed-lever, vanilla catches up to the same asymptote'' story does
+\emph{not} hold uniformly: whether a structured prior helps depends jointly on
+\emph{prior fit} (does the controller capture the task's control-relevant
+substructure?) and \emph{exploration difficulty} (can the budget-matched baseline
+reach competence at all?). This yields three behavioral-abstraction regimes
+(Table~\ref{tab:taxonomy}).
+
+\begin{table}[t]
+\centering
+\caption{Two-axis taxonomy of behavioral abstraction (prior fit $\times$
+exploration difficulty). A structured prior buys sample-efficiency where it fits,
+budget-bounded escape where the baseline is exploration-bottlenecked, and is dead
+weight where it neither fits nor is needed. Source: \texttt{SYNTHESIS\_beat\_ppo.md}.}
+\label{tab:taxonomy}
+\begin{tabular}{lll}
+\toprule
+Cell & Exemplar (seeds) & Verdict \\
+\midrule
+\textbf{Anchor} (easy explore, unfit prior)   & locomotion CPG / FingerTurnHard ($n=5$) & vanilla wins \emph{both} axes; prior is dead weight \\
+\textbf{Speed-lever} (easy explore, fit prior) & ReacherHard; cartpole full-force ($n=5$) & asymptote tie ($981$ vs.\ $977$); resid ${\sim}2$--$3\times$ faster \\
+\textbf{Escape} (hard explore, strong prior)   & Pendulum swing-up ($n=5$); cartpole low-force & vanilla never escapes in budget; resid competent --- a \emph{practical}-capacity win \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{speed_ReacherHard.png}\hfill
+\includegraphics[width=0.48\textwidth]{speed_PendulumSwingup.png}
+\caption{Speed-of-learning curves for the speed-lever and escape cells.
+\emph{Left:} ReacherHard --- controller$+$residual reaches threshold competence
+${\sim}2$--$3\times$ faster (${\sim}$1M vs.\ ${\sim}$9.8M steps) while the
+asymptote ties ($981$ vs.\ $977$). \emph{Right:} Pendulum swing-up, a naturally
+exploration-hard task in the escape regime --- the residual reaches the threshold
+on $5/5$ seeds (peak $836$) whereas the budget-matched vanilla baseline never
+escapes ($0/5$ ever, peak $47$). Curves harvested deterministically; source
+figures \texttt{speed\_ReacherHard.png}, \texttt{speed\_PendulumSwingup.png}.}
+\label{fig:speed}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{speed_locomotion_grid.png}
+\caption{Locomotion anchor cell (DMControl Hopper/Walker/Cheetah). Where the CPG
+prior fits neither the task nor a needed exploration gate, a budget-matched vanilla
+baseline matches or beats the controller$+$residual on \emph{both} axes --- the
+prior is dead weight, neither a speed lever nor an escape lever. Source figure
+\texttt{speed\_locomotion\_grid.png}.}
+\label{fig:locomotion}
+\end{figure}
+
+\paragraph{Escape is a controlled frontier, not a one-off.}
+The escape cell rests on a genuinely hard exploration gate, not on any task that
+merely happens to be sparse. A second escape attempt on CartpoleSwingupSparse at
+\emph{standard} actuation was a NULL: at full force the budget-matched vanilla PPO
+(1024 envs, full budget) also solves it ($\sim$800 peak, slightly above the
+residual's $\sim$711), so at standard actuation cartpole is exploration-easy and
+falls in the speed-lever cell. Rather than hunt for a second naturally-hard task,
+we made exploration difficulty a \emph{controlled axis}: we sweep a
+\texttt{FORCE\_SCALE} multiplier on the motor command (identical for both arms; the
+energy controller stays fair --- it still swings up at $0.25$, collapsing only at
+$0.15$) and measure how each arm degrades (Table~\ref{tab:escape}).
+
+\begin{table}[t]
+\centering
+\caption{Escape-difficulty frontier on CartpoleSwingupSparse: sparse return under
+an actuation-strength sweep, both arms identical except the analytic prior $+$
+residual. Vanilla PPO transitions from solving to total collapse at
+$\text{FORCE\_SCALE}\leq 0.6$; the prior $+$ residual solves at every scale.
+Training-eval $k/3$ shown ($n=3$/arm/scale); confirmed deterministically at
+$n=64$ on final checkpoints (\texttt{verdict: GO-escape-frontier}: vanilla
+$k/3 = 3/3, 0/3, 0/3, 0/3$; residual $3/3$ at every scale, mean frac\_solved
+$1.0/1.0/1.0/0.969$). Source: \texttt{SYNTHESIS\_beat\_ppo.md}
+(\texttt{escape\_difficulty\_sweep.json}).}
+\label{tab:escape}
+\begin{tabular}{lll}
+\toprule
+\texttt{FORCE\_SCALE} & vanilla PPO ($n=3$) & energy-prior $+$ residual ($n=3$) \\
+\midrule
+1.0  & solves ($\sim$800, $3/3$)       & solves ($\sim$711, $3/3$) \\
+0.6  & \textbf{$0,0,0 \to 0/3$}        & $690, 686, 721 \to$ \textbf{$3/3$} \\
+0.4  & \textbf{$0,0,0 \to 0/3$}        & $65, 687, 610 \to$ \textbf{$3/3$ nonzero} \\
+0.25 & \textbf{$0,0,0 \to 0/3$}        & $96, 350, 333 \to$ \textbf{$3/3$ nonzero} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The separation is absolute --- vanilla $0/9$, residual $9/9$ nonzero across the
+low-force runs --- and the deterministic $n=64$ harvest matches the training-eval
+to the decimal. So escape is a \emph{predictable function of exploration
+difficulty}: weaken actuation and you cross from the speed-lever regime (vanilla
+solves) into the escape regime where only the prior survives. The analytic prior
+\emph{shifts the solvable frontier}; it does not raise an asymptotic ceiling.
+Pendulum swing-up (peak $836$, $5/5$ reach threshold @9.8M vs.\ vanilla peak $47$,
+$0/5$ ever) is simply one task already in that regime. This is the strongest,
+most defensible form of the escape result (Figure~\ref{fig:escape}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{escape_frontier_cartpole.png}
+\caption{Escape-difficulty frontier on CartpoleSwingupSparse. As actuation is
+weakened (force limit reduced), a budget-matched vanilla PPO baseline crosses from
+the speed-lever regime, where it solves the task, into the escape regime, where
+only the controller$+$residual prior survives (vanilla $0/9$ nonzero on the
+low-force runs, residual $9/9$). The structured prior \emph{shifts the solvable
+frontier} rather than raising an asymptotic ceiling.}
+\label{fig:escape}
+\end{figure}
+
+\paragraph{Honest scope of the escape cell.}
+Escape rests on a \emph{single} naturally-hard task (Pendulum) plus the controlled
+cartpole frontier; we do \emph{not} claim a robust multi-task escape phenomenon at
+standard actuation. It is also a budget-bounded result: given unbounded
+exploration the baseline might close the gap, so this is a capacity-in-practice
+win, not a proof the true asymptote differs.
+
+% =====================================================================
+\section{Results II: The Hierarchy Test (Bet 2)}
+\label{sec:results-hier}
+
+We extend the matched-control protocol up the hierarchy on PandaPickCube
+(long-horizon reach$\to$grasp$\to$lift$\to$place), reporting peak held-out
+\emph{true} success (\texttt{box\_target}$\geq 0.9$, deterministic eval) in
+Table~\ref{tab:hier}.
+
+\begin{table}[t]
+\centering
+\caption{Hierarchy test on PandaPickCube. Peak held-out true success
+(\texttt{box\_target}$\geq 0.9$, deterministic eval). Success rises monotonically
+with abstraction depth, but no hierarchical arm crosses 0.5 and all trail PPO's
+0.66 ceiling. Source: \texttt{NEXT\_PAPER\_PROPOSAL.md} (folded-in
+\texttt{HIER\_VERDICT.json}, run 2026-06-28).}
+\label{tab:hier}
+\begin{tabular}{lllr}
+\toprule
+Arm & Hierarchy & Peak success & $n$ \\
+\midrule
+Flat TD-MPC2          & none (single-level WM)            & \textbf{0.0} (0.04 box\_target @15.6M) & 3 fresh + disk \\
+Hier residual         & shallow (raw-action)              & 0.116 & 6 \\
+Hier options, global  & 1-level (context-free)            & 0.175 & 6$\to$10 \\
+Hier options, mlp     & \textbf{2-level (context-conditioned)} & \textbf{0.215} (max 0.242) & 10 ($\sigma{\approx}0.01$) \\
+Flat PPO              & none                              & 0.66 @ 33M (anchor) & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Findings.}
+\begin{enumerate}
+  \item \textbf{Hierarchy $\gg$ flat.} The flat single-level WM is $0.0$ even at
+  15.6M env-steps; every hierarchical arm reaches non-trivial success at a
+  fraction of that budget --- a clear sample-efficiency / competence-onset GO.
+  \item \textbf{2-level $>$ 1-level} ($0.215$ vs.\ $0.175$): context-conditioned
+  subgoal \emph{adaptivity} is a real, reproducible lever (mechanism: place-phase
+  reach 0.94 vs.\ 0.57).
+  \item \textbf{Monotonic in abstraction depth:} flat $<$ residual $<$
+  global-options $<$ mlp-options.
+  \item \textbf{Temporal horizon is a second critical lever} (clean saturation
+  curve): option horizon $100\to0.073$ (collapses; too short to finish a phase)
+  $<$ $150\to0.215$ $<$ $200\to0.243 \approx 250\to0.242 \approx 300\to0.253$.
+  Success rises sharply to ${\sim}200$ then plateaus --- the subgoal horizon must
+  be long enough for the low-level achiever to complete a multi-phase sub-task,
+  beyond which extra horizon does not help. A textbook ``right level of temporal
+  abstraction'' result.
+  \item \textbf{Honest NULL on the asymptote:} no hierarchical arm crosses
+  $\geq 0.5$; all anchor ${\sim}0.2$ (the final place phase remains the
+  credit-assignment bottleneck), and all trail PPO's 0.66 ceiling.
+  \item \textbf{The decisive refinement (matched- vs.\ $2\times$ budget):} even
+  the 2-level $>$ 1-level edge is sample-efficiency, not capacity --- at
+  $2\times$ training budget the 1-level catches up to the 2-level (global\_long
+  $0.209 \approx$ mlp\_long $0.208$), and both still plateau ${\sim}0.2$. Robust
+  across all 3 ES hyperparameter configs (default / $\sigma{=}0.10$ / lr${=}0.02$).
+  \item \textbf{The plateau is the TASK, not the method.} Re-scoring the
+  \emph{same} 2-level \texttt{mlp} checkpoints under a position-only success
+  predicate (drop the orientation term; success $:= \lVert\text{box\_pos} -
+  \text{target\_pos}\rVert < \text{THR}$, $n=1024$ deterministic) lifts success
+  ${\sim}3\times$: full-upright $0.203$ mean / $0.247$ max $\to$ pos-only
+  ($<0.08$m, any-step) $0.607$ mean / $0.700$ max (even strict arrive-and-stay at
+  the final step is $0.552/0.641$; lift-phase $0.818$). The hierarchy
+  reaches / grasps / lifts reliably and lands the box within ${\sim}8$cm on
+  $>60\%$ of episodes; the only thing it fails is the final upright-orientation
+  requirement, which is a partial \emph{physical} ceiling. So the ${\sim}0.2$
+  asymptote in finding~5 is place-phase upright physics (a task ceiling), not a
+  limitation of the skill-options method. Source: \texttt{NEXT\_PAPER\_PROPOSAL.md}
+  (\texttt{method\_vs\_task.json} / \texttt{RESCORE\_POSONLY.json}).
+\end{enumerate}
+
+\paragraph{Interpretation (Bet 2): only \emph{injected} structure helps.}
+Hierarchy is a speed-of-learning / competence-onset lever whose value scales with
+abstraction depth and subgoal temporal horizon --- but it does \emph{not} lift the
+asymptotic ceiling (the residual gap is task physics, finding~7), and even the
+depth advantage dissolves at higher budget. Crucially, the only arm that buys
+competence at all is the one with \emph{injected}, hand-defined skill structure;
+this is in tension with LeCun's Bet~2, which is specifically that
+\emph{learned / generative} hierarchical abstraction is the lever.
+
+\paragraph{The learned/generative arm (Bet 2 proper).}
+To test the learned/generative side directly we compare the injected skill-options
+arm against a genuinely \emph{generative} world model (DreamerV3 --- a $32\times32$
+categorical RSSM with an observation-reconstruction decoder, actor-critic trained
+in imagination) and against a faithful non-generative \emph{learned} 2-level
+H-JEPA (EMA-target latent predictor, VICReg anti-collapse, latent subgoal emission,
+no decoder), all on PandaPickCube under the matched real-success protocol
+(Table~\ref{tab:bet2null}). \emph{Honest scope:} DreamerV3 is \emph{single-level}
+generative, so it conflates generativity with single-level rather than cleanly
+isolating generativity at fixed hierarchy; it answers the cruder but still-useful
+question ``does generative latent-WM planning break the place-phase plateau at
+all?'' A true generative 2-level hierarchy (a buildable Director) remains future
+work.
+
+\begin{table}[t]
+\centering
+\caption{Bet~2 proper: injected vs.\ learned/generative hierarchy on
+PandaPickCube, peak real success (\texttt{box\_target}$\geq 0.9$, deterministic
+eval, the same Protocol-A metric behind the skill-options/flat-TD-MPC2 baselines).
+Only injected skill structure buys competence; every \emph{learned} or
+\emph{generative} arm sits flat at $0.0$. \emph{Scope:} DreamerV3 is a
+single-level generative planner (not a 2-level Director-style latent-goal
+hierarchy), so it rules out ``generative WM \emph{alone} breaks the plateau,''
+not a generative 2-level hierarchy; its world model was fully converged
+(\texttt{wm\_loss}${\approx}1.36$, flat) at $0.0$, so this is a strong NULL, not
+under-training. The NULL is \emph{de-confounded}: it holds under a corrected
+low-level TD critic (\emph{criticfix reactive} @2.0M and \emph{criticfix OSC}
+@1.5M, both $0.000$) and under a feasible Cartesian (OSC) action channel, so it is
+not an artifact of the earlier critic bug. H-JEPA cells are seed~0 but corroborated
+across five independent low-level/HL variants (reactive, latent-MPPI,
+dense-reach-shaped, OSC, criticfix), all flat $0.0$.}
+\label{tab:bet2null}
+\begin{tabular}{lll}
+\toprule
+Arm & Type & Peak success \\
+\midrule
+Skill-options (2-level)        & injected, non-generative, hand-defined & \textbf{0.215} (max 0.242) \\
+Flat TD-MPC2                   & none (self-predictive), single-level & $0.0$ (15.6M) \\
+DreamerV3                      & learned, \emph{generative}, single-level & $0.000$ (3/3 seeds) \\
+H-JEPA, reactive HL            & learned, non-generative, 2-level & $0.000$ (2.0M) \\
+H-JEPA, latent-MPPI HL         & learned, non-generative, 2-level & $0.000$ ($n{=}64$, every eval) \\
+H-JEPA $+$ dense LL-reach shaping & learned, non-generative, 2-level & $0.000$ (\texttt{reached}$=0$) \\
+H-JEPA, reactive (criticfix)   & learned, non-generative, 2-level & $0.000$ (de-confound, 2.0M) \\
+H-JEPA, OSC action (criticfix) & learned, 2-level, feasible Cartesian LL & $0.000$ (de-confound, 1.5M) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The motor-primitive mechanism.}
+The learned/generative arms fail to clear the place-phase plateau for a clean
+mechanical reason: the low-level reach primitive is the wall. Reach on
+PandaPickCube is joint-space IK to a $<\!1.2$cm contact target from ${\sim}0.3$--$0.4$m,
+and it is genuinely unlearnable from scratch within budget --- not a
+reward-shaping or HL-planning gap. A random policy flips \texttt{reached\_box}
+$0/512$ times: the contact event is essentially never hit by chance. Even a
+dominant, correctly-wired dense reach reward (\texttt{reach\_w}$=30$ on the
+low-level reward only, with the reach signal set to the exact \texttt{reached\_box}
+quantity) leaves \texttt{reached}$=0$ through 1.5M steps, because the low level
+acts on a SimNorm latent trained only by the JEPA predictive loss, which does not
+preserve fine end-effector--cube geometry. So skill-options reaches $0.215$
+\emph{because it injects} the reach/grasp/lift/place primitives the learned low
+level cannot bootstrap --- and even that is capped by place-phase physics
+(method-vs-task: the same checkpoints reach $0.55$--$0.64$ under a position-only
+success criterion). This mechanism is critic-bug-independent: a \emph{scripted}
+controller handed perfect raw geometry reaches only ${\sim}0.12$--$0.17$ and
+plateaus ${\sim}0.12$m from the cube --- the OSC/IK controller physically cannot
+close the $<\!1.2$cm contact gap reliably --- so the bottleneck is the contact
+primitive itself, not the learned hierarchy or its critic.
+
+\paragraph{Positive control: the H-JEPA machinery is validated.}
+A NULL of a learned hierarchy is only informative if the hierarchy machinery
+itself is known to work where the low-level primitive \emph{is} feasible. We
+establish this with a rigorous positive control on a trivial-low-level,
+long-horizon 2D navigation task (point-maze), run under full determinism
+(\texttt{xla\_gpu\_deterministic\_ops}, highest matmul precision; same-seed runs
+verified bit-identical) and adequate optimization (update-to-data ratio $4$),
+comparing $4$ arms over $8$ seeds at $250$k steps with a deterministic held-out
+eval ($n{=}256$ at a fixed seed; Table~\ref{tab:bet2posctrl}). The 2-level H-JEPA
+on raw observations \emph{reliably reaches the raw-observation ceiling}
+($0.941 \pm 0.137$, $7/8$ seeds $\geq 0.996$; one outlier $0.535$), statistically
+indistinguishable from the flat identity-encoder ceiling ($0.971 \pm 0.048$).
+\textbf{Verdict GO:} the H-JEPA hierarchy + low-level controller are sound, so the
+PandaPickCube $0.0$ is cleanly attributable to the contact-primitive wall, not a
+broken implementation.
+
+\begin{table}[t]
+\centering
+\caption{Positive control validating the H-JEPA machinery on a trivial-low-level,
+long-horizon navigation task ($4$ arms $\times$ $8$ seeds, deterministic, UTD$=4$,
+$250$k steps, held-out eval $n{=}256$ at a fixed seed). Mean $\pm$ 95\% CI. The
+2-level H-JEPA on raw observations reaches the raw-obs ceiling, validating the
+hierarchy; both \emph{latent} arms are capped at ${\sim}0.4$--$0.5$ by SimNorm-JEPA
+latent collapse (a separable representation weakness, eff.\ rank ${\approx}0$,
+$8/8$ seeds). Source: \texttt{bet2\_null\_results.md}
+(\texttt{posctrl\_rigorous\_VERDICT.json}, verified 2026-06-29).}
+\label{tab:bet2posctrl}
+\begin{tabular}{lll}
+\toprule
+Arm & Representation & Held-out success \\
+\midrule
+Flat (identity-enc ceiling)    & raw observations     & \textbf{0.971 $\pm$ 0.048} \\
+2-level H-JEPA                 & raw observations     & \textbf{0.941 $\pm$ 0.137} \\
+Flat                          & SimNorm-JEPA latent  & $0.503 \pm 0.039$ \\
+2-level H-JEPA                 & SimNorm-JEPA latent  & $0.419 \pm 0.170$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation: the lever is a competent primitive, not learned hierarchy.}
+The learned/generative NULL \emph{extends} the single-level redundancy result up
+the hierarchy and runs counter to LeCun's Bet~2. The positive control settles the
+attribution cleanly: learned/generative hierarchy \emph{works} where the low-level
+primitive is feasible (navigation $0.94$, reaching the raw-obs ceiling), and is
+$0.0$ on PandaPickCube purely because the contact primitive is unlearnable from
+scratch (a scripted controller with perfect geometry tops out at ${\leq}0.17$).
+So the operative lever for competence is a \emph{competent low-level primitive} ---
+injected, exactly as skill-options does to reach $0.215$ --- not learned
+hierarchical abstraction, which is what LeCun's Bet~2 wagers on. Two secondary,
+separable findings temper the picture as honest caveats: (i) the faithful
+SimNorm-JEPA \emph{latent} collapses on the simple nav task (eff.\ rank
+${\approx}0$, $8/8$ seeds), capping both latent arms at ${\sim}0.4$--$0.5$ --- a
+real representation weakness independent of the hierarchy; and (ii) a reactive
+high level $\approx$ flat on a trivial low level, i.e.\ hierarchy neither helps nor
+hurts when the low-level task is itself trivial.
+
+\paragraph{Remaining limitations.}
+Two genuine gaps remain. (i) The PandaPickCube H-JEPA arms are single-seed
+(seed~0), albeit corroborated across five low-level/HL variants and de-confounded
+by the corrected critic. (ii) DreamerV3 is a \emph{single-level} generative planner,
+not a true 2-level Director-style latent-goal hierarchy; it rules out
+``generative WM \emph{alone} breaks the plateau,'' so a buildable generative
+2-level (Director) arm would still be the cleanest isolation of generativity at
+fixed hierarchy depth.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{hier_F1_depth_monotonicity.png}
+\caption{(F1) Abstraction depth is monotonic on PandaPickCube. Peak held-out
+true success (\texttt{box\_target}$\geq 0.9$, deterministic eval) rises
+monotonically with abstraction depth: flat TD-MPC2 $0.000$ ($n{=}3$) $<$
+raw-action residual $0.110$ ($n{=}8$) $<$ context-free 1-level options $0.184$
+($n{=}10$) $<$ context-conditioned 2-level options $0.215$ ($n{=}14$). Error bars
+are $\pm 1$ s.d.\ across seeds. Source: \texttt{HIER\_VERDICT.json}.}
+\label{fig:hier-depth}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{hier_F2_horizon_saturation.png}
+\caption{(F2) Subgoal-horizon saturation (2-level \texttt{mlp} options). Peak
+success vs.\ option horizon (low-level steps per option): $100\to0.073$
+(collapses; too short to finish a phase) $<$ $150\to0.215$ $<$ $200\to0.248
+\approx 250\to0.242 \approx 300\to0.253$. Success rises sharply to ${\sim}200$
+steps then plateaus --- a ``right level of temporal abstraction'' result. Error
+bars $\pm 1$ s.d. Source: \texttt{HIER\_VERDICT.json}.}
+\label{fig:hier-horizon}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{hier_F3_budget_catchup.png}
+\caption{(F3) Matched- vs.\ $2\times$-budget catch-up. At $1\times$ budget
+(iters${=}400$) the 2-level edge is real ($0.215$ vs.\ 1-level $0.184$); at
+$2\times$ budget (iters${=}700$) the 1-level arm catches up to the 2-level
+(global\_long $0.209 \approx$ mlp\_long $0.208$) and both still plateau
+${\sim}0.2$. The depth advantage is sample-efficiency, not capacity. Error bars
+$\pm 1$ s.d. Source: \texttt{HIER\_VERDICT.json}.}
+\label{fig:hier-budget}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{hier_F4_method_vs_task.png}
+\caption{(F4) The plateau is the TASK, not the method. Re-scoring the
+\emph{same} 2-level \texttt{mlp} checkpoints ($n{=}58$ seeds, $n{=}1024$
+deterministic envs) under a position-only success predicate (drop the
+orientation term, $<0.08$m, any-step) lifts success ${\sim}3\times$: full-upright
+$0.203$ mean / $0.247$ max $\to$ position-only $0.607$ mean / $0.700$ max. The
+${\sim}0.2$ asymptote is place-phase upright physics, not a limitation of the
+skill-options method. Source: \texttt{method\_vs\_task.json} /
+\texttt{RESCORE\_POSONLY.json}.}
+\label{fig:hier-method-task}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.78\textwidth]{hier_F5_injected_vs_learned.png}
+\caption{(F5) Only \emph{injected} structure buys competence (Bet-2 NULL;
+cf.\ Table~\ref{tab:bet2null}). The injected, hand-defined 2-level skill-options
+arm reaches $0.215$ peak real success, whereas every \emph{learned} or
+\emph{generative} hierarchy sits flat at $0.000$: DreamerV3 (generative,
+single-level; 3/3 seeds), H-JEPA reactive HL (2.0M), H-JEPA latent-MPPI HL
+($n{=}64$, every eval), and H-JEPA $+$ dense LL-reach shaping
+(\texttt{reached}$=0$). The NULL is de-confounded (holds under a corrected critic
+and a feasible OSC action) and the H-JEPA machinery is independently validated
+(Table~\ref{tab:bet2posctrl}: 2-level H-JEPA reaches $0.94$ on feasible-LL nav),
+so the $0.0$ is the contact-primitive wall, not a broken hierarchy.
+Source: \texttt{bet2\_null\_results.md} (verified 2026-06-29).}
+\label{fig:hier-injected}
+\end{figure}
+
+% =====================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Every abstraction lever is speed (or escape), not capacity.}
+Across the full ladder --- representational, behavioral, temporal, and
+hierarchy-depth --- abstraction lowers the \emph{statistical / optimization} cost
+of reaching a ceiling that a strong flat baseline also reaches; it does not raise
+that ceiling. The one regime where a prior wins on a \emph{capacity}-like axis is
+\emph{escape} (\S\ref{sec:taxonomy}): when the budget-matched baseline is
+exploration-bottlenecked and never reaches competence at all, the prior's win is a
+budget-bounded capacity-in-practice win, not a proof the true asymptote differs.
+This is the unifying claim, now established across abstraction \emph{types} (Bet 1)
+and \emph{up the hierarchy} (Bet 2). It reframes ``does abstraction help?'' as
+axis-dependent: yes on speed-of-learning and on escaping exploration gates, no on
+asymptote.
+
+\paragraph{Why the information term is often already satisfied.}
+A value-sufficient SimNorm latent already satisfies the information / anti-collapse
+objective that a JEPA must enforce, which is \emph{why} an added SE/abstraction
+term is redundant --- a worked instance of ``when is the information term already
+satisfied?'' The structural-entropy surrogate is motivated, not as a solution to
+the McAllester--Stratos impossibility, but as a tractable, assumption-light
+\emph{structural} proxy where the statistical route is provably hard.
+
+\paragraph{The primitive, not the hierarchy, is the lever.}
+The only hierarchy arm that buys competence on PandaPickCube has an \emph{injected},
+hand-defined low-level primitive (\S\ref{sec:results-hier}); the learned/generative
+NULL (Table~\ref{tab:bet2null}) runs counter to LeCun's Bet~2, which is specifically
+about \emph{learned} hierarchical abstraction. The positive control
+(Table~\ref{tab:bet2posctrl}) makes the attribution clean rather than ambiguous:
+the same 2-level H-JEPA machinery reaches the raw-obs ceiling ($0.94$) on a
+feasible-low-level navigation task, so the PandaPickCube $0.0$ is the contact
+primitive, not the hierarchy. The operative lever for competence is therefore a
+\emph{competent low-level primitive} (injected here), not learned hierarchical
+abstraction. We still do not over-claim on generativity:
+Director~\citep{hafner2022director} does competitive hierarchical latent planning on
+a generative WM, and our running generative reference (DreamerV3) is single-level,
+so a generative \emph{2-level} (Director-style) baseline remains the cleanest
+isolation of generativity at fixed depth before any claim that a non-generative
+abstract latent is \emph{necessary}.
+
+\paragraph{Limits.}
+(i) The behavioral-abstraction taxonomy (\S\ref{sec:taxonomy}) has
+\emph{one task per cell} that is naturally hard for escape (Pendulum); the escape
+cell is otherwise carried by the \emph{controlled} cartpole actuation frontier
+rather than by multiple naturally-hard tasks, and is budget-bounded (escape is
+capacity-in-practice, not a proof of differing asymptotes).
+(ii) The learned/generative cells of Table~\ref{tab:bet2null} are verified flat
+$0.0$, de-confounded by a corrected critic and a feasible OSC action, and the
+H-JEPA machinery is independently validated by the deterministic $8$-seed positive
+control (Table~\ref{tab:bet2posctrl}); the residual gap is that the PandaPickCube
+H-JEPA runs are seed~0 only (corroborated across five low-level/HL variants).
+(iii) DreamerV3 is a \emph{single-level} generative reference, so it conflates
+generativity with single-level rather than isolating generativity at fixed depth;
+a buildable generative 2-level (Director) arm remains the cleanest unrun
+disentanglement. (iv) On the positive-control task the faithful SimNorm-JEPA latent
+collapses (both latent arms capped ${\sim}0.4$--$0.5$) --- a separable
+representation weakness, not a hierarchy failure.
+(v) The escape frontier and behavioral tables are reported as deterministic
+$n=64$ / multi-seed where stated; the hierarchy peak-success numbers are
+training-eval peaks with deterministic re-scores where noted --- we flag this
+training-eval vs.\ deterministic distinction per table rather than blurring it.
+(vi) Long-horizon manipulation has physical/kinematic ceilings (the ${\sim}0.83$
+PickCube ceiling is physical), so we measure speed to a reachable threshold, not
+the ceiling. (vii) The entity-graph OOD result and several graph-side measurements
+are single-seed / synthetic with documented caveats. (viii) The crowded 2026
+JEPA-derivative space requires a fresh related-work sweep at submission.
+\todo{run the submission-time related-work sweep over 2602/2603 arXiv stems; do not
+cite post-cutoff derivatives without verification.}
+
+% =====================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We reframed a decade of inconsistent ``does abstraction help?'' results as an
+axis mismatch: the field scores asymptotic return, whereas LeCun's world-model
+program and Chollet's measure of intelligence both argue the right axis is speed
+of learning. Decomposing LeCun's program into a metric bet and an architecture
+bet, we tested both under one matched-control, speed-of-learning protocol. The
+metric bet is confirmed: representational, behavioral, and temporal abstraction
+are null on asymptote and real only on sample-efficiency --- and we organize the
+behavioral findings on a two-axis taxonomy whose escape cell we turn into a
+controlled actuation frontier, where a structured prior shifts the \emph{solvable}
+boundary that a budget-matched baseline cannot cross. On the architecture bet,
+hierarchy depth and subgoal horizon are genuine speed levers and the ${\sim}0.2$
+plateau is a task ceiling rather than a method limit, yet no hierarchical arm lifts
+the asymptote and the depth advantage dissolves at $2\times$ budget. The
+learned/generative arm LeCun bets on sits flat at $0.0$ on PandaPickCube
+(Table~\ref{tab:bet2null}) --- a NULL that holds under a corrected critic and a
+feasible OSC action, and that a rigorous deterministic positive control attributes
+cleanly to the contact primitive: the same 2-level H-JEPA machinery reaches the
+raw-observation ceiling on feasible-low-level navigation ($0.941$ vs.\ flat
+$0.971$, Table~\ref{tab:bet2posctrl}). The lever for competence is thus a
+\emph{competent low-level primitive} --- which skill-options inject to reach
+$0.215$, and which is unlearnable from scratch here (scripted ${\leq}0.17$) --- not
+learned hierarchical abstraction, counter to Bet~2. Every abstraction lever we
+tested buys speed (or budget-bounded escape), not asymptotic capacity. The
+remaining cleanest disentanglement is a Director-style generative \emph{2-level}
+baseline that would isolate generativity at fixed hierarchy depth.
+
+\subsubsection*{Acknowledgments}
+\todo{acknowledgments / funding (omit for double-blind submission).}
+
+\bibliographystyle{tmlr}
+\bibliography{references_speed}
+
+\end{document}

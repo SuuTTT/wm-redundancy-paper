@@ -1,0 +1,178 @@
+{
+  "seed": 3,
+  "config": {
+    "n_train": 4,
+    "n_ood": [
+      6,
+      8,
+      10,
+      12,
+      14
+    ],
+    "steps": 6000,
+    "episodes": 256,
+    "ep_len": 100,
+    "batch": 256,
+    "lr": 0.0003,
+    "hidden": 128,
+    "n_layers": 2,
+    "d_model": 64,
+    "ent_layers": 2,
+    "n_heads": 4,
+    "max_entities": 16
+  },
+  "probe_protocol": "heldout_ridge_r2 (80/20 split, standardized, lam=10); target=MC return-to-go; latent=monolith encode() / entity mean-pooled final tokens",
+  "value_relevant_entities": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "results": {
+    "monolith_pool": {
+      "train_metrics": {
+        "loss": 170.59426879882812,
+        "q_loss": 170.34814453125,
+        "reward_loss": 0.2452811598777771,
+        "self_loss": 0.0008458157535642385
+      },
+      "nparams": 85510,
+      "r2_indist": 0.8768,
+      "per_N": {
+        "4": {
+          "r2_perN": 0.8768,
+          "r2_transfer": 0.8768,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "6": {
+          "r2_perN": 0.7268,
+          "r2_transfer": -0.2547,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "8": {
+          "r2_perN": 0.7289,
+          "r2_transfer": 0.0556,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "10": {
+          "r2_perN": 0.8538,
+          "r2_transfer": 0.1699,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "12": {
+          "r2_perN": 0.8372,
+          "r2_transfer": -0.3806,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "14": {
+          "r2_perN": 0.8567,
+          "r2_transfer": -0.8227,
+          "n_samples": 25600,
+          "latent_dim": 128
+        }
+      }
+    },
+    "monolith_pad": {
+      "train_metrics": {
+        "loss": 14.467988967895508,
+        "q_loss": 14.452738761901855,
+        "reward_loss": 0.014751560986042023,
+        "self_loss": 0.0004988709697499871
+      },
+      "nparams": 92678,
+      "r2_indist": 0.9574,
+      "per_N": {
+        "4": {
+          "r2_perN": 0.9574,
+          "r2_transfer": 0.9574,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "6": {
+          "r2_perN": 0.9308,
+          "r2_transfer": 0.7566,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "8": {
+          "r2_perN": 0.8352,
+          "r2_transfer": -1.262,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "10": {
+          "r2_perN": 0.8448,
+          "r2_transfer": -2.4922,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "12": {
+          "r2_perN": 0.822,
+          "r2_transfer": -6.0335,
+          "n_samples": 25600,
+          "latent_dim": 128
+        },
+        "14": {
+          "r2_perN": 0.8038,
+          "r2_transfer": -6.6463,
+          "n_samples": 25600,
+          "latent_dim": 128
+        }
+      }
+    },
+    "entity_wm": {
+      "train_metrics": {
+        "loss": 8.61572551727295,
+        "q_loss": 8.501884460449219,
+        "reward_loss": 0.10418984293937683,
+        "self_loss": 0.0096516665071249
+      },
+      "nparams": 114438,
+      "r2_indist": 0.946,
+      "per_N": {
+        "4": {
+          "r2_perN": 0.946,
+          "r2_transfer": 0.946,
+          "n_samples": 25600,
+          "latent_dim": 64
+        },
+        "6": {
+          "r2_perN": 0.7564,
+          "r2_transfer": -0.8571,
+          "n_samples": 25600,
+          "latent_dim": 64
+        },
+        "8": {
+          "r2_perN": 0.7483,
+          "r2_transfer": -0.1266,
+          "n_samples": 25600,
+          "latent_dim": 64
+        },
+        "10": {
+          "r2_perN": 0.8572,
+          "r2_transfer": 0.3137,
+          "n_samples": 25600,
+          "latent_dim": 64
+        },
+        "12": {
+          "r2_perN": 0.8358,
+          "r2_transfer": 0.2068,
+          "n_samples": 25600,
+          "latent_dim": 64
+        },
+        "14": {
+          "r2_perN": 0.8592,
+          "r2_transfer": 0.0462,
+          "n_samples": 25600,
+          "latent_dim": 64
+        }
+      }
+    }
+  },
+  "wall_time_sec": 352.4
+}
