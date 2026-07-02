@@ -327,6 +327,19 @@ BallInCup PPO 0/0/967 vs TD-MPC2 975/0 — discovery-luck on BOTH algos (PPO 1/3
 NET: the HopperHop exploration wall is **specific to the gait-discovery regime**, which SHARPENS the claim ("PPO
 fails at gait discovery specifically") rather than weakening it. `b3060b:exp/ppo_wall_generalization/`.
 
+### ✅ WM-HEAD ABLATION (CheetahRun) — the TD/VALUE signal is the load-bearing net; consistency is the LEAST critical (2026-07-02, n=2, DONE)
+`b3060:helios_wmablate/exp/wm_head_ablation/{VERDICT.md,summary.json}`. Zero ONE loss term at a time (mask verified
+live in logs), encoder kept, 1M steps, n=2, MPPI + pi eval returns. FULL: MPPI 737.8 / pi 782.2. Ablations:
+**value → MPPI 16.4 / pi 12.0 (catastrophic — kills everything)**; reward → MPPI 5.0 but **pi 761.0** (load-bearing
+for PLANNING only — partly by construction, MPPI scores rollouts with it; pi barely needs it); policy → MPPI 122.7 /
+pi 2.5 (planner badly hurt without a proposal prior); **consistency (the self-predictive latent-dynamics loss!) →
+MPPI 367.2 / pi 541.1 — a 50%/31% drop, the SMALLEST of the four**. Cleanest readout = the pi column (no
+planner-needs-heads tautology): value ≫ policy > consistency > reward ≈ none. MECHANISM UPSHOT (Thread A / Part 8):
+what carries TD-MPC2 is the **TD value signal trained through the latent**, not the self-predictive "world model"
+loss per se — the model-based machinery's contribution routes through value learning. Caveat: dense task, n=2;
+the SAME ablation ON HOPPERHOP (the flagship exploration task) is running (seeds 1-2 GPU0/1 + seeds 3-4 GPU2/3
+just launched) — the decisive version for the exploration-efficiency mechanism.
+
 ### ⚠ SHAPED-FLAT INTERIM (2/6 seeds done, 2026-07-02) — dense shaping ALONE solves fourroom; C positive likely re-attributes
 `b3060b:exp/C_hier_new/runs_shapedflat/`: s0 final success **1.000** (from 360k), s1 **1.000** @380k. Flat TD3 +
 dense potential shaping to the TRUE goal solves the maze that sparse flat never solved (0/6) and feudal solved 4/6.
