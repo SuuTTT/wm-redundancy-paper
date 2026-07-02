@@ -115,6 +115,11 @@ CheetahRun) asked whether any TD-MPC2 variant can dominate PPO on **both** retur
 **CheetahRun corroborates** (the PPO-competitive regime): vanilla 671, jumpy 642 (no gain),
 efficient 564 (2.2× faster wall-clock), PPO ~270 — and PPO **never reaches return 500 even at 30M
 steps** while every TD-MPC2 variant reaches it in <1M.
+**⚠ CORRECTION (2026-07-02, anatomy replication):** that PPO CheetahRun reading was a **budget/config
+artifact** — the tuned mujoco_playground PPO config at 285M steps reaches **892–922 (3/3 seeds)**, matching
+SAC (918/912 @10M). CheetahRun is a slow-but-converging case, not a wall; TD-MPC2's edge there is
+sample-efficiency only (~600+ at 0.55M). The only genuine exploration wall in the program remains HopperHop
+(0/5 PPO seeds ≥200 at 472M). See `bet2_null_results.md` anatomy-replication entry.
 
 **Nuance on the wall-clock axis (refines the blunt "PPO wins wall-clock"):** PPO wins raw
 *throughput* (steps/sec, ~10–30× via 512-env parallelism + a gradient update per env-step), but on

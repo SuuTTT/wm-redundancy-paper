@@ -369,6 +369,17 @@ reward s3/4 confirm planner-only at n=4 (pi 225.5/188.7). PRECISE FINAL MECHANIS
 total failure); reward = planner-only; self-predictive consistency = the only merely-degrading component.
 Part 9 updated with final phrasing. Last 2 arms (policy s3/4) corroborative.
 
+### ✅ ANATOMY REPLICATION on CheetahRun (2026-07-02 ~23:45) — NO WALL; old Pareto PPO number was a budget/config artifact
+`b3060b:exp/anatomy2_cheetah/`. Tuned mujoco_playground PPO (no env-specific override; config audited), 285M
+steps/seed: **peaks 892.0 / 921.7 (done) / 910.9 (s33 @275M, finishing) — PPO SOLVES CheetahRun, 3/3.** SAC (tuned,
+n=2 @10M): **918.0 / 912.2.** TD-MPC2 fresh anchor: 603 @550k (in flight; prior ~670-738 @1M). VERDICT: CheetahRun
+is NOT a second wall — on-policy PPO catches up given budget, matching SAC's level; TD-MPC2 keeps only the
+efficiency edge (~600+ at 0.55M vs PPO needing ~50-100M+ to pass 600). **CORRECTION OF RECORD:** the Pareto-study
+claim "PPO ~270-290 @30M, never reaches 500 on CheetahRun" (SYNTHESIS_beat_ppo.md §3, Part 5 reality-check) was a
+BUDGET/CONFIG artifact — with the tuned config and adequate budget PPO reaches ~900. NET: the exploration wall is
+now tested against FIVE comparison settings (Finger, Pendulum-fixed, BallInCup, CheetahRun, HopperHop) and exists
+ONLY on HopperHop — maximally gait-discovery-specific, exactly Part 9's claim, now with n=4 no-wall controls.
+
 ### ✅✅ HOPPERHOP WM-ABLATION COMPLETE 20/20 (2026-07-02 ~20:55) — CAMPAIGN'S FINAL EXPERIMENT CLOSED
 Policy s3/4 finals: mppi 0.2/1.5, pi 1.5/0.0 — ≈0 both readouts, corroborating s1/2. FINAL n=4 TABLE (mppi_best
 per seed): none 570/513/287/372 | value 0/0/3/0 | policy 0.1/0/0.2/1.5 | reward ~0 (planner-dead by construction;
