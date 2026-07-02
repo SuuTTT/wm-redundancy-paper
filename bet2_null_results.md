@@ -362,6 +362,13 @@ gait found 4/4 at ~half strength); **reward-ablated s1/2: mppi ~0 (planner dead,
 Remaining: policy arms s1/2 (running), reward+policy s3/4. The n=4 mechanism story is now: value→0 (wall),
 consistency→~half, reward→planner-only. Part 9 updated.
 
+### UPDATE 16/20 (WM_ABLATION_HOP_DONE for s1/2): **policy-ablated ≈0 on BOTH readouts** (s1 0.1/0.1, s2 0.0/0.0)
+— unlike CheetahRun (planner limped to 123 without a prior), on HopperHop the planner cannot compensate AT ALL.
+reward s3/4 confirm planner-only at n=4 (pi 225.5/188.7). PRECISE FINAL MECHANISM: the value-learning pathway
+(TD value loss + the policy trained from it) is INDIVIDUALLY NECESSARY on the exploration task (each ablation →
+total failure); reward = planner-only; self-predictive consistency = the only merely-degrading component.
+Part 9 updated with final phrasing. Last 2 arms (policy s3/4) corroborative.
+
 ### ⚡ HOPPERHOP WM-ABLATION INTERIM (8/20 arms, 2026-07-02, disk jsonl) — value-ablation reproduces the WALL
 `b3060:helios_wmablate/exp/wm_head_ablation_hop/jsonl/` (@~1M, 4 evals/arm): **none (full, n=4): mppi best
 569.7/512.9/286.8/371.7 (all find the gait)**; **value-ablated (n=4, s3/4 at eval 3): 0.0/0.0/3.2/0.0 — TOTAL
