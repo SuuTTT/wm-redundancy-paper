@@ -348,6 +348,15 @@ feudal's shaping was SELF-GENERATED (no privileged goal info) while this control
 upper bound) — so the surviving claim would be "a learned hierarchy can manufacture its own dense signal," not
 "hierarchy beats shaping." HOLD final verdict for n=6.
 
+### ⚡ HOPPERHOP WM-ABLATION INTERIM (8/20 arms, 2026-07-02, disk jsonl) — value-ablation reproduces the WALL
+`b3060:helios_wmablate/exp/wm_head_ablation_hop/jsonl/` (@~1M, 4 evals/arm): **none (full, n=4): mppi best
+569.7/512.9/286.8/371.7 (all find the gait)**; **value-ablated (n=4, s3/4 at eval 3): 0.0/0.0/3.2/0.0 — TOTAL
+failure, the gait is NEVER found**; consistency-ablated (n=2): mppi 201.2/194.0, pi 235.6/260.3 — degraded ~50-60%
+but the gait IS discovered. INTERIM MECHANISM READ (the exploration-task version of the CheetahRun result):
+**removing the TD value loss reproduces a PPO-like exploration wall on HopperHop; removing the self-predictive
+consistency loss does not.** The exploration-relevant content of "the world model" is the value signal trained
+through the latent. Reward/policy arms pending (final VERDICT + Part 9 when all 20 land).
+
 ### 🚩 SHAPED-FLAT FINAL (n=6, 2026-07-02) — the C-hierarchy positive RE-ATTRIBUTES to dense shaping
 `b3060b:exp/C_hier_new/{SHAPEDFLAT_DONE,runs_shapedflat/}` (6 JSONs, deterministic unshaped final eval, matched
 400k): flat TD3 + dense potential shaping to the TRUE goal solves fourroom **3/6 (finals 1,1,1,0,0,0)** ≈ feudal
