@@ -306,6 +306,35 @@ Corrections + newly-found issues, now the canonical versions:
    (big hurt); value-ablated ≈32/16 (catastrophic, policy+planner both die); reward-ablated mppi ≈26/1 but pi ≈753/765
    (reward head load-bearing for PLANNING only). Early read: TD/value signal is the load-bearing net; consistency
    substantial; reward planner-only.
+### ✅ SAC CONTROL — the exploration wall is ON-POLICY-SPECIFIC, not model-free (2026-07-02, n=3, VERIFIED disk)
+The review-mandated decider. brax SAC, mujoco_playground tuned DMC config (audit line confirmed the HopperHop branch
+fired), SAME MJX env byte-for-byte as the PPO/TD-MPC2 arms, 3 seeds × 5M sequential.
+`b3060b:exp/sac_hopperhop_control/{SAC_CONTROL_DONE,runs/seed{1,2,3}.json}`.
+**Peaks 207.1 / 235.1 / 274.3 (mean ≈238.8); 3/3 seeds cross 200 within 5M** (seed1 first ≥200 @4.0M) — the exact
+threshold PPO's 5 seeds never touched in 472M. VERDICT: the strong "model-free is walled" reading is REFUTED;
+**the wall is an ON-POLICY (PPO) pathology** — off-policy replay+entropy escapes it. What the world model still
+buys, cleanly (same env): TD-MPC2 ~282 mean (n=4, best 367) at 1M ≥ SAC's 5M level → **~5× sample-efficiency**,
+and ~480–520 (n=2) at 3.9M vs SAC ~239 at 5M → **~2× attained level at matched budget**. Downgrade-and-sharpen of
+the flagship: planner=exploitation (unchanged), PPO categorically walled (unchanged), world-model = sample-efficiency
++ attained-level lever rather than the sole exploration escape. Part 8 rewritten accordingly.
+
+### ✅ WALL-GENERALIZATION — FINAL: the wall does NOT generalize; it is TASK-SPECIFIC (2026-07-02, all runs done)
+`analyze_ppowall.py` (best-seed criterion, PPO peak < 0.8×TD-MPC2 anchor): **"WALL DOES NOT GENERALIZE: PPO caught
+up to TD-MPC2 on all scored tasks."** Per-task (PPO n=3 tuned-config ~295M vs fresh TD-MPC2 n=2 @1M):
+FingerTurnHard PPO 971/975/971 vs TD-MPC2 984 — no wall, 3/3. PendulumSwingup PPO 852/38/93 vs 961 — best seed
+catches up; 2/3 walled BUT cell CONFOUNDED (PendulumSwingUp-vs-Swingup case bug: tuned override never fired).
+BallInCup PPO 0/0/967 vs TD-MPC2 975/0 — discovery-luck on BOTH algos (PPO 1/3, TD-MPC2 1/2), not a clean wall.
+NET: the HopperHop exploration wall is **specific to the gait-discovery regime**, which SHARPENS the claim ("PPO
+fails at gait discovery specifically") rather than weakening it. `b3060b:exp/ppo_wall_generalization/`.
+
+### ⚠ SHAPED-FLAT INTERIM (2/6 seeds done, 2026-07-02) — dense shaping ALONE solves fourroom; C positive likely re-attributes
+`b3060b:exp/C_hier_new/runs_shapedflat/`: s0 final success **1.000** (from 360k), s1 **1.000** @380k. Flat TD3 +
+dense potential shaping to the TRUE goal solves the maze that sparse flat never solved (0/6) and feudal solved 4/6.
+If this holds at n=6 → the fourroom "hierarchy positive" RE-ATTRIBUTES to dense shaping, with one honest residual:
+feudal's shaping was SELF-GENERATED (no privileged goal info) while this control uses the true goal (a deliberate
+upper bound) — so the surviving claim would be "a learned hierarchy can manufacture its own dense signal," not
+"hierarchy beats shaping." HOLD final verdict for n=6.
+
 8. **Blog-history audit:** 4 HIGH orphaned claims found + now BANNERED in place (phase1b glass-win/74%-variance;
    iters-8-9 "credible lead"; Part 2 jumpy "+44/+80%" shaped-return win; Part 3 R²=0.9994 §8 re-affirmation + jumpy
    +1017). Thread A/E stale status boards fixed (A2/A3 NULL). Remaining MED items listed in the review doc (Part 4/5
