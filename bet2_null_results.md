@@ -348,6 +348,13 @@ feudal's shaping was SELF-GENERATED (no privileged goal info) while this control
 upper bound) — so the surviving claim would be "a learned hierarchy can manufacture its own dense signal," not
 "hierarchy beats shaping." HOLD final verdict for n=6.
 
+### ✅ SAC-20M FINAL n=5 (2026-07-02) — distributions overlap; no clean level gap; TD-MPC2 = consistency + efficiency
+`runs_20M/seed{11..15}.json`: finals **414.0 / 277.2 / 572.5 / 285.2 / 246.3** (mean ≈359); peaks 418.7 / 277.2 /
+574.5 / 304.5 / **553.2** (s15 peaked then regressed — high late-training seed variance). vs TD-MPC2 same-env
+final ~477 (480.9/473.1 @5M, n=2). Honest final statement: SAC's mean 20M level sits below TD-MPC2's 5M level but
+the distributions OVERLAP (1/5 finals, 2/5 peaks ≥ anchor) → **no clean level gap; the world-model's robust
+advantages are consistency + ~4-5× sample-efficiency.** Closes the SAC control series (n=3 @5M + n=5 @20M).
+
 ### ⚡ HOPPERHOP WM-ABLATION INTERIM (8/20 arms, 2026-07-02, disk jsonl) — value-ablation reproduces the WALL
 `b3060:helios_wmablate/exp/wm_head_ablation_hop/jsonl/` (@~1M, 4 evals/arm): **none (full, n=4): mppi best
 569.7/512.9/286.8/371.7 (all find the gait)**; **value-ablated (n=4, s3/4 at eval 3): 0.0/0.0/3.2/0.0 — TOTAL
