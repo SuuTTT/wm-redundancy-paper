@@ -377,8 +377,11 @@ PPO fails BOTH hopper tasks (Hop 0/5 ≥200 @472M; Stand ≤149 @285M) while SAC
 show no wall (Finger/Pendulum/BallInCup/Cheetah/Walker). NEW FRAMING: **the on-policy exploration wall is
 MORPHOLOGY-specific — the single-leg hopper's unstable, contact-timing-critical dynamics defeat on-policy
 sampling even for standing**, which off-policy replay handles easily. Arguably a stronger, more interesting
-claim (a characterizable dynamics class, not one task). TD-MPC2 Stand anchor overnight (WALLPROBE_TDMPC2_DONE)
-completes the efficiency column. Part 9 wall framing rewritten.
+claim (a characterizable dynamics class, not one task). Part 9 wall framing rewritten.
+**STAND COLUMN COMPLETE (WALLPROBE_TDMPC2_DONE 08:10): TD-MPC2 best 962.3 (mppi @650k), 948.4 (pi @800k), n=1 —
+essentially solves HopperStand within 0.65M steps.** Full Stand ordering: TD-MPC2 962 @0.65M ≫ SAC 492/754 @5M ≫
+PPO ≤149 @285M (walled). On the hopper morphology the value-pathway learner is ~8× more efficient than SAC AND
+reaches a higher level; on-policy PPO never gets off the floor.
 
 ### ✅ WALKERRUN WM-ABLATION — decisive cells FINAL (2026-07-03 ~03:10, 8/10 arms n_evals=20; consistency mid-run)
 `b3060:helios_wmablate/exp/wm_head_ablation_walk/jsonl/` (1M steps, n=2/arm): **none 731.2/679.6 mppi,
