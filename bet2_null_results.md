@@ -481,3 +481,5 @@ no reliable level gap at larger budgets. Seeds 14/15 launching for the level-dis
    +1017). Thread A/E stale status boards fixed (A2/A3 NULL). Remaining MED items listed in the review doc (Part 4/5
    "0.79 tie vs PPO 0.81" vs canonical round-7 0.716<0.810 unreconciled; Part 6 planning-thesis needs banner;
    R²≈0.999 still cited in Part 5 reality-check/Part 6; unsourced "Pendulum 836 vs 46"/"3–4 orders" in Part 5 method map).
+
+### ✅ STAND n=3 + WALKERRUN n=4 (2026-07-03 ~15:30) — TD-MPC2 Stand 962.3/948.1/942.7 (s43 best at 0.3M!, STAND_BUDGET_DONE); WalkerRun decisive arms n=4: none 731/680/699/723, value 56/28/39/38 dead 4/4, policy 76/64/83/53 dead 4/4 (s3/4 through >=900k). Mechanism table + all wall/barrier cells now at final n across the board. Part 9 updated.
