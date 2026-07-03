@@ -369,6 +369,17 @@ reward s3/4 confirm planner-only at n=4 (pi 225.5/188.7). PRECISE FINAL MECHANIS
 total failure); reward = planner-only; self-predictive consistency = the only merely-degrading component.
 Part 9 updated with final phrasing. Last 2 arms (policy s3/4) corroborative.
 
+### 🚩🚩 WALL-BOUNDARY PROBE (HopperStand, 2026-07-03 ~07:15) — THE WALL IS HOPPER-MORPHOLOGY-WIDE, NOT HOP-GAIT-SPECIFIC
+`b3060b:exp/wallprobe_hopperstand/`. Tuned PPO (Hopper-prefix override VERIFIED fired), 285M steps/seed:
+**peaks 149.2 / 142.4, finals 90.8 / 135.8 (n=2) — flat/oscillating at the end, WALLED on HopperStand too.**
+SAC (tuned, n=2 @5M): **492.2 / 754.2 — solves.** REVISES Part 9's "gait-discovery-specific" framing: on-policy
+PPO fails BOTH hopper tasks (Hop 0/5 ≥200 @472M; Stand ≤149 @285M) while SAC escapes both and 5 non-hopper tasks
+show no wall (Finger/Pendulum/BallInCup/Cheetah/Walker). NEW FRAMING: **the on-policy exploration wall is
+MORPHOLOGY-specific — the single-leg hopper's unstable, contact-timing-critical dynamics defeat on-policy
+sampling even for standing**, which off-policy replay handles easily. Arguably a stronger, more interesting
+claim (a characterizable dynamics class, not one task). TD-MPC2 Stand anchor overnight (WALLPROBE_TDMPC2_DONE)
+completes the efficiency column. Part 9 wall framing rewritten.
+
 ### ✅ WALKERRUN WM-ABLATION — decisive cells FINAL (2026-07-03 ~03:10, 8/10 arms n_evals=20; consistency mid-run)
 `b3060:helios_wmablate/exp/wm_head_ablation_walk/jsonl/` (1M steps, n=2/arm): **none 731.2/679.6 mppi,
 711.1/671.1 pi. value-ablated 56.1/28.0 mppi, 43.7/37.2 pi — DEAD. policy-ablated 76.4/64.3 mppi, 48.1/34.5 pi —
