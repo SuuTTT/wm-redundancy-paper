@@ -380,7 +380,7 @@ Part 9 updated (value n=4→n=6).
 seed 44 ESCAPED (peak 681, final 619 @285M); 3/4 walled.** **SAC Stand n=4: 492.2/754.2/464.3/32.6 — seed 44
 FAILED; 3/4 solve @5M.** HONEST REVISED PICTURE: the categorical wall holds ONLY on HopperHop (PPO 0/5 ≥200
 @472M; SAC 3/3 @5M). HopperStand is a GRADED stochastic barrier for model-free methods: PPO escapes 1/4 at ~60×
-SAC's budget; SAC solves 3/4 at 5M; TD-MPC2 solves 1/1 (962 @0.65M; s42 → n=2 pending). Reliability×efficiency
+SAC's budget; SAC solves 3/4 at 5M; **TD-MPC2 solves 2/2 (962.3 @0.65M, 948.1 @0.9M — WALLPROBE_EXT_DONE 11:12)**. Reliability×efficiency
 ordering (TD-MPC2 ≫ SAC ≫ PPO) is the durable claim; "categorical morphology wall" is retracted to
 "hop-gait categorical + Stand graded". Part 9 revised AGAIN (2nd revision today — the controls keep teaching).
 
