@@ -1,4 +1,65 @@
-# HANDOFF — TD-MPC-Glass positive-chase campaign (for new session / Fable 5)
+# HANDOFF — TD-MPC-Glass campaign (UPDATED 2026-07-03 ~16:00, Fable-5 session → next session)
+
+## ⚡⚡ CURRENT STATE (read this section first; everything below it is history)
+
+**The campaign's active phase is 99% complete.** Part 9 is the living capstone blog post
+(`/home/ubuntu/blog/content/projects/2026-07-05-tdmpc-glass-part9-anatomy-of-beating-ppo.md`, live at
+suuttt.github.io/projects/2026-07-05-tdmpc-glass-part9-anatomy-of-beating-ppo/). Every evidence cell is at
+final n EXCEPT two harvests still in flight on b3060 (see IMMEDIATE TASKS).
+
+### Final claim set (all disk-verified, in Part 9 + ledger bet2_null_results.md)
+1. **Exploration wall, fully quantified (3 framing revisions on 07-03 as n grew — final form):**
+   - HopperHop: **categorical PPO wall** — 0/5 seeds ≥200 at 472M (tuned config, byte-identical MJX env);
+     SAC crosses 200 in 5/8 by 5M and 5/5 by ~8M (crossings 4.1–7.7M); TD-MPC2 6/6 by ~1M.
+   - HopperStand: **graded barrier** — PPO escapes 2/8 @285M (681/749; six ≤154); SAC 0/3 @1M, 5/6 @5M;
+     TD-MPC2 3/3 by ≤0.9M (962.3/948.1/942.7, third seed at 0.3M).
+   - **Matched-1M column = cleanest line: TD-MPC2 solves both hopper tasks at a budget where neither
+     model-free method solves either.** 5 no-wall control tasks (Finger, Pendulum-configfixed, BallInCup,
+     CheetahRun, WalkerRun). Ordering: reliability × efficiency TD-MPC2 ≫ SAC ≫ PPO on hopper dynamics.
+2. **Mechanism (3-task per-loss ablation):** the value-learning pathway (TD value loss + policy trained from
+   it) is INDIVIDUALLY NECESSARY (each ablation → dead) on CheetahRun (n=2), HopperHop (value n=6: 0/0/3.2/0/0/0.1),
+   WalkerRun (n=4: value 56/28/39/38, policy 76/64/83/53 all dead; none 731/680/699/723 healthy). Reward head =
+   planner-plumbing only (π at full strength without it, all 3 tasks). Self-predictive consistency loss = only
+   merely-degrading component (~25-50%). "The world model" that beats PPO is value learning, not dynamics modeling.
+3. **No level gap; efficiency + consistency are the WM's levers** (SAC-20M n=5 finals 246-572 straddle TD-MPC2's
+   477-481@5M). CheetahRun ordering: TD-MPC2 727/784@1M ≪ SAC 918/912@10M ≈ PPO 892-922@285M.
+4. **Hierarchy positive re-attributed to dense shaping** (shaped-flat 3/6 ≈ feudal 4/6; residual claim = feudal
+   SELF-GENERATES its dense signal; replicates Nachum et al. 2019).
+5. Earlier (07-02): full-arc adversarial review (REVIEW_2026-07-02_full_arc.md) — 4 HIGH orphaned blog claims
+   bannered; every current-phase number traced to disk; Pendulum config case-bug found (PendulumSwingUp vs
+   PendulumSwingup skips tuned override — patched via pendulum_fixed_driver.py); A1 noise confound documented.
+
+### IMMEDIATE TASKS for the next session (re-arm /loop with the prompt at bottom)
+1. **Harvest 5M anchors s33/34** (b3060 GPU0/1, was 3.2M/5M at 15:30, done ~17:00): marker
+   `HOP5M_ANCHORS_DONE` in `b3060:/root/helios_wmablate/exp/hop5m_anchors/`; read best/final from
+   `logs/seed3{3,4}.log` or CSV tag `hop5m_s3{3,4}`; expect ~480 → HopperHop 5M anchor n=2→n=4 →
+   ledger + Part 9 "(477–481 final at 5M (n=2))" → n=4 numbers → push.
+2. **Confirm WalkerRun s3/4 formal marker** (`WM_ABLATION_WALK_S34_DONE` in
+   `b3060:/root/helios_wmablate/exp/wm_head_ablation_walk/`) — outcome already published at eval 18/20;
+   just verify finals unchanged.
+3. Then EVERYTHING is final → post wind-down; GPUs free for whatever the user wants next.
+
+### Papers status
+- **Paper A** (`main.tex` here, 19pp, compiles clean): SUBMISSION-READY — figures in, retracted-R² excised,
+  hardened OOD sweep folded, related work fresh (BS-MPC tension honestly stated). Awaits ONLY user's author block.
+- **Paper 2 (speed-of-learning)**: drafted (`paper_speed_of_learning.tex`); numbers reconciled via review.
+- **Paper 3**: Part 9 IS the skeleton (morphology wall + matched-1M column + 3-task value-pathway mechanism +
+  efficiency-not-level + convergent literature BRO/SimBa/TD7/Nachum2019). Next step if user wants: assemble .tex.
+
+### Operational gotchas learned this session (READ — they bit repeatedly)
+- Blog repo (/home/ubuntu/blog) and paper repo (/home/ubuntu/wm-redundancy-paper) are SEPARATE — `cd` to each
+  before git ops; chaining both in one command loses cwd. Blog push often rejected (user pushes from other
+  sessions) → `git pull --rebase` first. Blog commits ONLY .md; paper repo may commit .tex/figs/evidence.
+  Commit msgs end `Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>`.
+- Remote launches: write scripts LOCALLY + `scp` (heredocs over ssh got mangled twice); `mkdir -p` log dirs
+  BEFORE nohup redirects (silent-death trap, hit twice); ALWAYS verify a launch actually trains (pgrep + log
+  growth) — 3 launchers died silently this session.
+- The /loop is ScheduleWakeup-based = SESSION-BOUND. Re-arm in the new session.
+- Verification discipline is the project's soul: quote DISK not memory (the "367@5M" error), report n, firm
+  n=1→n≥3 before claiming (three framings died to +1 seed today), controls-first (SAC control overturned the
+  flagship; shaped-flat re-attributed the hierarchy win).
+
+# HANDOFF (2026-07-02 original) — TD-MPC-Glass positive-chase campaign (for new session / Fable 5)
 
 **Written 2026-07-02 by Opus 4.8 session, right before user switched sessions.**
 This is a live autonomous campaign. The loop that drives it is **session-bound** (ScheduleWakeup) — it
@@ -145,6 +206,16 @@ versions of both.
 
 ## SSH
 `ssh b3060` and `ssh b3060b` are configured. Filter vast.ai login banner noise by grepping it out.
+
+## PAPER-3 HARDENING CAMPAIGN (launched 2026-07-02 ~22:35, user asked to keep GPUs busy)
+The anatomy (PPO walled / SAC escapes / TD-MPC2 fast; value-pathway mechanism) was n=1 task. Hardening:
+- b3060 (4 GPUs): **WalkerRun WM-ablation** (3rd mechanism task, 5 arms × s1/2, driver_walk.sh,
+  DONE=/root/helios_wmablate/exp/wm_head_ablation_walk/WM_ABLATION_WALK_DONE) — does value-load-bearing hold on
+  a dense learnable task outside the exploration regime?
+- b3060b (4 GPUs): **CheetahRun anatomy replication** (/root/tdmpc_glass/exp/anatomy2_cheetah/): PPO-long 150M×3
+  seeds (GPU0/1, ANATOMY2_PPO_DONE), SAC 10M×2 (GPU2, ANATOMY2_SAC_DONE), TD-MPC2 1M anchors n=2 (GPU3,
+  ANATOMY2_TDMPC2_DONE). Prior data: PPO ~270@30M never ≥500; TD-MPC2 ~670@1M. Q: does SAC reach ~500-700 fast →
+  wall on-policy-specific on a 2nd task. Harvest → ledger + Part 9 addendum (or Part 10 if verdict-changing).
 
 ## GPU QUEUE (2026-07-02 — what to launch when a slot frees; goal = publishable findings)
 Papers: A (redundancy, finalizing — agent on figures/R²-excision), 2 (speed-of-learning, drafted), 3 (world-model-
