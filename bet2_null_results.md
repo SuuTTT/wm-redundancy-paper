@@ -374,7 +374,8 @@ Part 9 updated with final phrasing. Last 2 arms (policy s3/4) corroborative.
 711.1/671.1 pi. value-ablated 56.1/28.0 mppi, 43.7/37.2 pi — DEAD. policy-ablated 76.4/64.3 mppi, 48.1/34.5 pi —
 DEAD. reward-ablated 46.7/38.6 mppi (planner dead by construction) but pi 710.9/728.2 — FULL STRENGTH.**
 consistency-ablated at eval 4/20 already 433.9/571.3 (s1), 221.2/239.4 (s2) — alive and learning (finals pending).
-**THE 3-TASK MECHANISM TABLE IS NOW COMPLETE on the decisive cells (CheetahRun n=2 + HopperHop n=4 + WalkerRun
+CONSISTENCY FINALS (10/10, WM_ABLATION_WALK_DONE 2026-07-03 ~04:55): mppi 546.8/522.3, pi 674.0/570.0 —
+degraded ~25% but fully alive; mildest ablation on all 3 tasks. **THE 3-TASK MECHANISM TABLE IS NOW COMPLETE on the decisive cells (CheetahRun n=2 + HopperHop n=4 + WalkerRun
 n=2): the value-learning pathway (TD value loss + the policy trained from it) is INDIVIDUALLY NECESSARY on all
 three tasks; the reward head is planner-plumbing only on all three; the self-predictive consistency loss is the
 only merely-degrading component on all three.** Part 9 addendum lands with consistency finals.
