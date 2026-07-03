@@ -369,6 +369,16 @@ reward s3/4 confirm planner-only at n=4 (pi 225.5/188.7). PRECISE FINAL MECHANIS
 total failure); reward = planner-only; self-predictive consistency = the only merely-degrading component.
 Part 9 updated with final phrasing. Last 2 arms (policy s3/4) corroborative.
 
+### ✅ WALKERRUN WM-ABLATION — decisive cells FINAL (2026-07-03 ~03:10, 8/10 arms n_evals=20; consistency mid-run)
+`b3060:helios_wmablate/exp/wm_head_ablation_walk/jsonl/` (1M steps, n=2/arm): **none 731.2/679.6 mppi,
+711.1/671.1 pi. value-ablated 56.1/28.0 mppi, 43.7/37.2 pi — DEAD. policy-ablated 76.4/64.3 mppi, 48.1/34.5 pi —
+DEAD. reward-ablated 46.7/38.6 mppi (planner dead by construction) but pi 710.9/728.2 — FULL STRENGTH.**
+consistency-ablated at eval 4/20 already 433.9/571.3 (s1), 221.2/239.4 (s2) — alive and learning (finals pending).
+**THE 3-TASK MECHANISM TABLE IS NOW COMPLETE on the decisive cells (CheetahRun n=2 + HopperHop n=4 + WalkerRun
+n=2): the value-learning pathway (TD value loss + the policy trained from it) is INDIVIDUALLY NECESSARY on all
+three tasks; the reward head is planner-plumbing only on all three; the self-predictive consistency loss is the
+only merely-degrading component on all three.** Part 9 addendum lands with consistency finals.
+
 ### ✅ ANATOMY REPLICATION on CheetahRun (2026-07-02 ~23:45) — NO WALL; old Pareto PPO number was a budget/config artifact
 `b3060b:exp/anatomy2_cheetah/`. Tuned mujoco_playground PPO (no env-specific override; config audited), 285M
 steps/seed: **peaks 892.0 / 921.7 (done) / 910.9 (s33 @275M, finishing) — PPO SOLVES CheetahRun, 3/3.** SAC (tuned,
