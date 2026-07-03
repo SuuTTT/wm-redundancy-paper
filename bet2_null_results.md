@@ -375,6 +375,15 @@ Full n=6 value cell on HopperHop: **0.0 / 0.0 / 3.2 / 0.0 / 0.0 / 0.1** (gait NE
 loss, 6/6 seeds) vs none n=6 287–570 (found 6/6). The mechanism's headline cell is at publication-grade n.
 Part 9 updated (value n=4→n=6).
 
+### ✅ RATE-SHARPENING COMPLETE (2026-07-03 ~13:40) — all wall/barrier cells at final n
+Disk-verified finals: **PPO Stand n=8: 149.2/142.4/144.3/681.2/749.0/153.5/125.7/122.1 → 2/8 escape @285M.**
+**SAC Hop n=8 @5M: 207/235/274/47/131/273/67/273 → 5/8 ≥200**; 20M-run crossings (seeds 11-15): 4.1M/5.1M/6.2M/
+7.7M/7.7M → **5/5 by ~8M** (budget-indexed escape; PPO 0/5 @472M categorical). **SAC Stand @1M probe: 0/3 (peaks
+70/10/12)** vs TD-MPC2 2/2 @≤0.9M (962/948) → TD-MPC2's Stand efficiency edge REAL at matched 1M budget; SAC Stand
+5/6 by 5M. TD-MPC2 Stand s43 (n=3) in flight. FINAL claim set (Part 9 updated): categorical PPO wall on hop;
+graded barriers elsewhere; matched-1M column = TD-MPC2 solves both hopper tasks where neither model-free method
+solves either; reliability×efficiency ordering TD-MPC2 ≫ SAC ≫ PPO fully quantified.
+
 ### ⚠ WALL-PROBE EXTENSION n=4 (2026-07-03 ~10:10) — Stand wall is PROBABILISTIC, not categorical; SAC seed-dependent too
 `runs_ppo/seed4{3,4}.json`, `runs_sac/seed4{3,4}.json` (all done:true). **PPO Stand n=4: 149.2/142.4/144.3/681.2 —
 seed 44 ESCAPED (peak 681, final 619 @285M); 3/4 walled.** **SAC Stand n=4: 492.2/754.2/464.3/32.6 — seed 44
