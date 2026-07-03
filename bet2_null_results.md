@@ -483,3 +483,4 @@ no reliable level gap at larger budgets. Seeds 14/15 launching for the level-dis
    R²≈0.999 still cited in Part 5 reality-check/Part 6; unsourced "Pendulum 836 vs 46"/"3–4 orders" in Part 5 method map).
 
 ### ✅ STAND n=3 + WALKERRUN n=4 (2026-07-03 ~15:30) — TD-MPC2 Stand 962.3/948.1/942.7 (s43 best at 0.3M!, STAND_BUDGET_DONE); WalkerRun decisive arms n=4: none 731/680/699/723, value 56/28/39/38 dead 4/4, policy 76/64/83/53 dead 4/4 (s3/4 through >=900k). Mechanism table + all wall/barrier cells now at final n across the board. Part 9 updated.
+  ↳ 2026-07-03 ~16:20 WM_ABLATION_WALK_S34_DONE formal marker: policy s3/4 finals unchanged at 20/20 evals (83.1/53.1, dead) — published n=4 numbers stand.
