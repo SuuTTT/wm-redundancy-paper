@@ -369,6 +369,12 @@ reward s3/4 confirm planner-only at n=4 (pi 225.5/188.7). PRECISE FINAL MECHANIS
 total failure); reward = planner-only; self-predictive consistency = the only merely-degrading component.
 Part 9 updated with final phrasing. Last 2 arms (policy s3/4) corroborative.
 
+### ✅ VALUE-ABLATION WALL REPRODUCTION FIRMED n=6 (2026-07-03 ~09:05, WM_ABLATION_HOP_S56_DONE)
+Seeds 5/6 (none + value arms only): none mppi_best 373.7/306.6 (healthy); **value-ablated 0.0/0.1 — dead.**
+Full n=6 value cell on HopperHop: **0.0 / 0.0 / 3.2 / 0.0 / 0.0 / 0.1** (gait NEVER found without the TD value
+loss, 6/6 seeds) vs none n=6 287–570 (found 6/6). The mechanism's headline cell is at publication-grade n.
+Part 9 updated (value n=4→n=6).
+
 ### 🚩🚩 WALL-BOUNDARY PROBE (HopperStand, 2026-07-03 ~07:15) — THE WALL IS HOPPER-MORPHOLOGY-WIDE, NOT HOP-GAIT-SPECIFIC
 `b3060b:exp/wallprobe_hopperstand/`. Tuned PPO (Hopper-prefix override VERIFIED fired), 285M steps/seed:
 **peaks 149.2 / 142.4, finals 90.8 / 135.8 (n=2) — flat/oscillating at the end, WALLED on HopperStand too.**
