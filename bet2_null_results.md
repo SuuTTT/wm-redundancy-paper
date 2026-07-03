@@ -379,6 +379,11 @@ claim "PPO ~270-290 @30M, never reaches 500 on CheetahRun" (SYNTHESIS_beat_ppo.m
 BUDGET/CONFIG artifact — with the tuned config and adequate budget PPO reaches ~900. NET: the exploration wall is
 now tested against FIVE comparison settings (Finger, Pendulum-fixed, BallInCup, CheetahRun, HopperHop) and exists
 ONLY on HopperHop — maximally gait-discovery-specific, exactly Part 9's claim, now with n=4 no-wall controls.
+**ANATOMY2 COMPLETE (2026-07-03 02:27, ANATOMY2_TDMPC2_DONE):** fresh TD-MPC2 CheetahRun anchors peaks **727.0 /
+784.1 at ≤1M (n=2)** (`helios-rl/exp/tdmpc_glass/CheetahRun_anat2chee_s{31,32}/`). Final CheetahRun ordering:
+TD-MPC2 ~700-784 @1M ≪ SAC 918/912 @10M ≈ PPO 892-922 @285M — pure sample-efficiency hierarchy (~10× vs SAC,
+~100×+ vs PPO to comparable level), no wall, and here the model-free methods reach a slightly HIGHER level than
+TD-MPC2's 1M plateau (honest note: TD-MPC2 @1M may not be its asymptote either).
 
 ### ✅✅ HOPPERHOP WM-ABLATION COMPLETE 20/20 (2026-07-02 ~20:55) — CAMPAIGN'S FINAL EXPERIMENT CLOSED
 Policy s3/4 finals: mppi 0.2/1.5, pi 1.5/0.0 — ≈0 both readouts, corroborating s1/2. FINAL n=4 TABLE (mppi_best
