@@ -375,7 +375,16 @@ Full n=6 value cell on HopperHop: **0.0 / 0.0 / 3.2 / 0.0 / 0.0 / 0.1** (gait NE
 loss, 6/6 seeds) vs none n=6 287–570 (found 6/6). The mechanism's headline cell is at publication-grade n.
 Part 9 updated (value n=4→n=6).
 
-### 🚩🚩 WALL-BOUNDARY PROBE (HopperStand, 2026-07-03 ~07:15) — THE WALL IS HOPPER-MORPHOLOGY-WIDE, NOT HOP-GAIT-SPECIFIC
+### ⚠ WALL-PROBE EXTENSION n=4 (2026-07-03 ~10:10) — Stand wall is PROBABILISTIC, not categorical; SAC seed-dependent too
+`runs_ppo/seed4{3,4}.json`, `runs_sac/seed4{3,4}.json` (all done:true). **PPO Stand n=4: 149.2/142.4/144.3/681.2 —
+seed 44 ESCAPED (peak 681, final 619 @285M); 3/4 walled.** **SAC Stand n=4: 492.2/754.2/464.3/32.6 — seed 44
+FAILED; 3/4 solve @5M.** HONEST REVISED PICTURE: the categorical wall holds ONLY on HopperHop (PPO 0/5 ≥200
+@472M; SAC 3/3 @5M). HopperStand is a GRADED stochastic barrier for model-free methods: PPO escapes 1/4 at ~60×
+SAC's budget; SAC solves 3/4 at 5M; TD-MPC2 solves 1/1 (962 @0.65M; s42 → n=2 pending). Reliability×efficiency
+ordering (TD-MPC2 ≫ SAC ≫ PPO) is the durable claim; "categorical morphology wall" is retracted to
+"hop-gait categorical + Stand graded". Part 9 revised AGAIN (2nd revision today — the controls keep teaching).
+
+### 🚩🚩 WALL-BOUNDARY PROBE (HopperStand, 2026-07-03 ~07:15) — THE WALL IS HOPPER-MORPHOLOGY-WIDE, NOT HOP-GAIT-SPECIFIC (superseded by the n=4 extension above)
 `b3060b:exp/wallprobe_hopperstand/`. Tuned PPO (Hopper-prefix override VERIFIED fired), 285M steps/seed:
 **peaks 149.2 / 142.4, finals 90.8 / 135.8 (n=2) — flat/oscillating at the end, WALLED on HopperStand too.**
 SAC (tuned, n=2 @5M): **492.2 / 754.2 — solves.** REVISES Part 9's "gait-discovery-specific" framing: on-policy
