@@ -513,3 +513,5 @@ CheetahRun reward s3/s4: mppi 31/26 DEAD, pi 796/805 FULL (n=4 w/ 5/761). Consis
 ### ✅ PPO STAND RATE n=16 (2026-07-04 ~15:50, seeds 49-56 @285M ALL WALLED: 137/155/120/129/128/195/105/107) — ESCAPE RATE FINAL 2/16 (12.5%; both escapes s44=681 s45=749 were 120M-budget runs; all four 285M runs walled). The graded barrier is near-categorical: escape is rare, not 25%. SAC s47-50 in flight (n→10). Part 9 §1 updating.
 
 ### ✅ RATE_HARDEN_DONE (2026-07-04 ~16:20) — SAC Stand n=10 FINAL: solves 7/10 (492/754/464/921/932/897.4/924.1; fails 33/100/300 @5M). Stand three-method gradient FINAL: TD-MPC2 3/3 (<=0.9M) >> SAC 7/10 (5M) >> PPO 2/16 (120-285M). Stand-mech none arms complete 4/4 solving (911-939 mppi) — harness validates; value arms in flight.
+
+### ✅ SAC HOP RATE n=12 FINAL (2026-07-04 ~17:15, SAC_S912_DONE): >=200@5M in 6/12 (207/235/274/273/273/238; fails 47/131/67/76/89/115) = 50% at 5M; 20M-run crossings still 5/5 by ~8M. Budget-indexed escape curve final: 50%@5M -> 100%@~8M (vs PPO 0/5@472M, TD-MPC2 6/6@1M). TD-MPC2 Stand s44 healthy, s45 relaunch OK (3rd attempt; lesson: pkill pattern matched launch env-var in same cmdline).
