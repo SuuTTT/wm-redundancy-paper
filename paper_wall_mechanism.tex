@@ -77,6 +77,12 @@ matching SAC 918/912 at 10M; an earlier ``never ${\ge}500$'' scoring was a budge
 WalkerRun. The wall is therefore specific to the single-leg hopper's unstable, contact-timing-critical
 dynamics---categorical only for the hop itself.
 
+\textbf{Discriminator: AcrobotSwingup (unstable, contact-free).} PPO learns normally (267--344, $n{=}4$ at
+285M) --- \emph{the wall requires contact-criticality, not instability alone}. Conversely SAC is slow and
+inconsistent here even at 20M (42/207; 54--89 at 5M): the off-policy advantage is also task-class-specific.
+TD-MPC2 leads on both classes (429/422 within 1M) --- the value-pathway advantage is the most portable of the
+three. (TD-MPC2 HopperStand later firmed to 5/5: 962/948/943/959/959.)
+
 \section{Which loss does the work? The value pathway}\label{sec:mech}
 We zero one loss term at a time (from scratch; masks verified in logs) and evaluate both MPPI and policy-only
 returns, on CheetahRun, HopperHop, and WalkerRun, $n{\ge}4$ per decisive arm (HopperHop value cell $n{=}6$).
