@@ -500,3 +500,5 @@ CheetahRun s3/s4 (exp/wm_head_ablation/jsonl): none 721/795; value 37/58 mppi (p
 
 ### ✅ MECHANISM TABLE FULLY COMPLETE (2026-07-04 ~06:10, CHEETAH_FINAL2_DONE) — every arm n>=4 x 3 tasks
 CheetahRun reward s3/s4: mppi 31/26 DEAD, pi 796/805 FULL (n=4 w/ 5/761). Consistency s3/s4: 516/575 + 558/623 (n=4 w/ 367/541) — mildest confirmed. Nothing in the 5-arm x 3-task table remains below n=4. Part 9 §3 final.
+
+### 🚩 HUMANOID-STAND PROBE (2026-07-04 ~06:20): TD-MPC2 loss=nan by ~282k on HumanoidStand TOO — divergence is MORPHOLOGY-WIDE, not task-difficulty (hopper Stand solved at 0.3M; humanoid Stand nans by 0.28M). Killed. Walk 4M s43/s44 healthy at ~230k (divergence tally pending: s41 nan@2.46M, s42@~600k+ running, humstand nan@0.28M). §4b updated.
