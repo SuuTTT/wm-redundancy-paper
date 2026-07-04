@@ -497,3 +497,6 @@ HopperHop TD-MPC2 5M anchor finals (CSV HopperHop_hop5m_s3{3,4}): s33 best 393.2
 
 ### ✅ MECH_COMPLETE (2026-07-04 ~03:25) — mechanism table final: n>=4 all decisive arms x 3 tasks
 CheetahRun s3/s4 (exp/wm_head_ablation/jsonl): none 721/795; value 37/58 mppi (pi 7/8) DEAD; policy mppi 192/141 limps, pi 9/11 DEAD. Combined w/ s1/s2 + WalkerRun all-arms n=4 + HopperHop value n=6: the value-pathway law is fully firmed. Part 9 §3 updated + §4b humanoid addendum published (trifecta w/ s42-pending caveat).
+
+### ✅ MECHANISM TABLE FULLY COMPLETE (2026-07-04 ~06:10, CHEETAH_FINAL2_DONE) — every arm n>=4 x 3 tasks
+CheetahRun reward s3/s4: mppi 31/26 DEAD, pi 796/805 FULL (n=4 w/ 5/761). Consistency s3/s4: 516/575 + 558/623 (n=4 w/ 367/541) — mildest confirmed. Nothing in the 5-arm x 3-task table remains below n=4. Part 9 §3 final.
