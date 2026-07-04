@@ -502,3 +502,4 @@ CheetahRun s3/s4 (exp/wm_head_ablation/jsonl): none 721/795; value 37/58 mppi (p
 CheetahRun reward s3/s4: mppi 31/26 DEAD, pi 796/805 FULL (n=4 w/ 5/761). Consistency s3/s4: 516/575 + 558/623 (n=4 w/ 367/541) — mildest confirmed. Nothing in the 5-arm x 3-task table remains below n=4. Part 9 §3 final.
 
 ### 🚩 HUMANOID-STAND PROBE (2026-07-04 ~06:20): TD-MPC2 loss=nan by ~282k on HumanoidStand TOO — divergence is MORPHOLOGY-WIDE, not task-difficulty (hopper Stand solved at 0.3M; humanoid Stand nans by 0.28M). Killed. Walk 4M s43/s44 healthy at ~230k (divergence tally pending: s41 nan@2.46M, s42@~600k+ running, humstand nan@0.28M). §4b updated.
+  ↳ 06:50 walk s44 loss=nan @~0.53M (killed). DIVERGENCE TALLY: nan 3 (walk s41@2.46M, walk s44@0.53M, stand@0.28M) vs healthy-so-far 2 (s42@1.03M — log is tdmpc2_4m_seed42.log; s43@0.46M). TD-MPC2 humanoid divergence looks STOCHASTIC-but-frequent (~60%+ of runs), onset 0.3-2.5M.
