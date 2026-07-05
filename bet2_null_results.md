@@ -523,3 +523,6 @@ AcrobotSwingup = unstable but CONTACT-FREE. PPO n=4 @285M: 290.4/266.5/344.3/285
 
 ### ✅ STAND MECHANISM COMPLETE (2026-07-05 ~00:25, 19/20 arms formal, consistency_s2 @13/20 verdict-locked) — 4TH TASK, n=4 ALL ARMS
 HopperStand: none 937/926/946/911 (pi 924-950) all solve; value 7/13/9/6 DEAD; policy 34/18/9/20 (pi<=5) DEAD; reward mppi 270/301/542/265 vs pi 944/515/943/944 PLANNER-PLUMBING; consistency 898/816/821/818 (pi 760-930) MILDEST (near-full). The 5-arm law now spans FOUR tasks. Part 9 §3 updated.
+
+### ✅ NIGHT-FINAL HARDENING (2026-07-05 ~00:55, ACRO_N4_DONE):
+TD-MPC2 Acrobot n=4: 429.5/422.0/454.1/445.9 (<=1M) — tight, best of 3 methods. SAC-20M Acrobot n=4: 42.2/207.1/65.6/123.4 — slow+inconsistent CONFIRMED. **SAC HumanoidStand 918.5/922.5 (n=2) — SOLVES.** HUMANOID MATRIX COMPLETE: SAC solves BOTH tasks (Walk 4/5 625-909, Stand 2/2 ~920); PPO nan all configs; TD-MPC2 diverges/fails all runs. §4b + discriminator numbers final everywhere.
