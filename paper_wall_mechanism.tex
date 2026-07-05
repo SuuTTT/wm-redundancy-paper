@@ -103,6 +103,11 @@ $-$consistency & 367--558 ($\pi$ to 623) & ${\sim}$half strength, 4/4 find gait 
 self-predictive dynamics loss is the only component whose removal merely degrades.}
 \end{table}
 
+The pattern replicates on a fourth task, HopperStand ($n{=}4$/arm), which the full model solves in 0.3M steps:
+none 911--946 (all solve); value-ablated 6--13 and policy-ablated 9--34 --- dead; reward-ablated MPPI 265--542
+but $\pi$ 943--944; consistency-ablated 816--898 --- nearly no cut at all. \emph{Without the TD value loss,
+TD-MPC2 cannot even learn to stand.}
+
 ``The world model explores'' thus decomposes: the TD value signal trained through the latent discovers and
 ranks behavior; the self-predictive dynamics loss is a helpful regularizer, not the key.
 
