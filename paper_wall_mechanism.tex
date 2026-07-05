@@ -73,6 +73,13 @@ three-method gradient --- TD-MPC2 3/3 $\gg$ SAC 7/10 $\gg$ PPO 2/16 --- and the 
 (\emph{TD-MPC2 solves both hopper tasks at a budget where neither model-free method solves either}) are the
 headline statements.
 
+\begin{figure}[t]\centering
+\includegraphics[width=0.62\linewidth]{figures/fig_wall_curves.pdf}
+\caption{HopperHop seed curves on byte-identical MJX environments (log-$x$): tuned PPO stays below the escape
+threshold through hundreds of millions of steps; tuned SAC crosses at 4--8M; TD-MPC2 crosses within 1M.}
+\label{fig:wall}
+\end{figure}
+
 \textbf{No-wall controls.} FingerTurnHard (PPO ${\approx}973$, 3/3), Pendulum (solved once the config bug was
 fixed: 842/831), BallInCupCatch (discovery-luck for both algorithms), CheetahRun (PPO 892--922 at 285M,
 matching SAC 918/912 at 10M; an earlier ``never ${\ge}500$'' scoring was a budget/config artifact we retract),
@@ -104,6 +111,14 @@ $-$consistency & 367--558 ($\pi$ to 623) & ${\sim}$half strength, 4/4 find gait 
 \caption{Five-loss ablation. Removing the TD value loss reproduces the exploration wall itself; the
 self-predictive dynamics loss is the only component whose removal merely degrades.}
 \end{table}
+
+\begin{figure}[t]\centering
+\includegraphics[width=0.8\linewidth]{figures/fig_mechanism_bars.pdf}
+\caption{Five-loss ablation across four tasks (best MPPI return, mean over seeds, $n{\ge}2$ per bar; decisive
+arms $n{\ge}4$). Removing the TD value loss or the policy prior is fatal everywhere; removing the
+self-predictive consistency loss barely registers.}
+\label{fig:mech}
+\end{figure}
 
 The pattern replicates on a fourth task, HopperStand ($n{=}4$/arm), which the full model solves in 0.3M steps:
 none 911--946 (all solve); value-ablated 6--13 and policy-ablated 9--34 --- dead; reward-ablated MPPI 265--542
