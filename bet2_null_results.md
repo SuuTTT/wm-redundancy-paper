@@ -526,3 +526,5 @@ HopperStand: none 937/926/946/911 (pi 924-950) all solve; value 7/13/9/6 DEAD; p
 
 ### ✅ NIGHT-FINAL HARDENING (2026-07-05 ~00:55, ACRO_N4_DONE):
 TD-MPC2 Acrobot n=4: 429.5/422.0/454.1/445.9 (<=1M) — tight, best of 3 methods. SAC-20M Acrobot n=4: 42.2/207.1/65.6/123.4 — slow+inconsistent CONFIRMED. **SAC HumanoidStand 918.5/922.5 (n=2) — SOLVES.** HUMANOID MATRIX COMPLETE: SAC solves BOTH tasks (Walk 4/5 625-909, Stand 2/2 ~920); PPO nan all configs; TD-MPC2 diverges/fails all runs. §4b + discriminator numbers final everywhere.
+
+### ✅ ENTROPY-KNOB CONTROL (2026-07-05 ~01:45, ENTROPY_SWEEP_DONE): HopperHop wall SURVIVES entropy_cost x3 (peaks 4.2/73.9) and x10 (48.1/64.1), n=2 each @150M — same <=74 class as baseline 53.8, none near 200. The categorical wall is NOT an under-exploration-hyperparameter artifact. Part 9 §1 + Paper 3 updated.
