@@ -62,9 +62,9 @@ we audit resolved configurations for every run after discovering that \texttt{Pe
 \section{The exploration wall, budget-indexed}\label{sec:wall}
 \textbf{HopperHop --- categorical for PPO.} Tuned PPO: peak 53.8, 0/5 seeds ${\ge}200$ through 472M steps/seed;
 the wall also survives the standard exploration knob (entropy cost $\times 3$ and $\times 10$: peaks 4--74,
-$n{=}2$ each at 150M). On the \emph{graded} HopperStand barrier, by contrast, entropy $\times 3$ lifted one of
-two seeds over the threshold (627 vs.\ 118; $\times 10$: 132/141 both walled) --- the knob can occasionally
-shift a graded barrier but never dents the categorical wall.
+$n{=}2$ each at 150M). On the \emph{graded} HopperStand barrier, by contrast, entropy $\times 3$ put 1/4 seeds over the threshold
+(627 vs.\ 118--150; $\times 10$: 0/4, 116--185) --- a rate consistent with the baseline's 2/16 escape lottery
+rather than a repair. The knob neither repairs the graded barrier nor dents the categorical wall.
 SAC crosses 200 in 6/12 seeds by 5M and 5/5 by ${\sim}8$M (crossings 4.1--7.7M in 20M runs). TD-MPC2: 6/6 by
 ${\sim}1$M; 5M bests 295--481 ($n{=}4$, mean ${\sim}412$).
 
