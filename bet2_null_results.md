@@ -531,3 +531,5 @@ TD-MPC2 Acrobot n=4: 429.5/422.0/454.1/445.9 (<=1M) — tight, best of 3 methods
 
 ### ⚠️→✅ STAND ENTROPY CONTROL (2026-07-05 ~10:35, STAND_ENT_DONE) — HONEST REVISION, informative:
 PPO HopperStand entropy_cost x3: 118.3 / **627.3 — 1 of 2 seeds ESCAPED**; x10: 131.6/141.0 (both walled). Contrast: HopperHop survived x3 AND x10 (4-74, 4 arms). VERDICT: the exploration knob can occasionally shift the GRADED Stand barrier (consistent with baseline 2/16 escapes) but never the CATEGORICAL Hop wall. Sharpens graded-vs-categorical with a causal knob. Part 9 §1 + Paper 3 updated with the split verdict.
+
+### ✅ STAND ENTROPY n=4 FINAL (2026-07-05 ~11:35, STAND_ENT2_DONE): em3: 627.3/118.3/149.9/141.4 = **1/4 escaped**; em10: 131.6/141.0/184.7/115.5 = **0/4** (all in 105-195 wall band). vs baseline 2/16. VERDICT FIRMED: entropy x3's 1/4 is consistent with the baseline graded escape lottery (~1-in-8), NOT a repair; x10 0/4. Neither dents the categorical Hop wall (4-74). Wording finalized in Part 9 §1 + Paper 3.
