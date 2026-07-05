@@ -520,3 +520,6 @@ CheetahRun reward s3/s4: mppi 31/26 DEAD, pi 796/805 FULL (n=4 w/ 5/761). Consis
 
 ### ✅ ACROBOT DISCRIMINATOR COMPLETE (2026-07-04 ~21:55, ACROBOT_PROBE_DONE + SAC20M_ACRO_DONE)
 AcrobotSwingup = unstable but CONTACT-FREE. PPO n=4 @285M: 290.4/266.5/344.3/285.7 — learns fine, NO WALL → the on-policy wall REQUIRES contact-criticality, not instability alone. SAC: 88.6/53.8/60.5 @5M (n=3) and 42.2/207.1 @20M (n=2) — slow AND inconsistent even at 4x budget → the off-policy advantage is also task-class-specific. TD-MPC2: 429.5/422.0 (n=2, <=1M) — best on BOTH task classes; the value-pathway advantage is the most portable of the three. Part 9 §1 discriminator para + Stand 5/5 fold; Paper 3 updated.
+
+### ✅ STAND MECHANISM COMPLETE (2026-07-05 ~00:25, 19/20 arms formal, consistency_s2 @13/20 verdict-locked) — 4TH TASK, n=4 ALL ARMS
+HopperStand: none 937/926/946/911 (pi 924-950) all solve; value 7/13/9/6 DEAD; policy 34/18/9/20 (pi<=5) DEAD; reward mppi 270/301/542/265 vs pi 944/515/943/944 PLANNER-PLUMBING; consistency 898/816/821/818 (pi 760-930) MILDEST (near-full). The 5-arm law now spans FOUR tasks. Part 9 §3 updated.
