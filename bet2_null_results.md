@@ -528,3 +528,6 @@ HopperStand: none 937/926/946/911 (pi 924-950) all solve; value 7/13/9/6 DEAD; p
 TD-MPC2 Acrobot n=4: 429.5/422.0/454.1/445.9 (<=1M) — tight, best of 3 methods. SAC-20M Acrobot n=4: 42.2/207.1/65.6/123.4 — slow+inconsistent CONFIRMED. **SAC HumanoidStand 918.5/922.5 (n=2) — SOLVES.** HUMANOID MATRIX COMPLETE: SAC solves BOTH tasks (Walk 4/5 625-909, Stand 2/2 ~920); PPO nan all configs; TD-MPC2 diverges/fails all runs. §4b + discriminator numbers final everywhere.
 
 ### ✅ ENTROPY-KNOB CONTROL (2026-07-05 ~01:45, ENTROPY_SWEEP_DONE): HopperHop wall SURVIVES entropy_cost x3 (peaks 4.2/73.9) and x10 (48.1/64.1), n=2 each @150M — same <=74 class as baseline 53.8, none near 200. The categorical wall is NOT an under-exploration-hyperparameter artifact. Part 9 §1 + Paper 3 updated.
+
+### ⚠️→✅ STAND ENTROPY CONTROL (2026-07-05 ~10:35, STAND_ENT_DONE) — HONEST REVISION, informative:
+PPO HopperStand entropy_cost x3: 118.3 / **627.3 — 1 of 2 seeds ESCAPED**; x10: 131.6/141.0 (both walled). Contrast: HopperHop survived x3 AND x10 (4-74, 4 arms). VERDICT: the exploration knob can occasionally shift the GRADED Stand barrier (consistent with baseline 2/16 escapes) but never the CATEGORICAL Hop wall. Sharpens graded-vs-categorical with a causal knob. Part 9 §1 + Paper 3 updated with the split verdict.
