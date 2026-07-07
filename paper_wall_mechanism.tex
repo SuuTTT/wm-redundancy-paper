@@ -128,14 +128,16 @@ none 911--946 (all solve); value-ablated 6--13 and policy-ablated 9--34 --- dead
 but $\pi$ 943--944; consistency-ablated 816--898 --- nearly no cut at all. \emph{Without the TD value loss,
 TD-MPC2 cannot even learn to stand.}
 
-The ablation's mildest cut is in fact a \emph{task-class-indexed} removability result. Training
-consistency-OFF from scratch at the full 5M budget: on exploration-bound HopperHop the stripped agent scores
+The ablation's mildest cut is not uniformly removable, and the pattern is sharper than a task-class split.
+Training consistency-OFF from scratch at the full 5M budget: on HopperHop the stripped agent scores
 165/475/481/511 ($n{=}4$) against the full model's $420 \pm 113$ ($n{=}12$) --- three seeds at the top of the
-full band, reaching 440+ by ${\sim}2$M; on dense WalkerRun it plateaus at 537/574/554/594 (mean 565) against
-the full model's 709--782 (mean 737), a $-23\%$ gap with non-overlapping ranges; on dense CheetahRun the gap
-replicates harder --- stripped 516--528 (mean 524) vs.\ full 782--904 (mean 849), $-38\%$. The self-predictive loss is
-removable where directed exploration is the bottleneck and load-bearing where dense state-tracking is ---
-the same task-class dependence as every method ordering in this paper.
+full band, reaching 440+ by ${\sim}2$M --- but on every other task tested the stripped agent loses badly:
+WalkerRun 537--594 (mean 565) vs.\ 709--782 (mean 737), $-23\%$; CheetahRun 516--528 (mean 524) vs.\ 782--904
+(mean 849), $-38\%$; AcrobotSwingup 233--352 (mean 284) vs.\ 488--533 (mean 511), $-44\%$ --- all
+non-overlapping ($n{=}4$ per cell). Acrobot is exploration-flavored, so ``removable when exploration-bound''
+does not survive; the reading that fits all four tasks is that the self-predictive loss underwrites MPPI
+rollout quality wherever the \emph{planner} carries learning, and HopperHop --- where the policy head learns
+the behavior directly --- is the one task where it is redundant.
 
 ``The world model explores'' thus decomposes: the TD value signal trained through the latent discovers and
 ranks behavior; the self-predictive dynamics loss is a helpful regularizer, not the key.
