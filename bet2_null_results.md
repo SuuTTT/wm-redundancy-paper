@@ -560,3 +560,16 @@ Direct 8M runs, fresh seeds: HopperHop s51 139.2, s52 139.9 — **0/2 crossed 20
 ### ⚠️ PAPER-4 TASK-4 STRIPPED (2026-07-07 05:16, SUFFACRO_DONE): stripped-Acrobot 5M finals **297.0/232.7/351.8/256.4 (mean 284)** vs full 533/511/513/488 (mean 511) = **-44%, non-overlapping**. THE CLEAN EXPLORATION/DENSE SPLIT BREAKS: removability held only on Hop (3/4 top-of-band). Revised reading: the consistency loss supports MPPI rollout quality wherever the planner carries learning (Acrobot -44%, Walker -23%, Cheetah -38% are all planner-led); HopperHop — where the policy head can learn the behavior directly — is the removable case. Cart-sparse (task 5, both arms in flight) tests this revision.
 
 ### PAPER-4 TASK-5 FULL BASELINE (2026-07-07 07:45, CART5M_DONE): TD-MPC2 full CartpoleSwingupSparse 5M bests, n=4: **0.0/0.0/1.3/0.0** — vanilla TD-MPC2 stalls this sparse task at 5M (matches its known Part-18-era behavior; expl_until=25000 default). Task-5 sufficiency cell is therefore likely uninformative BOTH-FAIL (stripped s41-44 verdict ~13:30); the sufficiency grid's evidentiary core = the 4 solved tasks (Hop removable; Walker/Cheetah/Acrobot -23/-38/-44%).
+
+### 🏁 PAPER-4 TASK-5 STRIPPED + 2x5 GRAND VERDICT (2026-07-07 14:12): stripped-CartpoleSwingupSparse 5M finals **0.00/0.00/0.00/0.00 (n=4)** = full baseline 0/0/1.3/0 → **BOTH-FAIL cell, uninformative for sufficiency** (the full model itself stalls this sparse task; not a probe of the consistency loss). 
+**2x5 SUFFICIENCY GRID — FINAL (evidentiary core = the 4 tasks the full model solves):**
+
+| Task | stripped consistency-OFF @5M (n=4) | full baseline | gap | verdict |
+|---|---|---|---|---|
+| HopperHop (pi-learnable) | 165/475/481/511 | 420±113 (n=12) | ~0 | REMOVABLE (3/4 top-of-band) |
+| WalkerRun | 537/574/554/594 (565) | 709/705/753/782 (737) | -23% | load-bearing |
+| CheetahRun | 527/528/516/524 (524) | 903/904/782/806 (849) | -38% | load-bearing |
+| AcrobotSwingup | 297/233/352/256 (284) | 533/511/513/488 (511) | -44% | load-bearing |
+| CartpoleSwingupSparse | 0/0/0/0 | 0/0/1.3/0 | n/a | both-fail (uninformative) |
+
+**THESIS (survives all 4 informative tasks): the consistency (self-predictive) loss underwrites MPPI rollout quality wherever the PLANNER carries learning (Walker/Cheetah/Acrobot all planner-led → load-bearing); HopperHop — where the policy head learns the behavior directly and the planner mostly amplifies — is the one task where it is redundant.** An n=8 replication of the HopperHop removable cell (stripped s45-48) is finishing to firm the lone low seed (165).
