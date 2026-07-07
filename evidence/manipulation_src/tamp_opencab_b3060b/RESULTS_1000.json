@@ -1,0 +1,42 @@
+{
+  "controller": "TAMP good-branch grasp_cmd direct + IK push",
+  "n_per_seed": 256,
+  "steps": 1000,
+  "metric": "box_target>=0.9 (ENV, not shaped); reached_box latch @0.012",
+  "per_seed": {
+    "2024": {
+      "reached_rate": 0.875,
+      "success_rate": 0.875,
+      "mean_max_box_target": 0.8352,
+      "p90_max_box_target": 0.9614,
+      "final_handle_x_mean": 0.3229
+    },
+    "7": {
+      "reached_rate": 0.8438,
+      "success_rate": 0.8438,
+      "mean_max_box_target": 0.8059,
+      "p90_max_box_target": 0.9614,
+      "final_handle_x_mean": 0.3284
+    },
+    "99": {
+      "reached_rate": 0.8789,
+      "success_rate": 0.8789,
+      "mean_max_box_target": 0.8388,
+      "p90_max_box_target": 0.9613,
+      "final_handle_x_mean": 0.333
+    },
+    "1000": {
+      "reached_rate": 0.8594,
+      "success_rate": 0.8594,
+      "mean_max_box_target": 0.8206,
+      "p90_max_box_target": 0.9614,
+      "final_handle_x_mean": 0.3258
+    }
+  },
+  "mean_reached_rate": 0.8643,
+  "mean_success_rate": 0.8643,
+  "ppo_baseline_peak_success": 0.832,
+  "ppo_baseline_final_success": 0.7188,
+  "ppo_reached_rate": 1.0,
+  "part40_analytic_reached_rate": 0.05
+}

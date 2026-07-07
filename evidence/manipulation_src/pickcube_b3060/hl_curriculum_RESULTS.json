@@ -1,0 +1,74 @@
+{
+  "experiment": "#8 hard-config curriculum (prioritized resets) on in-loop residual",
+  "task": "PandaPickCube (mujoco_playground, state-based)",
+  "box": "b3060 (vast 41649155), 4x RTX3060 12GB, SHARED (foreign tenant on GPU2/3); used GPU0/1",
+  "metric": "real success = max over 1000-step rollout of metrics[box_target]>=0.9 (grasp-gated); n=256; evaluated on UNIFORM held-out config distribution (RES_CURRICULUM unset at eval) for an honest number. PEAK + FINAL reported.",
+  "baseline_to_beat": {
+    "in_loop_residual_part27_real_success": 0.79
+  },
+  "curriculum_mechanism": {
+    "file": "/root/helios-rl/exp/tdmpc_glass/hl_curriculum/residual_env_curriculum.py",
+    "class": "CurriculumResidualPickCube(ResidualPickCube)",
+    "design": "per-env ring buffer (K=64) of recently-FAILED (box0,target) configs threaded through brax AutoResetWrapper_preserve_info; full_reset=True; ~50%% resets replay a failed config + ~50%% uniform. Selection+box-replacement at first step of each episode (is_new) because the wrapper hides preserve_info from reset(). Failure = episode max box_target<0.9.",
+    "in_loop_residual": "inherited verbatim (alpha=1.0, phase-z Markov obs, milestone shaping); shared residual_env.py NOT edited",
+    "validated": {
+      "buffer_fills": true,
+      "fail_n_reached": 29,
+      "replay_rate_measured": 0.479,
+      "replay_rate_target": 0.5,
+      "launcher_boots": true,
+      "smoke_controller_baseline_success": 0.109
+    }
+  },
+  "training_config": "brax PPO official manipulation_params PandaPickCube branch: num_envs=2048, episode_length=150, unroll=10, lr=1e-3, entropy=2e-2, discounting=0.97, num_minibatches=32, batch=512, num_evals=21. num_timesteps target=40M; brax step counter overshoots to 65.5M (ceil rounding + num_resets_per_eval). alpha fixed=1.0.",
+  "uniform_eval_real_success": {
+    "control_no_curriculum": {
+      "s1": {
+        "peak_success": 0.793,
+        "peak_step": 58982400,
+        "peak_reached": 0.9961,
+        "peak_mbt": 0.9066,
+        "final_success": 0.7539,
+        "final_step": 65536000,
+        "n_ckpts": 20
+      },
+      "s2": {
+        "peak_success": 0.7969,
+        "peak_step": 49152000,
+        "peak_reached": 0.9922,
+        "peak_mbt": 0.9042,
+        "final_success": 0.7461,
+        "final_step": 65536000,
+        "n_ckpts": 20
+      }
+    },
+    "curriculum": {
+      "s1": {
+        "peak_success": 0.1172,
+        "peak_step": 26214400,
+        "peak_reached": 0.9961,
+        "peak_mbt": 0.7869,
+        "final_success": 0.0234,
+        "final_step": 65536000,
+        "n_ckpts": 20
+      },
+      "s2": {
+        "peak_success": 0.0898,
+        "peak_step": 3276800,
+        "peak_reached": 0.9688,
+        "peak_mbt": 0.6112,
+        "final_success": 0.082,
+        "final_step": 65536000,
+        "n_ckpts": 20
+      }
+    }
+  },
+  "summary": {
+    "control_peak_mean": 0.795,
+    "curriculum_peak_mean": 0.1035,
+    "delta_curriculum_minus_control": -0.6915
+  },
+  "verdict": "NO (strong negative). Hard-config curriculum does NOT lift uniform-eval real success above 0.79; it CATASTROPHICALLY COLLAPSES it: control (no curriculum) peak 0.79/0.80 (mean 0.795, reproduces the 0.79 bar), curriculum peak 0.12/0.09 (mean 0.103). Curriculum training reward also depressed (~850 vs control ~1200) and learns slower. The curriculum policy still REACHES the box (reached~0.97-1.0) but fails the lift-to-target on uniform configs (low mbt) -> overfits the hard-config tail / destabilizes the in-loop residual.",
+  "confound_honest_note": "The control used full_reset=False (cached per-env config, the stock residual training regime), while the curriculum REQUIRED full_reset=True (re-reset per episode) for prioritized resets. So this A/B conflates the prioritized-failed sampling with the full_reset training regime. A cleaner isolation would add a third arm: full_reset=True + UNIFORM resets (no replay). As implemented, the prioritized-reset curriculum is a clear net loss; whether full_reset alone or the hard-config oversampling is the dominant cause is not isolated here. Either way, the curriculum-as-designed does not help.",
+  "honesty_note": "all numbers from real rollouts written to per-run JSON (eval_*.json); eval on UNIFORM held-out distribution (RES_CURRICULUM unset) so the curriculum distribution cannot game the reported number. n=256, 1000-step, alpha=1.0."
+}

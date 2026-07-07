@@ -1,0 +1,260 @@
+{
+ "title": "Manipulation methods benchmark (Paper B headline table)",
+ "generated": "2026-06-27",
+ "metric": "REAL success = max over rollout of env metric box_target >= 0.9 (grasp-gated; ENV metric, NOT shaped reward); n=256 episodes per eval; identical scoring to TD-MPC2 (eval_curve.py).",
+ "protocols": {
+  "primary": "150-step (Part-44 style) and 1000-step rollout; success is primary; we report peak-by-success and final.",
+  "sample_efficiency": "env-steps to first/sustained >=0.95 real success."
+ },
+ "ci_method": "mean +/- 95% CI (1.96 * sd / sqrt(n)) over seeds; CI omitted (null) when n<2.",
+ "boxes": {
+  "b3060": "vast 4x RTX3060, /root/helios-rl/.venv (jax0.10.2, brax0.14.2)",
+  "b3060b": "vast 4x RTX3060, /root/tdmpc_glass (residual-on-TAMP + TAMP-alone live here)"
+ },
+ "verification_note": "Every number below is read from a real eval JSON (path + n shown). '\u2014' = genuine gap, never fabricated.",
+ "tasks": {
+  "PandaPickCube": {
+   "PPO": {
+    "status": "harvested",
+    "official_config_20M": {
+     "success_peak": 0.6602,
+     "peak_step": 32768000,
+     "success_final": 0.6602,
+     "n_eps": 256,
+     "n_seeds": 1,
+     "protocol_steps": 1000,
+     "note": "OFFICIAL mujoco_playground manipulation_params PandaPickCube branch (the fair comparator). brax step counter overshoots 20M target to 32.77M.",
+     "source": "b3060:/root/helios-rl/exp/tdmpc_glass/baselines_ppo_sac/RESULTS.json (key PPO)"
+    },
+    "extended_config_100M": {
+     "success_peak": 0.832,
+     "peak_step": 108134400,
+     "success_final": 0.7188,
+     "final_step": 113049600,
+     "n_eps": 256,
+     "n_seeds": 1,
+     "protocol_steps": 1000,
+     "note": "Longer-trained PPO (peaks 0.83 at ~108M, then degrades to 0.72).",
+     "source": "b3060:/root/helios-rl/exp/tdmpc_glass/baselines_ppo_sac/PPO_100_RESULT.json"
+    }
+   },
+   "abstraction_inloop_residual": {
+    "status": "harvested n=2 (s1,s2) + re-run n=2 (s3,s4) this session -> n=4",
+    "method": "analytic option-controller + in-loop learned PPO residual; executed = clip(a_HL + alpha*residual), alpha fixed=1.0; obs=(s,z); residual trained with brax PPO (official PandaPickCube config), 40M target (step counter overshoots).",
+    "n_seeds": 4,
+    "success_peak_mean_n4": 0.6211,
+    "success_peak_ci95_n4": 0.3394,
+    "success_peak_mean": 0.6211,
+    "success_peak_ci95": 0.3394,
+    "per_seed_peak": {
+     "s1": 0.793,
+     "s2": 0.7969,
+     "s3": 0.793,
+     "s4": 0.1016
+    },
+    "per_seed_final": {
+     "s1": 0.7539,
+     "s2": 0.7461,
+     "s3": 0.7695,
+     "s4": 0.1016
+    },
+    "per_seed_peak_step": {
+     "s1": 58982400,
+     "s2": 49152000,
+     "s3": 39321600,
+     "s4": 55705600
+    },
+    "non_collapsed_3of4": {
+     "mean": 0.7943,
+     "ci95": 0.00255,
+     "n": 3,
+     "note": "s1,s2,s3 cluster tightly at ~0.79; s4 effectively collapsed (peak only 0.1016, residual mostly fails the pick: box_target stays low through ~49M, recovers only marginally at the end) -> seed-level near-failure, 1/4 seeds."
+    },
+    "n_eps": 256,
+    "protocol_steps": 1000,
+    "eval_distribution": "UNIFORM held-out config distribution (RES_CURRICULUM unset at eval), honest.",
+    "source": "b3060: hl_curriculum/RESULTS.json (s1,s2 = uniform_eval_real_success.control_no_curriculum); hl_curriculum/eval_ctrl_s3.json, eval_ctrl_s4.json (s3,s4 re-run this session from control_logs/PandaPickCube-*-ctrl_nocurr_s{3,4} checkpoints, same eval_residual_curve.py protocol)",
+    "reference_part27": "prior in-loop residual reported 0.79 (Part 27); reproduced here as 0.79 on 3/4 seeds; 1 seed (s4) effectively collapsed (peak 0.10).",
+    "honest_note": "n=2 cherry (s1,s2) reads 0.795; the honest n=4 is 0.621 +/- 0.339 because 1/4 seeds collapsed (s4 peak 0.10). Headline should use 0.79 (3/4 succeed) with the 1/4 collapse rate disclosed, OR the n=4 mean 0.621."
+   },
+   "curriculum": {
+    "status": "harvested (NEGATIVE)",
+    "method": "hard-config prioritized-reset curriculum on top of the in-loop residual (oversample recently-failed configs).",
+    "n_seeds": 2,
+    "success_peak_mean": 0.1035,
+    "success_peak_ci95": 0.02685,
+    "per_seed_peak": {
+     "s1": 0.1172,
+     "s2": 0.0898
+    },
+    "per_seed_final": {
+     "s1": 0.0234,
+     "s2": 0.082
+    },
+    "n_eps": 256,
+    "protocol_steps": 1000,
+    "verdict": "STRONG NEGATIVE: curriculum catastrophically collapses real success (0.795 control -> 0.103 curriculum); policy still reaches box (~0.97-1.0) but fails the pull/place. delta = -0.69.",
+    "source": "b3060:/root/helios-rl/exp/tdmpc_glass/hl_curriculum/RESULTS.json (uniform_eval_real_success.curriculum, summary, verdict)"
+   },
+   "TAMP": {
+    "status": "n/a",
+    "value": null,
+    "note": "TAMP (manipulation planner) column applies to PandaOpenCabinet only; PickCube's analytic-controller route is the in-loop residual above.",
+    "source": null
+   },
+   "TDMPC2": {
+    "status": "harvested (reference)",
+    "success": 0.0,
+    "n_seeds": null,
+    "note": "Pure TD-MPC2 (and jumpy variant) reward-hacks: hovers to farm dense gripper_box shaping; 0% REAL success at 1-1.5M steps. Demo-seeded TD-MPC2 also 0.0 real success (hl_demoseed real_success_peak_overall=0.0). Heuristic controller ~9.4%.",
+    "source": "b3060:/root/helios-rl/exp/tdmpc_glass/baselines_ppo_sac/RESULTS.json (reference_tdmpc2); b3060:/root/helios-rl/exp/tdmpc_glass/hl_demoseed/RESULTS.json"
+   }
+  },
+  "PandaOpenCabinet": {
+   "PPO": {
+    "status": "harvested",
+    "success_peak": 0.9883,
+    "peak_step": 29491200,
+    "success_final": 0.9844,
+    "final_step": 55705600,
+    "success_peak_150step": 0.9805,
+    "peak_step_150": 39321600,
+    "n_eps": 256,
+    "n_seeds": 1,
+    "protocol_steps": 1000,
+    "sample_efficiency": {
+     "steps_to_0.95_success": 22937600,
+     "note": "first crosses ~0.94 at 22.9M, sustained ~0.98 from 39.3M; before ~22M success=0 (reaches handle but cannot pull)."
+    },
+    "source": "b3060:/root/helios-rl/exp/tdmpc_glass/baselines_ppo_sac/p46_ppo_oc_success.json (1000-step), p46_ppo_oc_150step.json (150-step)"
+   },
+   "abstraction_curriculum_release": {
+    "status": "harvested",
+    "method": "structured-skill bootstrap (boot at 6.5M) then RELEASE to free RL (warmstart_then_free).",
+    "n_seeds": 7,
+    "success_peak_mean": 0.98719,
+    "success_peak_ci95": 0.00571,
+    "per_seed_peak": {
+     "s1": 1.0,
+     "s2": 0.9844,
+     "s3": 0.9922,
+     "s4": 0.9805,
+     "s5": 0.9805,
+     "s6": 0.9922,
+     "s7": 0.9805
+    },
+    "per_seed_final": {
+     "s1": 1.0,
+     "s2": 0.9805,
+     "s3": 0.9922,
+     "s4": 0.9766,
+     "s5": 0.6328,
+     "s6": 0.9805,
+     "s7": 0.9805
+    },
+    "per_seed_steps_to_0.95": {
+     "s1": 4915200,
+     "s2": 1638400,
+     "s3": 3276800,
+     "s4": 8192000,
+     "s5": 16384000,
+     "s6": 3276800,
+     "s7": 6553600
+    },
+    "sustained_count": "6/7 sustain >=0.90 to end (s5 final drops to 0.63 after peaking 0.98).",
+    "n_eps": 256,
+    "protocol_steps": 1000,
+    "source": "b3060:/root/helios-rl/hl_opencabinet/beatppo_C/release/EVAL_boot6p5_s{1..7}.json"
+   },
+   "TAMP_alone": {
+    "status": "harvested",
+    "method": "TAMP good-branch grasp_cmd direct + IK push (analytic plan, no learning).",
+    "n_seeds": 4,
+    "success_mean_150step": 0.82713,
+    "success_ci95_150step": 0.01301,
+    "success_mean_1000step": 0.86428,
+    "success_ci95_1000step": 0.01572,
+    "per_seed_150step": {
+     "2024": 0.832,
+     "7": 0.8086,
+     "99": 0.8398,
+     "1000": 0.8281
+    },
+    "n_eps": 256,
+    "source": "b3060b:/root/tdmpc_glass/exp/tdmpc_glass/tamp_opencab/RESULTS.json (150), RESULTS_1000.json (1000)"
+   },
+   "residual_on_TAMP": {
+    "status": "harvested",
+    "method": "in-loop learned residual on top of the TAMP controller; executed = clip(a_TAMP + residual), alpha=1.0; PPO-trained residual.",
+    "n_seeds": 7,
+    "success_peak_mean": 0.9805,
+    "success_peak_ci95": 0.0,
+    "per_seed_peak": {
+     "s1": 0.9805,
+     "s2": 0.9805,
+     "s3": 0.9805,
+     "s4": 0.9805,
+     "s5": 0.9805,
+     "s6": 0.9805,
+     "s7": 0.9805
+    },
+    "per_seed_final": {
+     "s1": 0.9805,
+     "s2": 0.9805,
+     "s3": 0.9805,
+     "s4": 0.9805,
+     "s5": 0.9805,
+     "s6": 0.9805,
+     "s7": 0.9805
+    },
+    "per_seed_steps_to_0.95": {
+     "s1": 3276800,
+     "s2": 1638400,
+     "s3": 1638400,
+     "s4": 1638400,
+     "s5": 3276800,
+     "s6": 3276800,
+     "s7": 1638400
+    },
+    "sustained_count": "6/7 sustained_0.95_last3=true (s6 dipped mid-run but final=0.9805).",
+    "n_eps": 256,
+    "protocol_steps": 150,
+    "protocol_1000_check": {
+     "seed3": {
+      "success": 0.9805,
+      "step": 32768000
+     },
+     "source": "res_eval_s3_1000.json"
+    },
+    "source": "b3060b:/root/tdmpc_glass/exp/tdmpc_glass/tamp_opencab/res_eval_s{1..7}.json (150-step)"
+   },
+   "TDMPC2": {
+    "status": "gap",
+    "value": null,
+    "note": "No usable TD-MPC2 OpenCabinet eval (p47_tdmpc2_oc_smoke CSV is header-only/empty). TD-MPC2 reference behavior (reward-hack, ~0 real success) carries over from PickCube. Marked '\u2014'.",
+    "source": "b3060:/root/helios-rl/exp/tdmpc_glass/PandaOpenCabinet_p47_tdmpc2_oc_smoke/seed_1.csv (empty)"
+   }
+  }
+ },
+ "firmed": {
+  "PandaPickCube_abstraction_n8": {
+   "seeds": {
+    "s1": 0.794,
+    "s2": 0.794,
+    "s3": 0.793,
+    "s4": 0.109,
+    "s5": 0.785,
+    "s6": 0.809,
+    "s7": 0.789,
+    "s8": 0.797
+   },
+   "n": 8,
+   "mean": 0.709,
+   "non_collapsed_mean": 0.794,
+   "non_collapsed_n": 7,
+   "collapse_frac": 0.125,
+   "note": "7/8 seeds ~0.79 (beats fair-budget PPO 0.66); 1/8 collapse ~0.11. Real-success box_target>=0.9 n=256.",
+   "src": "hl_curriculum/eval_ctrl_s{1..8}.json"
+  }
+ }
+}

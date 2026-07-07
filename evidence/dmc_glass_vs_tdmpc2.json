@@ -1,0 +1,293 @@
+{
+ "protocol": "DMC, 1M env-steps, return at final converged ckpt (>=900k), n seeds",
+ "tasks": {
+  "AcrobotSwingup": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 296.1,
+    "std": 11.2,
+    "ci95": 11.0,
+    "wallclock_min": 73.3,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 323.9,
+    "std": 100.9,
+    "ci95": 98.9,
+    "wallclock_min": 53.2,
+    "wallclock_n": 3
+   }
+  },
+  "BallInCup": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 486.5,
+    "std": 486.5,
+    "ci95": 476.8,
+    "wallclock_min": 85.0,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 731.2,
+    "std": 422.2,
+    "ci95": 413.7,
+    "wallclock_min": 60.1,
+    "wallclock_n": 3
+   }
+  },
+  "CartpoleBalance": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 972.1,
+    "std": 9.3,
+    "ci95": 9.1,
+    "wallclock_min": 74.1,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 945.2,
+    "std": 50.8,
+    "ci95": 49.8,
+    "wallclock_min": 53.8,
+    "wallclock_n": 3
+   }
+  },
+  "CartpoleSwingup": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 835.7,
+    "std": 12.5,
+    "ci95": 12.2,
+    "wallclock_min": 72.8,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 823.2,
+    "std": 35.7,
+    "ci95": 35.0,
+    "wallclock_min": 54.0,
+    "wallclock_n": 3
+   }
+  },
+  "CheetahRun": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 658.2,
+    "std": 7.5,
+    "ci95": 7.3,
+    "wallclock_min": 75.9,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 499.9,
+    "std": 274.0,
+    "ci95": 268.5,
+    "wallclock_min": 59.0,
+    "wallclock_n": 3
+   }
+  },
+  "FingerSpin": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 968.6,
+    "std": 11.8,
+    "ci95": 11.6,
+    "wallclock_min": 86.0,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 949.6,
+    "std": 32.8,
+    "ci95": 32.1,
+    "wallclock_min": 63.2,
+    "wallclock_n": 3
+   }
+  },
+  "FingerTurnEasy": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 873.8,
+    "std": 97.4,
+    "ci95": 95.5,
+    "wallclock_min": 84.4,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 919.5,
+    "std": 85.4,
+    "ci95": 83.7,
+    "wallclock_min": 62.2,
+    "wallclock_n": 3
+   }
+  },
+  "FingerTurnHard": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 725.1,
+    "std": 158.3,
+    "ci95": 155.1,
+    "wallclock_min": 84.9,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 869.1,
+    "std": 170.6,
+    "ci95": 167.2,
+    "wallclock_min": 62.6,
+    "wallclock_n": 3
+   }
+  },
+  "HopperHop": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 196.5,
+    "std": 145.4,
+    "ci95": 142.5,
+    "wallclock_min": 51.8,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 264.8,
+    "std": 64.0,
+    "ci95": 62.8,
+    "wallclock_min": 45.6,
+    "wallclock_n": 3
+   }
+  },
+  "HopperStand": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 417.4,
+    "std": 329.9,
+    "ci95": 323.3,
+    "wallclock_min": 87.0,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 896.2,
+    "std": 36.1,
+    "ci95": 35.4,
+    "wallclock_min": 63.9,
+    "wallclock_n": 3
+   }
+  },
+  "PendulumSwingup": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 389.0,
+    "std": 389.8,
+    "ci95": 382.1,
+    "wallclock_min": 70.3,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 589.4,
+    "std": 342.4,
+    "ci95": 335.5,
+    "wallclock_min": 53.6,
+    "wallclock_n": 3
+   }
+  },
+  "ReacherEasy": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 933.1,
+    "std": 88.9,
+    "ci95": 87.2,
+    "wallclock_min": 72.3,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 980.0,
+    "std": 3.3,
+    "ci95": 3.3,
+    "wallclock_min": 55.9,
+    "wallclock_n": 3
+   }
+  },
+  "ReacherHard": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 975.7,
+    "std": 2.6,
+    "ci95": 2.5,
+    "wallclock_min": 73.2,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 883.0,
+    "std": 151.1,
+    "ci95": 148.1,
+    "wallclock_min": 56.3,
+    "wallclock_n": 3
+   }
+  },
+  "WalkerRun": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 662.2,
+    "std": 8.3,
+    "ci95": 8.2,
+    "wallclock_min": 99.3,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 651.5,
+    "std": 34.3,
+    "ci95": 33.6,
+    "wallclock_min": 71.2,
+    "wallclock_n": 3
+   }
+  },
+  "WalkerStand": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 969.1,
+    "std": 14.6,
+    "ci95": 14.3,
+    "wallclock_min": 99.7,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 978.8,
+    "std": 16.8,
+    "ci95": 16.5,
+    "wallclock_min": 70.7,
+    "wallclock_n": 3
+   }
+  },
+  "WalkerWalk": {
+   "tdmpc-glass": {
+    "n": 4,
+    "mean": 918.6,
+    "std": 81.2,
+    "ci95": 79.6,
+    "wallclock_min": 99.3,
+    "wallclock_n": 3
+   },
+   "tdmpc2": {
+    "n": 4,
+    "mean": 971.1,
+    "std": 12.1,
+    "ci95": 11.8,
+    "wallclock_min": 71.1,
+    "wallclock_n": 3
+   }
+  }
+ }
+}

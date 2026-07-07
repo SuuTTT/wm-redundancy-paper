@@ -1,0 +1,218 @@
+{
+  "task": "PandaOpenCabinet",
+  "method": "in-loop TAMP residual",
+  "alpha": 1.0,
+  "protocol_steps": 150,
+  "metric": "box_target>=0.9 (ENV)",
+  "curve": [
+    {
+      "step": 1638400,
+      "success_rate": 0.0156,
+      "reached_rate": 0.0156,
+      "mean_max_box_target": 0.0149,
+      "p90_max_box_target": 0.0,
+      "n_eps": 256,
+      "eval_sec": 29.6
+    },
+    {
+      "step": 3276800,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.948,
+      "p90_max_box_target": 0.9756,
+      "n_eps": 256,
+      "eval_sec": 24.0
+    },
+    {
+      "step": 4915200,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.977,
+      "p90_max_box_target": 1.0,
+      "n_eps": 256,
+      "eval_sec": 23.7
+    },
+    {
+      "step": 6553600,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9741,
+      "p90_max_box_target": 1.0,
+      "n_eps": 256,
+      "eval_sec": 23.3
+    },
+    {
+      "step": 8192000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9769,
+      "p90_max_box_target": 0.9994,
+      "n_eps": 256,
+      "eval_sec": 23.4
+    },
+    {
+      "step": 9830400,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9765,
+      "p90_max_box_target": 0.9991,
+      "n_eps": 256,
+      "eval_sec": 23.1
+    },
+    {
+      "step": 11468800,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9765,
+      "p90_max_box_target": 0.9993,
+      "n_eps": 256,
+      "eval_sec": 23.8
+    },
+    {
+      "step": 13107200,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9768,
+      "p90_max_box_target": 0.9993,
+      "n_eps": 256,
+      "eval_sec": 23.4
+    },
+    {
+      "step": 14745600,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9773,
+      "p90_max_box_target": 0.9996,
+      "n_eps": 256,
+      "eval_sec": 23.2
+    },
+    {
+      "step": 16384000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9784,
+      "p90_max_box_target": 0.9997,
+      "n_eps": 256,
+      "eval_sec": 23.5
+    },
+    {
+      "step": 18022400,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9772,
+      "p90_max_box_target": 0.999,
+      "n_eps": 256,
+      "eval_sec": 23.0
+    },
+    {
+      "step": 19660800,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9777,
+      "p90_max_box_target": 0.9994,
+      "n_eps": 256,
+      "eval_sec": 23.2
+    },
+    {
+      "step": 21299200,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9772,
+      "p90_max_box_target": 0.9994,
+      "n_eps": 256,
+      "eval_sec": 23.9
+    },
+    {
+      "step": 22937600,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9776,
+      "p90_max_box_target": 0.9995,
+      "n_eps": 256,
+      "eval_sec": 23.5
+    },
+    {
+      "step": 24576000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9768,
+      "p90_max_box_target": 0.9991,
+      "n_eps": 256,
+      "eval_sec": 23.4
+    },
+    {
+      "step": 26214400,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9764,
+      "p90_max_box_target": 0.9991,
+      "n_eps": 256,
+      "eval_sec": 23.6
+    },
+    {
+      "step": 27852800,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9764,
+      "p90_max_box_target": 0.999,
+      "n_eps": 256,
+      "eval_sec": 23.3
+    },
+    {
+      "step": 29491200,
+      "success_rate": 0.0,
+      "reached_rate": 0.0,
+      "mean_max_box_target": 0.0,
+      "p90_max_box_target": 0.0,
+      "n_eps": 256,
+      "eval_sec": 23.6
+    },
+    {
+      "step": 31129600,
+      "success_rate": 0.7852,
+      "reached_rate": 0.7852,
+      "mean_max_box_target": 0.7833,
+      "p90_max_box_target": 1.0,
+      "n_eps": 256,
+      "eval_sec": 25.0
+    },
+    {
+      "step": 32768000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.979,
+      "p90_max_box_target": 0.9997,
+      "n_eps": 256,
+      "eval_sec": 24.3
+    }
+  ],
+  "summary": {
+    "final": {
+      "step": 32768000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.979,
+      "p90_max_box_target": 0.9997,
+      "n_eps": 256,
+      "eval_sec": 24.3
+    },
+    "peak": {
+      "step": 3276800,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.948,
+      "p90_max_box_target": 0.9756,
+      "n_eps": 256,
+      "eval_sec": 24.0
+    },
+    "steps_to_0.83": 3276800,
+    "steps_to_0.90": 3276800,
+    "steps_to_0.95": 3276800,
+    "sustained_0.95_last3": false,
+    "last3_success": [
+      0.0,
+      0.7852,
+      0.9805
+    ]
+  }
+}

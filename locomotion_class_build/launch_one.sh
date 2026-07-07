@@ -1,0 +1,27 @@
+#!/bin/bash
+# Launch ONE Residual<Task> PPO training run on a given GPU, detached (setsid).
+# NEVER --save_full_state.  Reward unchanged (true task return).
+# Usage: TASK=CheetahRun SEED=1 GPU=0 [STEPS=..] [ALPHA=1.0] ./launch_one.sh
+set -u
+cd /root/helios-rl/exp/tdmpc_glass/locomotion_class
+rm -rf __pycache__
+PY=/root/helios-rl/.venv/bin/python3
+TASK=${TASK:?set TASK}
+SEED=${SEED:-1}
+GPU=${GPU:-0}
+STEPS=${STEPS:-8000000}
+NEVALS=${NEVALS:-16}
+NENVS=${NENVS:-1024}
+ALPHA=${ALPHA:-1.0}
+MEMFRAC=${MEMFRAC:-0.42}
+
+ld=logs/${TASK}_res_a${ALPHA}_s${SEED}
+rm -rf "$ld"
+mkdir -p logs
+echo "launch task=$TASK seed=$SEED gpu=$GPU alpha=$ALPHA steps=$STEPS -> $ld"
+RES_ALPHA=$ALPHA CUDA_VISIBLE_DEVICES=$GPU XLA_PYTHON_CLIENT_MEM_FRACTION=$MEMFRAC \
+MUJOCO_GL=egl setsid nohup $PY run_residual_locomotion.py \
+  --env_name ${TASK}Residual --impl jax \
+  --num_timesteps $STEPS --num_evals $NEVALS --num_envs $NENVS --seed $SEED \
+  --logdir "$ld" > "$ld.log" 2>&1 &
+echo "pid $!"

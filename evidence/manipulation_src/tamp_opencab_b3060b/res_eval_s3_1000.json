@@ -1,0 +1,45 @@
+{
+  "task": "PandaOpenCabinet",
+  "method": "in-loop TAMP residual",
+  "alpha": 1.0,
+  "protocol_steps": 1000,
+  "metric": "box_target>=0.9 (ENV)",
+  "curve": [
+    {
+      "step": 32768000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9804,
+      "p90_max_box_target": 1.0,
+      "n_eps": 256,
+      "eval_sec": 35.7
+    }
+  ],
+  "summary": {
+    "final": {
+      "step": 32768000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9804,
+      "p90_max_box_target": 1.0,
+      "n_eps": 256,
+      "eval_sec": 35.7
+    },
+    "peak": {
+      "step": 32768000,
+      "success_rate": 0.9805,
+      "reached_rate": 0.9805,
+      "mean_max_box_target": 0.9804,
+      "p90_max_box_target": 1.0,
+      "n_eps": 256,
+      "eval_sec": 35.7
+    },
+    "steps_to_0.83": 32768000,
+    "steps_to_0.90": 32768000,
+    "steps_to_0.95": 32768000,
+    "sustained_0.95_last3": false,
+    "last3_success": [
+      0.9805
+    ]
+  }
+}

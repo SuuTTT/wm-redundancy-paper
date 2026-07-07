@@ -1,0 +1,186 @@
+{
+  "protocol_steps": 1000,
+  "anneal_total": 20480000.0,
+  "curve": [
+    {
+      "step": 3276800,
+      "alpha": 1.0,
+      "success_rate": 0.0078,
+      "reached_rate": 0.9844,
+      "mean_max_box_target": 0.6263,
+      "p90_max_box_target": 0.8089,
+      "n_eps": 256,
+      "eval_sec": 48.5
+    },
+    {
+      "step": 6553600,
+      "alpha": 1.0,
+      "success_rate": 0.0156,
+      "reached_rate": 0.9922,
+      "mean_max_box_target": 0.7471,
+      "p90_max_box_target": 0.8592,
+      "n_eps": 256,
+      "eval_sec": 38.2
+    },
+    {
+      "step": 9830400,
+      "alpha": 1.0,
+      "success_rate": 0.2266,
+      "reached_rate": 0.9922,
+      "mean_max_box_target": 0.801,
+      "p90_max_box_target": 0.9206,
+      "n_eps": 256,
+      "eval_sec": 38.0
+    },
+    {
+      "step": 13107200,
+      "alpha": 1.0,
+      "success_rate": 0.2305,
+      "reached_rate": 0.9922,
+      "mean_max_box_target": 0.8272,
+      "p90_max_box_target": 0.9235,
+      "n_eps": 256,
+      "eval_sec": 38.0
+    },
+    {
+      "step": 16384000,
+      "alpha": 1.0,
+      "success_rate": 0.3242,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8593,
+      "p90_max_box_target": 0.9333,
+      "n_eps": 256,
+      "eval_sec": 37.3
+    },
+    {
+      "step": 19660800,
+      "alpha": 1.0,
+      "success_rate": 0.457,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8741,
+      "p90_max_box_target": 0.9382,
+      "n_eps": 256,
+      "eval_sec": 37.2
+    },
+    {
+      "step": 22937600,
+      "alpha": 1.0,
+      "success_rate": 0.582,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8799,
+      "p90_max_box_target": 0.9393,
+      "n_eps": 256,
+      "eval_sec": 37.9
+    },
+    {
+      "step": 26214400,
+      "alpha": 1.0,
+      "success_rate": 0.6289,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8815,
+      "p90_max_box_target": 0.9404,
+      "n_eps": 256,
+      "eval_sec": 37.5
+    },
+    {
+      "step": 29491200,
+      "alpha": 1.0,
+      "success_rate": 0.6992,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8933,
+      "p90_max_box_target": 0.9443,
+      "n_eps": 256,
+      "eval_sec": 37.2
+    },
+    {
+      "step": 32768000,
+      "alpha": 1.0,
+      "success_rate": 0.7656,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.9028,
+      "p90_max_box_target": 0.9474,
+      "n_eps": 256,
+      "eval_sec": 36.2
+    },
+    {
+      "step": 36044800,
+      "alpha": 1.0,
+      "success_rate": 0.7891,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8994,
+      "p90_max_box_target": 0.949,
+      "n_eps": 256,
+      "eval_sec": 36.8
+    },
+    {
+      "step": 39321600,
+      "alpha": 1.0,
+      "success_rate": 0.793,
+      "reached_rate": 1.0,
+      "mean_max_box_target": 0.9076,
+      "p90_max_box_target": 0.9515,
+      "n_eps": 256,
+      "eval_sec": 36.4
+    },
+    {
+      "step": 42598400,
+      "alpha": 1.0,
+      "success_rate": 0.7578,
+      "reached_rate": 1.0,
+      "mean_max_box_target": 0.9025,
+      "p90_max_box_target": 0.9491,
+      "n_eps": 256,
+      "eval_sec": 36.4
+    },
+    {
+      "step": 45875200,
+      "alpha": 1.0,
+      "success_rate": 0.7539,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8986,
+      "p90_max_box_target": 0.9475,
+      "n_eps": 256,
+      "eval_sec": 36.5
+    },
+    {
+      "step": 49152000,
+      "alpha": 1.0,
+      "success_rate": 0.7461,
+      "reached_rate": 1.0,
+      "mean_max_box_target": 0.9045,
+      "p90_max_box_target": 0.9476,
+      "n_eps": 256,
+      "eval_sec": 36.2
+    },
+    {
+      "step": 52428800,
+      "alpha": 1.0,
+      "success_rate": 0.7227,
+      "reached_rate": 0.9922,
+      "mean_max_box_target": 0.8931,
+      "p90_max_box_target": 0.9435,
+      "n_eps": 256,
+      "eval_sec": 35.9
+    },
+    {
+      "step": 55705600,
+      "alpha": 1.0,
+      "success_rate": 0.7695,
+      "reached_rate": 0.9922,
+      "mean_max_box_target": 0.895,
+      "p90_max_box_target": 0.944,
+      "n_eps": 256,
+      "eval_sec": 36.0
+    },
+    {
+      "step": 58982400,
+      "alpha": 1.0,
+      "success_rate": 0.7773,
+      "reached_rate": 0.9961,
+      "mean_max_box_target": 0.8938,
+      "p90_max_box_target": 0.9439,
+      "n_eps": 256,
+      "eval_sec": 36.5
+    }
+  ]
+}
