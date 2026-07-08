@@ -585,3 +585,15 @@ Direct 8M runs, fresh seeds: HopperHop s51 139.2, s52 139.9 — **0/2 crossed 20
 ### URC-Walker 5M FINAL (2026-07-08 13:10, URC_WALKER_DONE): urc 699.7 (689/710) vs matched vanilla 727.2 (702/752) = **-3.8%** (n=2, 5M). Bet-2 URC now closed on BOTH planner-led tasks at full 5M: Cheetah -8.2%, Walker -3.8% → reweighting the consistency loss by rollout-drift does not help. Reweighting family FULLY CLOSED (VAC Cheetah -4.4%/Walker -8.9%; URC Cheetah -8.2%/Walker -3.8%).
 
 ### ❌ SOTA BET 3a — VALUE-CONDITIONED ABSTRACTION (bisimulation metric): STRONG NO-GO (2026-07-08 15:35, BIS_CHEETAH_DONE). Added a bisimulation-style latent metric (states pulled together by reward+transition equivalence; --bisim_coef) — structure the value pathway consumes by construction. Paired vs matched vanilla, CheetahRun 5M (n=2 each coef): **bisim_coef=0.1 → 460.4 (427/494); bisim_coef=0.5 → 388.4 (435/341); vanilla van2 = 855.4 → -46% / -55%.** Both coefficients HARM badly, from ~900k onward, no recovery — a far larger hit than the reweighting bets (-4 to -9%) because bisimulation reshapes the ENTIRE latent geometry rather than reweighting one loss. **Mechanism:** TD-MPC2's SimNorm+TD latent is already value-sufficient (held-out value-decode R²≈1); imposing an explicit value-conditioned metric distorts the representation the value pathway would learn on its own. **The redundancy result now spans the full spectrum: added-structure (Paper A/glass/graph) + loss-reweighting (VAC/URC) + value-conditioned-metric (bisim) — ALL null-to-harmful on dense value-based control.** NEXT: bet-3b value-sufficient bottleneck (architectural, not metric): split z=[z_v,z_r], Q/π read only z_v.
+
+### ⚖️ SOTA BET 3b — VALUE-SUFFICIENT BOTTLENECK: GRADED NULL / value-sufficiency curve (2026-07-08 20:10). Architectural (not metric) structure: Q and π read only the first D dims of the 512-dim SimNorm latent (env-gated _vslice in QEnsemble+Pi __call__, byte-identical at D=512); dynamics/consistency/reward keep full z. CheetahRun 5M width sweep (n=1/width, s50) vs matched vanilla van2=855:
+
+| bottleneck D | % of latent | return | % of vanilla |
+|---|---|---|---|
+| 16 | 3% | 496 | 58% |
+| 32 | 6% | 563 | 66% |
+| 64 | 12.5% | 639 | 75% |
+| 128 | 25% | 753 | 88% |
+| 512 (vanilla) | 100% | 855 | 100% |
+
+**Clean monotone diminishing-returns curve; NO bottleneck width recovers full performance.** Structure-via-architecture, like the metric (bisim) and reweighting (VAC/URC) bets, can only match-or-hurt — never beat vanilla. But it degrades GRACEFULLY (unlike bisim's -55% crater): 25% of dims buys 88%. Interpretation: **the value pathway reads DISTRIBUTED latent information — there is no small value-sufficient subspace that recovers everything.** This completes the redundancy result: ALL four forms of imposed structure — added-structure (Paper A glass/graph), loss-reweighting (VAC/URC), value-conditioned-metric (bisim), architectural-bottleneck (VBN) — are null-to-harmful on dense value-based control. The novel positive artifact is the width→return **value-sufficiency curve** itself. NEXT: confirm curve on WalkerRun (2nd task).
