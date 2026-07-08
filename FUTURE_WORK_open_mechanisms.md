@@ -73,6 +73,24 @@ the actionable content of the whole anti-collapse thread, currently left as a re
 
 ---
 
+## Q3. Bet B (behavioral-prior taxonomy) — resolved in substance, unpackaged as a law
+
+B was not re-run in the five-bet round because its answer already existed from the Phase-2/3 class-controller
+campaign (#38–#41, all with matched-budget vanilla controls): OSC/reaching ties-but-3×-faster on the fit member
+(ReacherHard 980.7 vs 976.8) and loses on the unfit (FingerTurnHard 923 vs 952); CPG/locomotion loses to matched
+vanilla on all 5 tasks; energy-shaping is a pure *escape* lever on exploration-bound Pendulum (5/5 @836 vs vanilla
+0/5 @47) but backfires on Acrobot (~70 vs ~200) where the prior is too weak. The implied taxonomy: a controller
+helps — as **sample-efficiency, never a higher ceiling** — iff its actuated DOF match the goal DOF *and* it is a
+competent controller for the task; it is an escape lever only when the task is exploration-bound and the prior
+already reaches the reward region; otherwise it is dead weight or an anchor.
+
+**The gap:** every datapoint is a different task/prior pairing — anecdotes consistent with the rule, not a
+controlled test of it. **Decisive experiment (unrun):** hold one prior family fixed, vary *only* the
+actuated-vs-goal-DOF overlap across a matched task set, and show the sample-efficiency multiplier is monotone in
+that overlap. One box-day; turns B from "supporting evidence for the sample-efficiency framing" into a citable
+predictive taxonomy. Lower priority than Q1/Q2 (it confirms rather than opens), but the cleanest way to actually
+*claim* Bet B.
+
 ## Recommendation
 
 Add both to the paper's Future Work, and fold the concrete probes into the two active plans:
