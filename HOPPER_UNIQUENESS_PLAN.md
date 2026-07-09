@@ -17,10 +17,33 @@ is removable (n=8).** Grounded in 4 papers the user supplied + our own measureme
 - **Why it explains our facts:** on-policy exploration rarely samples the narrow success basin and discards it after one update; off-policy replay keeps it. Once found, the basin is a **low-dimensional limit cycle** → execution-simple → WM removable.
 - **Decisive test:** **basin-width** = fraction of action-perturbations (ε-ball around the optimal policy) that keep the hopper upright for H steps, per task. Prediction: HopperHop narrowest; Cheetah/Walker wide.
 
-### H3. Benchmark-design artifact (Voelcker et al. 2024, "Can we hop in general?")
+### ENV RECON (2026-07-09, decisive for H3/H4) — HopperHop has NO early termination; the wall is a conjunctive reward
+Read `mujoco_playground/_src/dm_control_suite/hopper.py`:
+- `_STAND_HEIGHT = 0.6`, `_HOP_SPEED = 2.0`.
+- **Reward = `standing × hopping`** (a *product*): `standing = tolerance(height, (0.6, 2))`,
+  `hopping = tolerance(horiz_speed, bounds=(2.0, ∞), margin=1.0)`. You score only when **both** upright **and**
+  moving ≥ 2 m/s.
+- **`done = isnan(qpos) | isnan(qvel)` ONLY** — *no* early termination on falling; the episode always runs full length.
+**Implication:** unlike Gym-Hopper, this wall is **NOT a termination artifact**. It is a **conjunctive, multiplicative,
+sparse-in-practice reward** — reward stays ≈0 until the agent *simultaneously* solves standing and fast hopping.
+That is precisely the exploration structure on-policy PPO (Monte-Carlo/GAE advantage) fails on and off-policy
+TD+replay tolerates. This *refines* H3: the Voelcker knob for THIS env is the **reward structure**, not termination.
+It also directly supports **H4** (exploration-hard): the barrier is finding the joint standing+hopping behavior.
+
+### H3 (refined). Reward-design artifact (Voelcker et al. 2024, "Can we hop in general?")
 - **Claim (the sharpest warning):** Hopper's **termination condition and reward scaling** are load-bearing — *changing the termination height can invert SOTA algorithm rankings.* Relying on Hopper blindly can yield flawed conclusions.
 - **Why it matters to US:** our headline "categorical PPO wall on HopperHop" could be **partly a benchmark-design artifact** (instant termination on torso-drop → sparse, cliff-like return that murders on-policy PPO) rather than a pure algorithm-capability wall. This is the rigor check the critique *needs* before publication.
-- **Decisive test (the priority experiment):** re-run tuned PPO + TD-MPC2 on HopperHop under **varied termination/reward** — (a) softer/no early-termination, (b) rescaled/denser reward, (c) height-threshold sweep. Does the PPO wall **move, soften, or invert**? Outcomes: wall robust → genuine algorithmic wall (strong claim); wall softens with denser reward/no-term → the wall is *exploration-hard-because-of-sparse-cliff-return*, which sharpens (not kills) the critique; wall inverts → mandatory caveat.
+- **Decisive test (the priority experiment), now concrete + low-risk given the recon:** add two env-var knobs to
+  `hopper.py` (default = byte-identical): **(i) `HOP_SPEED` override** (default 2.0 → test 1.0, 0.5 = easier hop
+  threshold), and **(ii) reward mode** `product` (default) vs **`sum`** (`0.5*standing + 0.5*hopping`, a *denser,
+  non-conjunctive* reward). Re-run tuned PPO + TD-MPC2 on 2–3 variants. **Predictions:** if PPO clears the wall under
+  additive reward or lower HOP_SPEED → the wall is the **conjunctive/sparse-reward design** (exploration-hard;
+  confirms H4, refines Voelcker), and our "categorical PPO wall" claim must be stated as *conditional on the standard
+  DMC reward*, not as PPO-can-never-hop. If PPO still walls under the easier reward → the barrier is deeper (contact
+  dynamics / H1-H2), strengthening the pure-algorithm-capability reading. Either outcome is publishable and is the
+  rigor check the critique needs. **Patch is ~5 lines, env-gated** (`os.environ.get('HOP_SPEED')`, `HOP_REWARD_MODE`),
+  backup + smoke, then PPO/TD-MPC2 runs — safe to do autonomously. **Runner note:** confirm the box has a PPO entry
+  (`run_benchmark.py --algos ppo` or `ppo.py`); b3060/wm_head_ablation has `ppo.py`.
 
 ### H4. Exploration-hard-but-execution-simple (our standing hypothesis)
 - **Claim:** the gait is hard to *find* (contact-critical exploration) but easy to *execute* (low-dim limit cycle needing no accurate multi-step rollout) → simultaneously high wall + removable WM.
