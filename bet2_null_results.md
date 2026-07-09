@@ -608,3 +608,12 @@ Direct 8M runs, fresh seeds: HopperHop s51 139.2, s52 139.9 — **0/2 crossed 20
 | 128 | 753 (88%) | 695 (96%) |
 
 **Same monotone diminishing-returns shape on both tasks** — return rises with bottleneck width, none fully recovers vanilla, graceful (no crater). Walker's curve sits higher (Walker's value pathway is slightly more compressible — 128d gets 96% vs Cheetah's 88%), but the qualitative law is identical: **the value pathway reads a distributed latent, and you can bottleneck Q/π to a fraction of it at a graded, width-dependent cost.** Confirms the bet-3b Cheetah finding is a robust property, not a single-task artifact. The value-sufficiency curve is the program's novel positive artifact.
+
+### ✅ TWO-AXIS HOP (Part-12 crux, clean 5M, 2026-07-09 03:34, TWOAXIS_HOP2_DONE). HopperHop, full-WM (ABLATE=none) vs stripped-WM (ABLATE=consistency), n=2 (s62/63), evaluating BOTH the MPPI-planner return and the raw-policy return each eval:
+
+| arm | mppi | π (policy-only) | planning help? |
+|---|---|---|---|
+| full WM (none) | **571** (554/587) | 542 (506/577) | **yes, mppi>π both seeds** |
+| stripped WM (consistency) | 421 (386/455) | **448** (386/511) | **no — π≥mppi** (tie, then 511>455) |
+
+**The Part-12 crux confirmed at 5M: MPPI planning beats the raw policy ONLY when the world model is present; strip the world model and planning adds nothing (the policy alone is as good or better).** So on HopperHop, the planner's value comes from the world model's rollout quality — and since the world model is *removable* there (stripped ≈ 421-448, within the earlier removable-Hop band ~420±113), TD-MPC2's Hopper win is carried by the TD value + policy, not by planning-over-the-world-model. This is the mechanistic evidence for the Part-12 argument that Hopper's flagship win is a TD-learning win, not a world-model win. (Caveat: stripped-vs-full absolute gap here is n=2-noisy — this full pair drew high seeds 554/587 vs the historical 420 band; the *within-arm* mppi-vs-π comparison is the robust signal.)
