@@ -67,6 +67,20 @@ Hopper reward/termination design vs. genuine algorithm capability.
 - **Missing piece:** a clean SAC-core swap (canonical SAC in place of TD-MPC2's actor-critic, keep WM+MPPI) to confirm
   the value pathway (not the specific update) is what matters. Cheap, optional.
 
+## BOX CAPABILITY (2026-07-09, discovered during H3 build) — H3 MUST run on b3060, not b3060b
+- **b3060b (tdmpc_glass)** has an editable `mujoco_playground_repo` (easy to patch) but its **HopperHop does NOT build**:
+  `getattr(mjxw.types.GraphMode, 'WARP')` → `AttributeError: int has no attribute WARP` (pre-existing mjx-warp
+  dependency issue, reproduced with the *original* unpatched hopper.py). That's why b3060b's VBN sweeps were only
+  Cheetah/Walker/Acrobot. The H3 patch was applied+smoke-tested here, failed on env-build (not the patch),
+  and **reverted** (b3060b hopper.py is clean). ⇒ **b3060b cannot do any HopperHop experiment.**
+- **b3060 (helios_wmablate)** has a pip-installed (site-packages) `mujoco_playground` whose **HopperHop builds &
+  trains fine** (the two-axis Hop ran to 5M there). ⇒ **H3 runs on b3060.** Patch target = the site-packages
+  `.../mujoco_playground/_src/dm_control_suite/hopper.py` in b3060's venv (locate via `find <venv> -path
+  '*dm_control_suite/hopper.py'`). Same 2 env-gates (HOP_SPEED, HOP_REWARD_MODE); b3060 has `train_ppo` in
+  `scripts/run_benchmark.py`. b3060 is busy with the Walker two-axis until ~11:00.
+- Consequence: while b3060 finishes Walker, b3060b is idle for Hopper purposes (it can't build the env, and fixing
+  the mjx-warp dep risks its working Cheetah/Walker env — not worth it). idle > filler.
+
 ## Experiment priority (launch when polish boxes free ~10–11:00)
 1. **H3 termination/reward-robustness of the PPO wall** — *the* priority; discharges the Voelcker caveat, needs a
    HopperHop env-variant (termination height + reward-scale knobs) + re-run PPO & TD-MPC2. Highest rigor payoff.
