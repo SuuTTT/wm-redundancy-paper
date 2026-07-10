@@ -657,3 +657,14 @@ Direct 8M runs, fresh seeds: HopperHop s51 139.2, s52 139.9 — **0/2 crossed 20
 | 128 | 753 | 742 | 748 | 87% |
 
 n=2 curve: 545/568/638/748 — the monotone-diminishing law holds with tight per-width agreement at D≥32 (s50-s51 gaps ≤11); D=16 has the largest seed spread (496 vs 594). Note 16/32 near-tie at n=2 (545 vs 568) — the floor region is flat; the informative slope is D≥32→128. No width recovers vanilla. s52 queued.
+
+### A1 AMENDMENT — Cheetah VBN s51 true 5M finals (2026-07-10 04:15, A1_CHEETAH_S51_DONE marker; supersedes the 20:45 pre-completion harvest). The 20:45 numbers (594/572/636/742) were late-but-NOT-final evals; the completed-run finals at es=5,000,192 (mppi) are: **16→535, 32→582, 64→617, 128→723**. Corrected n=2 table:
+
+| D | s50 | s51 (final) | n=2 mean | % of van 855 |
+|---|---|---|---|---|
+| 16 | 496 | 535 | 516 | 60% |
+| 32 | 563 | 582 | 572 | 67% |
+| 64 | 639 | 617 | 628 | 73% |
+| 128 | 753 | 723 | 738 | 86% |
+
+The corrected s51 is *cleaner* than the pre-completion read: strictly monotone within-seed (535<582<617<723, no 16/32 inversion), tight s50-s51 agreement at every width (gaps ≤39), and the n=2 curve 516/572/628/738 is strictly monotone with no flat floor region (the earlier '16/32 near-tie' was an artifact of harvesting W16 mid-fluctuation). Law unchanged: monotone diminishing, no width recovers vanilla. Lesson re-confirmed: harvest ONLY at markers, never from near-final evals. s52 launched (GPU0-3, marker A1_CHEETAH_S52_DONE).
