@@ -668,3 +668,19 @@ n=2 curve: 545/568/638/748 — the monotone-diminishing law holds with tight per
 | 128 | 753 | 723 | 738 | 86% |
 
 The corrected s51 is *cleaner* than the pre-completion read: strictly monotone within-seed (535<582<617<723, no 16/32 inversion), tight s50-s51 agreement at every width (gaps ≤39), and the n=2 curve 516/572/628/738 is strictly monotone with no flat floor region (the earlier '16/32 near-tie' was an artifact of harvesting W16 mid-fluctuation). Law unchanged: monotone diminishing, no width recovers vanilla. Lesson re-confirmed: harvest ONLY at markers, never from near-final evals. s52 launched (GPU0-3, marker A1_CHEETAH_S52_DONE).
+
+### P4 — Walker sufficiency n=4 FINAL + Cheetah n=2 (truncated) + b3060 proc-kill event (2026-07-10 08:50)
+**Event:** all 8 b3060 jobs died ~08:20 (no reboot — uptime 3w5d; ssh also flapping, cause TBD, suspect host-level pressure). Walker suff died at es=4,900,096 (98% of 5M), Cheetah suff at es≈4,550,144-4,600,064 (~91%). Harvested at last common eval, honest truncation noted.
+
+**Walker load-bearing, n=4 (s62/63 @5M + s70/71 @4.90M):**
+| arm | s62 | s63 | s70 | s71 | mean |
+|---|---|---|---|---|---|
+| full (none) | 740 | 698 | 704.8 | 689.8 | **708.2** |
+| stripped (consistency-off) | 662 | 669 | 637.1 | 651.3 | **654.9** |
+
+**Δ = −7.5% (n=4, tight: full range 690-740, stripped 637-669, non-overlapping).** The historical single-pair −23% is confirmed a seed/version outlier; the durable claim is **WalkerRun WM load-bearing ≈ −7 to −8%**, modest but consistent and non-overlapping at n=4.
+
+**Cheetah sufficiency n=2 TRUNCATED @~4.55M (paired same-step, runs killed):** full 733.3 (s70) / 670.2 (s71, @4.60M), stripped 526.7 / 607.6 → means 701.8 vs 567.2 = **−19.2%**, but seed spread is wide (s70 −28%, s71 −9%). Historical single-seed −38% not reproduced at face value; honest read: **Cheetah WM load-bearing, magnitude seed-dependent −9 to −28% (n=2, truncated)** — needs n≥3 full-5M for a paper number.
+
+### P2 PRE-BUILD DISCOVERY (2026-07-10 08:55, CRITICAL for Point-1/Paper 3): our TD-MPC2 implementation ALREADY collects with π+noise, NOT MPPI.
+Read /root/helios-rl/scripts/run_benchmark.py collection loop (L1786-1803): ALL branches use act_fn_batch (tanh π-mean) + Gaussian EXPL_NOISE (+ optional random warmup/mix). batch_mppi_targets (MPPI) appears ONLY in an optional MPC-distillation loss block (L1981, coef-gated; default status TBC). **Implication: the "MPPI-as-structured-explorer-during-collection" hypothesis is ALREADY FALSIFIED-BY-CONSTRUCTION in our stack — every TD-MPC2 number we have (incl. Hop 6/6≥200 by ~1M, beating SAC's 6/9@8M) was achieved with policy-only data collection.** TD-MPC2's Hopper edge over SAC in our implementation must come from: (a) the value/actor architecture + losses (Q-ensemble, SimNorm, TD machinery), (b) the MPC-distillation loss IF default-on (planning shaping π via imitation, not via exploration), and/or (c) eval-time MPPI (excluded: π-only evals also clear the wall). P2 is therefore REDEFINED: if mpc-distill is default-on → P2 = distill-coef-0 ablation (does planning-shaped π-learning carry the edge?); if default-off → the attribution collapses to (a) the off-policy TD core itself, and the remaining SAC-vs-strippedTDMPC2 gap is architectural (P1 SAC-core isolation becomes the decisive experiment). NOTE for Part-12/Paper-3 framing: canonical Hansen TD-MPC2 collects WITH the planner; ours does not — an implementation deviation that is itself evidence (planner-collection unnecessary to beat PPO/SAC on Hop) but must be stated when citing "TD-MPC2".
