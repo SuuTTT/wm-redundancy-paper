@@ -709,3 +709,14 @@ SAC with α-floor 0.05 + canonical target-entropy −1.0·|A| (gates verified bo
 - **(stripped-)TD-MPC2, same stack:** 8/8 ≥200, ~1-2M crossing.
 **Mechanism formulation (Paper 3): the discriminating design axis is exploration-in-the-data vs stochasticity-in-the-objective.** TD-MPC2's core optimizes a DETERMINISTIC actor objective (max Q at the mean action) and injects exploration only at collection time (annealed Gaussian 0.3 + random warmup); SAC bakes entropy into the objective, which on a conjunctive-sparse contact task is lose-lose (collapse→stand-trap, floor→noise-trap). This makes TD-MPC2's Hop win attributable to the TD core's *objective structure* (+ Q-ensemble/SimNorm), NOT planning/WM/collection — completing Point-1 with a positive mechanism.
 CAVEATS: n=3/arm; α-floor grid is 1 point (0.05) — an α=0.01 arm now running to map the workable-entropy band (narrow-band claim needs ≥2 floor values); custom SAC v1 (not reference impl) — statement scoped to 'canonical SAC objective under this stack'.
+
+### ✅ P1 COMPLETE — α-band point 3: floor 0.01 ALSO fails (2026-07-10 14:15, P1_SAC3_HOP_DONE, n=3 @5M)
+SAC α-floor 0.01 (canonical target-entropy) HopperHop finals: **0.98 / 0.002 / 51.4** — no seed near 200; two noise-trapped, one crawling toward the stand-trap. Full P1 α-grid (all n=3, 5M, same stack):
+| SAC entropy config | finals | phenotype |
+|---|---|---|
+| auto-α (collapses →0.003) | 76 / 23 / 101 | stand-trap (best SAC config!) |
+| fixed floor α=0.01 | 1 / 0 / 51 | mixed noise/stand-trap |
+| fixed floor α=0.05 | 0.3 / 0 / 0 | noise-trap |
+| (stripped-)TD-MPC2 core | 8/8 ≥200 by ~1-2M | solves |
+
+**P1 verdict (scoped honestly): at a 5M budget, no entropy configuration of the SAC objective — auto-tuned, low-fixed, or canonical-fixed — gets past the standing local optimum on HopperHop's conjunctive reward, while TD-MPC2's planner-free TD core crosses 200 by 1-2M (n=8). The edge is objective-structural (deterministic actor objective maximizing a Q-ensemble over a SimNorm latent, exploration injected only in the data), not an entropy-knob artifact.** SCOPE CAVEATS: (i) sample-efficiency claim at 5M, NOT capability — external/historical SAC reaches Hop success by ~8M (6/9), so SAC eventually hops; the gap is ≥4-8× sample efficiency. (ii) custom SAC v1 implementation. (iii) remaining unexplored knobs (UTD, n-step, ensemble size) — these are TD-MPC2-side ingredients; testing which ONE carries the speed gap = the Lean+ decomposition experiment (next). Point-1 of the user's three questions is now answered with a positive mechanism + 12-run grid.
