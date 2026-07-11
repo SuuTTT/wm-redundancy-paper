@@ -748,3 +748,13 @@ Our policy loss: pl = −E[min₂ Q(sg(z), tanh(μ_π(z))) / RunningScale] — t
 | stripped (consistency-off) | 526.7 | 607.6 | 455.7 | 649.5 | **559.9** |
 
 **CheetahRun WM load-bearing = −23.8% (n=4; clean full-5M pair alone: −28.1%).** Stripped-arm variance is high (456-650) while full is tight (670-771) — consistency-off Cheetah is seed-fragile, itself informative (without the WM anchor the return level wanders). Historical single-seed −38% not reproduced; durable claim: **Cheetah −20 to −28%, mean ≈−24%.** Task ordering CONFIRMED at n≥4 for three tasks: Hop removable (n=8) < Walker −7.5% (n=4) < Cheetah −23.8% (n=4) < Acrobot −44% (n=1-2, needs seeds) — the task-conditional world-model table for Papers A/3 is now paper-grade for the first three rows.
+
+### ✅ A1 — Cheetah VBN n=3 (2026-07-11 02:40, A1_CHEETAH_S52_DONE; all finals at es=5,000,192 mppi)
+| D | s50 | s51 | s52 | n=3 mean | % of van 855 |
+|---|---|---|---|---|---|
+| 16 | 496 | 535 | 519 | **516.7** | 60% |
+| 32 | 563 | 582 | 584 | **576.3** | 67% |
+| 64 | 639 | 617 | 617 | **624.3** | 73% |
+| 128 | 753 | 723 | 703 | **726.3** | 85% |
+
+Strictly monotone WITHIN every seed; per-width seed spread ≤ 50 (tight). **The Cheetah value-sufficiency curve is n=3 paper-grade: return rises smoothly with bottleneck width, no width recovers vanilla (85% at D=128), the value pathway reads a distributed latent.** This is Paper A's positive-instrument headline figure for Cheetah. Walker s52 still running (n=3 pending); Acrobot remains n=2.
