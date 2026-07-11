@@ -740,3 +740,11 @@ PPO on HopperHop, product reward, HOP_SPEED=1.0 (easier threshold) with HOP_MARG
 
 ### P1 wording check — our π objective is FULLY deterministic (2026-07-10 17:55, code audit tdmpc2.py L719-741)
 Our policy loss: pl = −E[min₂ Q(sg(z), tanh(μ_π(z))) / RunningScale] — the DETERMINISTIC tanh-mean action, no sampling, NO entropy term anywhere in the actor objective. Canonical TD-MPC2 samples a~π and adds a very small entropy bonus (~1e-4 coefficient) — functionally near-deterministic. P1's mechanism statement is therefore exact for our stack and directionally right for canonical: the working recipe on conjunctive-sparse Hop pairs a (near-)zero-entropy actor OBJECTIVE with data-side exploration (annealed Gaussian 0.3 + warmup), vs SAC's objective-entropy at α∈[0.003 collapsed, 0.05 floored] which fails at every tested level. Deviation note for the paper: ours drops canonical's small entropy bonus and action-sampling in the actor loss — another (minor) reimpl deviation to list in setup.
+
+### ✅ P4 — Cheetah sufficiency n=4 FINAL (2026-07-11 01:50, P4_CHEETAH_SUFF2_DONE; s72/73 full-5M + s70/71 truncated@4.55M)
+| arm | s70 (trunc) | s71 (trunc) | s72 @5M | s73 @5M | mean |
+|---|---|---|---|---|---|
+| full (none) | 733.3 | 670.2 | 766.0 | 770.5 | **735.0** |
+| stripped (consistency-off) | 526.7 | 607.6 | 455.7 | 649.5 | **559.9** |
+
+**CheetahRun WM load-bearing = −23.8% (n=4; clean full-5M pair alone: −28.1%).** Stripped-arm variance is high (456-650) while full is tight (670-771) — consistency-off Cheetah is seed-fragile, itself informative (without the WM anchor the return level wanders). Historical single-seed −38% not reproduced; durable claim: **Cheetah −20 to −28%, mean ≈−24%.** Task ordering CONFIRMED at n≥4 for three tasks: Hop removable (n=8) < Walker −7.5% (n=4) < Cheetah −23.8% (n=4) < Acrobot −44% (n=1-2, needs seeds) — the task-conditional world-model table for Papers A/3 is now paper-grade for the first three rows.
