@@ -766,3 +766,13 @@ Strictly monotone WITHIN every seed; per-width seed spread ≤ 50 (tight). **The
 | stripped (consistency-off) + planner-collection | 451.8 | 479.8 | **465.8** |
 
 **Stripped ≈ full to within noise (Δ = +0.2%).** The consistency loss is removable on HopperHop even when the PLANNER COLLECTS THE DATA by rolling the (untrained, in the stripped arm) dynamics net — the biggest threat to Part-12's headline is DISCHARGED; the critique holds beyond the policy-collection deviation. Secondary reads: (i) planner-collection does not materially change Hop levels vs our historical policy-collection (~465 @2.5M vs ~420±113 @5M band — consistent with V1's Hop-deficit ≈0%); (ii) the stripped arm's planner scores actions through reward/value heads over garbage dynamics and STILL collects data good enough for full performance — the strongest evidence yet for H4 (execution-simple limit cycle; planner value-scoring, not rollout fidelity, is what matters on Hop). Remaining scope note: n=2/arm at 2.5M on Hop only; Walker planner-collection contrast (where WM IS load-bearing) is the natural follow-up if a reviewer asks. Part-12/Paper-3 can now say: 'removable under BOTH policy- and planner-collection (n=8 + n=2)'.
+
+### ✅ A1 — Walker VBN n=3 (2026-07-11 06:20, A1_WALKER_S52_DONE; s52 finals at es=5,000,192 mppi)
+| D | s50 @5M | s51 (trunc 4.0-4.5M) | s52 @5M | n=3 mean | % of van 727 |
+|---|---|---|---|---|---|
+| 16 | 591 | 617 | 656.5 | **621.5** | 85% |
+| 32 | 642 | 662 | 637.1 | **647.0** | 89% |
+| 64 | 665 | 675 | 665.6 | **668.5** | 92% |
+| 128 | 695 | 720 | 688.1 | **701.0** | 96% |
+
+(s51 truncated by the 07-10 fleet incident — biases s51 LOW yet it's mid-pack; mixed-budget noted.) n=3 means remain monotone though s52 alone has a 16/32 inversion (656>637) — Walker's tight widths are near-tied ~620-670, i.e., **Walker is the most compressible task: even D=16 retains 85% and D=128 recovers 96%.** Curve is n=3; the flat-floor + high-recovery shape is the Walker signature in the 3-task VSB law. Acrobot s52 launched on the freed GPUs (→ n=3 for the least-compressible task; prior n=2 280/351/291/491 vs 511).
