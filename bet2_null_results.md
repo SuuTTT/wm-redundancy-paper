@@ -758,3 +758,11 @@ Our policy loss: pl = −E[min₂ Q(sg(z), tanh(μ_π(z))) / RunningScale] — t
 | 128 | 753 | 723 | 703 | **726.3** | 85% |
 
 Strictly monotone WITHIN every seed; per-width seed spread ≤ 50 (tight). **The Cheetah value-sufficiency curve is n=3 paper-grade: return rises smoothly with bottleneck width, no width recovers vanilla (85% at D=128), the value pathway reads a distributed latent.** This is Paper A's positive-instrument headline figure for Cheetah. Walker s52 still running (n=3 pending); Acrobot remains n=2.
+
+### ✅✅ V2 VERDICT — Hop removability SURVIVES canonical-style planner-collection (2026-07-11 04:30, V2_MPPICOL_DONE, n=2/arm @2.5M, MPPI_COLLECT=1, n_samples=512)
+| arm | s50 | s51 | mean |
+|---|---|---|---|
+| full + planner-collection | 467.8 | 462.2 | **465.0** |
+| stripped (consistency-off) + planner-collection | 451.8 | 479.8 | **465.8** |
+
+**Stripped ≈ full to within noise (Δ = +0.2%).** The consistency loss is removable on HopperHop even when the PLANNER COLLECTS THE DATA by rolling the (untrained, in the stripped arm) dynamics net — the biggest threat to Part-12's headline is DISCHARGED; the critique holds beyond the policy-collection deviation. Secondary reads: (i) planner-collection does not materially change Hop levels vs our historical policy-collection (~465 @2.5M vs ~420±113 @5M band — consistent with V1's Hop-deficit ≈0%); (ii) the stripped arm's planner scores actions through reward/value heads over garbage dynamics and STILL collects data good enough for full performance — the strongest evidence yet for H4 (execution-simple limit cycle; planner value-scoring, not rollout fidelity, is what matters on Hop). Remaining scope note: n=2/arm at 2.5M on Hop only; Walker planner-collection contrast (where WM IS load-bearing) is the natural follow-up if a reviewer asks. Part-12/Paper-3 can now say: 'removable under BOTH policy- and planner-collection (n=8 + n=2)'.
