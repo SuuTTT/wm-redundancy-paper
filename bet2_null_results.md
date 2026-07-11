@@ -801,3 +801,11 @@ Pre-registered before launch: "stripped degrades under planner-collection on Wal
 | 128 | 491 | 303.2 | **428.4** | 84% |
 
 s52 is a globally weak seed (low at every width — Acrobot's known seed brutality; cf. official TDMPC-v1 hopper 2/577/1 style variance). At n=3 the three tight widths converge to a statistically flat ~258-271 (50-53%) while **D=128 = 428 (84%) remains far above** — the robust Acrobot claim is unchanged and now better-founded: *128 ≫ tight widths; the tight-width ordering is noise; Acrobot is the least-compressible task in the grid.* s53 running → n=4 tonight. **With this, the 3-task VSB grid is n=3 COMPLETE: Cheetah 517/576/624/726 vs 855 (monotone), Walker 622/647/669/701 vs 727 (flat-high, most compressible), Acrobot 258/267/271/428 vs 511 (step-at-128, least compressible). Paper A's positive-instrument figure is data-complete.**
+
+### ✅ V2X — dissociation table at n=3 (2026-07-11 23:20, V2X_S52_DONE, planner-collection @2.5M)
+| task | full s50/51/52 | stripped s50/51/52 | mean Δ | median Δ |
+|---|---|---|---|---|
+| HopperHop | 468 / 462 / 448 (mean 459) | 452 / 480 / 466 (mean 466) | **+1.4%** | +0.9% |
+| WalkerRun | 758 / 686 / **455** (mean 633) | 601 / 610 / 600 (mean 604) | −4.6% n.s. | **−12.5%** |
+
+**Hop: removability at n=3 is rock-solid** (stripped ≥ full at every seed; spreads tight). **Walker: the s52 FULL arm is an outlier low (455 vs 686-758)** — full+planner-collect appears bimodal (2 strong seeds, 1 collapsed) while stripped is astonishingly tight (600-610, spread 10). Honest read: the dissociation DIRECTION survives (stripped never reaches the full-arm median; 2/3 seeds show the large gap; median Δ −12.5%) but the mean-based −16.1% claim must soften to 'median −12 to −16%, full-arm seed-bimodal (n=3)'. Resolving seed (s53 pair) launching alongside Lean+. Mechanistic note: a collapsed full+planner-collect seed on Walker is itself interesting — planner-collection couples data quality to WM quality, adding a failure mode the stripped arm (which ignores its garbage WM for data via value-scoring... no wait, stripped ALSO planner-collects; its stability suggests the WM-rollout scoring adds VARIANCE when the WM is mid-quality) — flag for Paper 3 discussion, do not over-claim.
