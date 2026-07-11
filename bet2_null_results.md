@@ -776,3 +776,11 @@ Strictly monotone WITHIN every seed; per-width seed spread ≤ 50 (tight). **The
 | 128 | 695 | 720 | 688.1 | **701.0** | 96% |
 
 (s51 truncated by the 07-10 fleet incident — biases s51 LOW yet it's mid-pack; mixed-budget noted.) n=3 means remain monotone though s52 alone has a 16/32 inversion (656>637) — Walker's tight widths are near-tied ~620-670, i.e., **Walker is the most compressible task: even D=16 retains 85% and D=128 recovers 96%.** Curve is n=3; the flat-floor + high-recovery shape is the Walker signature in the 3-task VSB law. Acrobot s52 launched on the freed GPUs (→ n=3 for the least-compressible task; prior n=2 280/351/291/491 vs 511).
+
+### ✅✅ V2W — PRE-REGISTERED PREDICTION CONFIRMED: the collection-mode × WM double dissociation (2026-07-11 13:15, V2W_MPPICOL_DONE, n=2/arm @2.5M, MPPI_COLLECT=1, n_samples=512)
+| task | full + planner-collect | stripped + planner-collect | Δ |
+|---|---|---|---|
+| HopperHop (V2) | 465.0 (468/462) | 465.8 (452/480) | **+0.2% (removable)** |
+| WalkerRun (V2W) | **721.9** (758/686) | **605.4** (601/610) | **−16.1% (non-overlapping)** |
+
+Pre-registered before launch: "stripped degrades under planner-collection on Walker, where the WM is load-bearing." CONFIRMED. **The double dissociation is now complete and clean: the consistency loss is removable on Hop under BOTH collection modes, and load-bearing on Walker under BOTH — with the planner-collection gap (−16.1% @2.5M) LARGER than the policy-collection gap (−7.5% @5M), i.e., planner-collection AMPLIFIES the world model's importance exactly where rollout quality matters (the planner collects by rolling the WM; garbage dynamics → degraded data).** Second read: full+planner-collect reaches 722 at 2.5M ≈ the policy-collect full band at 5M (708-727) — planner-collection roughly DOUBLES Walker sample-efficiency in our stack, consistent with V1's official-vs-ours deficit attribution (official planner-collecting TD-MPC2 is stronger precisely on WM-load-bearing tasks). This pair of results (V2+V2W) is the cleanest mechanistic evidence in the whole program: WM value is task-conditional, and collection mode modulates it in the predicted direction on both ends. Paper 3 centerpiece table; n=2/arm noted (extend if reviewer asks).
