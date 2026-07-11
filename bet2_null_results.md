@@ -791,3 +791,13 @@ Pre-registered before launch: "stripped degrades under planner-collection on Wal
 **Arm-pair:** env-gate LEAN_TAU (target-EMA tau divided ~3-5×, exact current value to be read from code before patching) in wmabl tdmpc2.py; arms = Cheetah × ABLATE=consistency × {LEAN_TAU on, off} × s50/51/52 (6 runs, 5M, ~2 packed days) + later Walker replication.
 **Pre-registered predictions:** (1) stripped+stab variance shrinks toward full's (spread <120); (2) mean recovers ≥half the -24% gap (→ ≥620); (3) effect ordering Cheetah > Walker > Hop≈0 (Hop already stable — any Hop change falsifies the mechanism story). **Kill number:** stripped+stab Cheetah mean <590 or spread >180 at n=3 → dead, ledger the null.
 **Payoff:** if it works → Lean+ is a real artifact (TD-MPC2 minus the entire WM at near-full dense-task performance = the lightweight agent the user asked for); if it fails → the WM's contribution is NOT mere target stabilization, sharpening Paper A's claim that the consistency loss carries irreplaceable predictive structure on dense tasks. Informative both ways.
+
+### ✅ A1 — Acrobot VBN n=3 (2026-07-11 18:10, A1_ACROBOT_S52_DONE + A1_ACROBOT_S52_W64_DONE; s52 finals at es=5,000,192 mppi)
+| D | n=2 mean (s50/51) | s52 | n=3 mean | % of van 511 |
+|---|---|---|---|---|
+| 16 | 280 | 213.6 | **257.9** | 50% |
+| 32 | 351 | 98.8 | **266.9** | 52% |
+| 64 | 291 | 230.6 | **270.5** | 53% |
+| 128 | 491 | 303.2 | **428.4** | 84% |
+
+s52 is a globally weak seed (low at every width — Acrobot's known seed brutality; cf. official TDMPC-v1 hopper 2/577/1 style variance). At n=3 the three tight widths converge to a statistically flat ~258-271 (50-53%) while **D=128 = 428 (84%) remains far above** — the robust Acrobot claim is unchanged and now better-founded: *128 ≫ tight widths; the tight-width ordering is noise; Acrobot is the least-compressible task in the grid.* s53 running → n=4 tonight. **With this, the 3-task VSB grid is n=3 COMPLETE: Cheetah 517/576/624/726 vs 855 (monotone), Walker 622/647/669/701 vs 727 (flat-high, most compressible), Acrobot 258/267/271/428 vs 511 (step-at-128, least compressible). Paper A's positive-instrument figure is data-complete.**
