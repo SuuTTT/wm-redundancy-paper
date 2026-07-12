@@ -819,3 +819,11 @@ s52 is a globally weak seed (low at every width — Acrobot's known seed brutali
 | 128 | 982 | 303.2 | 304.0 | **397.3** | 78% |
 
 s53 per-width: 270.8/283.3/315.7/304.0 — a middling seed where D=128 (304) ≈ D=64 (316), i.e. the second consecutive seed where 128 is not dominant. At n=4 the aggregate step-at-128 persists but narrows (428→397, 84%→78% of vanilla), carried by s50/51 (491 pair mean). Claim after n=4: **tight widths (16/32/64) remain statistically flat at 51–55%; D=128 remains the only width that recovers a large fraction of vanilla, but its margin is seed-heavy** — Acrobot stays the least-compressible task in the grid, with the honest caveat that the 128-step's size has wide seed variance (s50 491-pair vs s52/53 ~304). Paper A figure updated to n=4 on Acrobot.
+
+### ✅ V2W s53 — Walker planner-collection dissociation RESOLVED at n=4 (2026-07-12 10:50, V2W_S53_DONE; finals at es=2,500,096, disk-verified)
+| arm | s50 | s51 | s52 | s53 | n=4 mean | n=4 median |
+|---|---|---|---|---|---|---|
+| full (none) | 758 | 686 | 455 | **744.7** | 661 | **715.5** |
+| stripped (consistency) | 601 | 610 | 600 | **558.3** | 592 | **600.5** |
+
+**Verdict: the dissociation is CONFIRMED at n=4** — stripped degrades −15.4% on medians (−10.4% on means), vs Hop's rock-solid ±0 (n=3, +1.4%). The s52 full-arm 455 is now the lone outlier (3/4 full seeds cluster 686–758), so the "bimodality" concern dissolves — with one honest refinement observed live in s53's eval trajectory: the FULL arm's evals swing widely within a single run late in training (680 → 715 → 676 → **501** → 696 → 744 over 2.1–2.5M) while the stripped arm's stay tight (539–568 across the same window). The right claim is therefore: **under planner-collection on WalkerRun, the full model reaches a higher but higher-variance performance regime (median ~715, within-run eval swings ~250 pts), while the stripped model is stable at a lower level (~600, swings ~30 pts)** — the WM buys peak performance at the cost of eval stability; s52's 455 was most likely an unlucky final-eval draw from that volatile regime, not a distinct mode. Paper 3's double-dissociation table updates to n=4 on Walker with this variance-aware framing.
