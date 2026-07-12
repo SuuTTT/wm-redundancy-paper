@@ -851,3 +851,18 @@ Extending the collection-mode × WM dissociation: (i) **V2H Hop s53 pair** → n
 
 ### 📋 GWM line reviewed pre-box-retirement (2026-07-12 18:30) — stays CLOSED; one banked item
 User retiring the 5070 Ti GWM box (instance 40924090). Review of the June record (CHANGELOG + graph-world-model-plan.md): iter-34 representation-level OOD win (graph value-R² 0.57 vs fair-mono 0.40) never converted to control (MPC at random floor); SOLD reproduced (100% vs paper 97.9%) and its own Table 1 shows monolithic TD-MPC2 ties it off-relational; iter-36 control test UNINFORMATIVE (env SNR ceiling, on the retiring box); ManiSkill headroom gate FAILED (monolithic generalizes over passive distractors). Verdict: line stays closed as Paper A's relational-axis closure. BANKED (post-deadline, not this week): SOLD Fetch-Distinct head-to-head, ~2-3 box-days on a ≥30GB-disk PyTorch box — the one untested cell (active multi-object interaction). Box retirement is data-safe: contact_entities.py/entity_wm.py/monolithic_wm.py/value_coupling_probe.py all in tdmpc-glass repo. Part-18 lab-notebook blog published covering all 10 tracks of the revision week.
+
+### ✅ A1 — Walker VBN n=4 COMPLETE → 3-TASK GRID n=4 COMPLETE (2026-07-12 22:20, A1_WALKER_S53AB_DONE + A1_WALKER_S53CD_DONE; s53 finals at es=5,000,192, disk-verified)
+| D | n=3 mean | s53 | n=4 mean | % of van 727 |
+|---|---|---|---|---|
+| 16 | 622 | 610.7 | **619.2** | 85% |
+| 32 | 647 | 618.2 | **639.8** | 88% |
+| 64 | 669 | 648.9 | **664.0** | 91% |
+| 128 | 701 | 674.9 | **694.5** | 96% |
+
+s53 is itself monotone (610.7→674.9) and lands squarely on the n=3 curve. Walker stays the **most compressible** task: even D=16 retains 85% of vanilla. **THE PAPER-A FIGURE IS n=4 COMPLETE ON ALL THREE TASKS:**
+- **Cheetah** 544/588/630/727 vs 855 (64→85%, strictly monotone — smooth information gradient)
+- **Walker** 619/640/664/694 vs 727 (85→96%, flat-high — most compressible)
+- **Acrobot** 261/271/282/397 vs 511 (51→78%, step-at-128 — least compressible)
+
+Three qualitatively distinct fingerprints at n=4, matching the sufficiency ordering (Walker −7.5% < Cheetah −23.8% < Acrobot −44%). n=5 arms (s54) in flight on all Cheetah widths + Walker W16/32; Walker s54 W64/128 launched on freed GPU0.
