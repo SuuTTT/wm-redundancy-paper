@@ -809,3 +809,13 @@ s52 is a globally weak seed (low at every width — Acrobot's known seed brutali
 | WalkerRun | 758 / 686 / **455** (mean 633) | 601 / 610 / 600 (mean 604) | −4.6% n.s. | **−12.5%** |
 
 **Hop: removability at n=3 is rock-solid** (stripped ≥ full at every seed; spreads tight). **Walker: the s52 FULL arm is an outlier low (455 vs 686-758)** — full+planner-collect appears bimodal (2 strong seeds, 1 collapsed) while stripped is astonishingly tight (600-610, spread 10). Honest read: the dissociation DIRECTION survives (stripped never reaches the full-arm median; 2/3 seeds show the large gap; median Δ −12.5%) but the mean-based −16.1% claim must soften to 'median −12 to −16%, full-arm seed-bimodal (n=3)'. Resolving seed (s53 pair) launching alongside Lean+. Mechanistic note: a collapsed full+planner-collect seed on Walker is itself interesting — planner-collection couples data quality to WM quality, adding a failure mode the stripped arm (which ignores its garbage WM for data via value-scoring... no wait, stripped ALSO planner-collects; its stability suggests the WM-rollout scoring adds VARIANCE when the WM is mid-quality) — flag for Paper 3 discussion, do not over-claim.
+
+### ✅ A1 — Acrobot VBN n=4 COMPLETE (2026-07-12 04:15, A1_ACROBOT_S53_DONE; s53 finals at es=5,000,192 mppi, disk-verified)
+| D | s50/51 sum | s52 | s53 | n=4 mean | % of van 511 |
+|---|---|---|---|---|---|
+| 16 | 560 | 213.6 | 270.8 | **261.1** | 51% |
+| 32 | 702 | 98.8 | 283.3 | **271.0** | 53% |
+| 64 | 582 | 230.6 | 315.7 | **282.1** | 55% |
+| 128 | 982 | 303.2 | 304.0 | **397.3** | 78% |
+
+s53 per-width: 270.8/283.3/315.7/304.0 — a middling seed where D=128 (304) ≈ D=64 (316), i.e. the second consecutive seed where 128 is not dominant. At n=4 the aggregate step-at-128 persists but narrows (428→397, 84%→78% of vanilla), carried by s50/51 (491 pair mean). Claim after n=4: **tight widths (16/32/64) remain statistically flat at 51–55%; D=128 remains the only width that recovers a large fraction of vanilla, but its margin is seed-heavy** — Acrobot stays the least-compressible task in the grid, with the honest caveat that the 128-step's size has wide seed variance (s50 491-pair vs s52/53 ~304). Paper A figure updated to n=4 on Acrobot.
