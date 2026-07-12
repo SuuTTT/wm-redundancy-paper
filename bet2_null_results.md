@@ -838,3 +838,13 @@ Pre-registered gates (0af60bf): success = variance<120 AND mean≥620 → **FAIL
 
 ### 📋 PRE-REGISTRATION — V2H s53 + V2C (launched 12:30, GPUs 0-2 b3060, 2.5M planner-collection, n_samples=512)
 Extending the collection-mode × WM dissociation: (i) **V2H Hop s53 pair** → n=4 on the removable side; prediction: stripped≈full (±5%), consistent with n=3's +1.4%. (ii) **V2C Cheetah s50/s51 pairs** → 3rd task in the dissociation table, the intermediate-compressibility case; prediction: stripped degrades ≥15% (policy-collection gives −23.8% at 5M; planner-collection amplified Walker's gap, so Cheetah's should be at least Walker-sized). Kill/read: if stripped-Cheetah under planner-collection degrades <8%, the "planner-collection amplifies WM importance" generalization is falsified and the amplification is Walker-specific.
+
+### ✅ A1 — Cheetah VBN n=4 COMPLETE (2026-07-12 16:00, A1_CHEETAH_S53_DONE; s53 finals at es=5,000,192, disk-verified)
+| D | n=3 mean | s53 | n=4 mean | % of van 855 |
+|---|---|---|---|---|
+| 16 | 517 | 624.9 | **544.0** | 64% |
+| 32 | 576 | 624.9 | **588.2** | 69% |
+| 64 | 624 | 646.7 | **629.7** | 74% |
+| 128 | 726 | 729.0 | **726.8** | 85% |
+
+(s53 W16 and W32 finals coincide at 624.9 — verified distinct runs, distinct md5s and differing pi-rows; a 1-decimal coincidence.) s53 is itself non-decreasing in width (624.9/624.9/646.7/729.0), and the n=4 means keep Cheetah's **strictly monotone** value-sufficiency curve, now spanning 64%→85% of vanilla. Cheetah remains the clean "smooth information-gradient" case in the 3-task grid: no width is enough, each doubling buys more, and even D=128 leaves 15% on the table — consistent with the sufficiency result (−23.8% stripped) that Cheetah's WM carries real predictive structure. Walker n=4 pending (s53 W16/32 GPU3 + W64/128 GPU0, ~evening) → grid n=4 complete then. Refill: Cheetah s54 W64/W128 launched on freed GPU2 (n=5).
