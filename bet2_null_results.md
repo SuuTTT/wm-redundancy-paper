@@ -866,3 +866,18 @@ s53 is itself monotone (610.7→674.9) and lands squarely on the n=3 curve. Walk
 - **Acrobot** 261/271/282/397 vs 511 (51→78%, step-at-128 — least compressible)
 
 Three qualitatively distinct fingerprints at n=4, matching the sufficiency ordering (Walker −7.5% < Cheetah −23.8% < Acrobot −44%). n=5 arms (s54) in flight on all Cheetah widths + Walker W16/32; Walker s54 W64/128 launched on freed GPU0.
+
+### 🔴 V2HC + V2W-s54 — the 3-task planner-collection table lands, WITH A PRE-REGISTERED INVERSION (2026-07-13 03:05, V2HC_EXT_DONE + V2W_S54_DONE; finals at es=2,500,096, disk-verified)
+**Cheetah (NEW, n=2): the pre-registered prediction (943819c: stripped −15%+) is FALSIFIED — inverted.**
+| arm | s50 last-6 evals (2.25→2.5M) | s50 final | s51 last-6 | s51 final | last-6 median |
+|---|---|---|---|---|---|
+| full | 313/312/171/300/440/**141** | 141.4 | 235/554/329/341/453/**585** | 584.8 | ~306 / ~397 |
+| stripped | 547/560/538/530/529/**459** | 459.3 | 548/485/551/536/540/**555** | 555.1 | ~534 / ~544 |
+
+Under planner-collection on CheetahRun, the FULL model does not merely fail to beat stripped — it **destabilizes** (evals swing 141–585 within 250k steps, both seeds) while the stripped model sits stably at ~460–555. On last-6 medians stripped is ~+40% ABOVE full. Kill criterion (<8% degradation) fires; the honest claim: **"planner-collection amplifies WM importance" is Walker-specific, not a law.** The full-model eval volatility seen on Walker (250-pt swings) becomes outright instability on Cheetah. Same-budget caveat: both arms at 2.5M; no cross-budget comparison to the 5M policy-collection numbers is made.
+
+**Walker (n=5, V2W s54: full 738.8, stripped 612.5):** full 758/686/455/745/739 (median **739**, mean 676.6) vs stripped 601/610/600/558/612 (median **601**, mean 596.2) — **−18.7% on medians**, dissociation strengthens at n=5.
+
+**Hop (n=4, s53: full 436.0, stripped 467.8):** stripped ≥ full again; removability rock-solid.
+
+**The refined 3-task planner-collection picture:** Hop — WM removable, both arms stable. Walker — WM buys a higher but volatile regime (−19% median cost of stripping). Cheetah — WM under planner-collection is actively destabilizing; stripping HELPS (+40% median, n=2). The collection-mode × WM interaction is task-dependent and non-monotone in WM-load — a sharper (and more honest) Paper-3 centerpiece than the amplification story. EXTENSION LAUNCHED: V2C s52/s53/s54 pairs (6 arms, GPUs 1-3 b3060) → Cheetah n=5 to nail the inversion.
