@@ -914,3 +914,11 @@ s54 non-decreasing in width (564.7/593.8/613.7/721.3), lands on the curve; n=5 m
 
 ### ✅ A1 — Walker VBN n=5 (Walker VBN s54: W16=647.5 W32=654.0 W64=674.9 W128=690.9)
 n=5 means: **625 / 643 / 666 / 694** vs vanilla 727 (86/88/92/95%). Flat-high fingerprint stable; grid VBN now n=5 on Cheetah+Walker, Acrobot s54 running → n=5.
+
+### 📋 PRE-REGISTRATION — M1: the mechanism of the Cheetah planner-collection inversion (2026-07-14 03:40 SGT, to launch when V2CW_EXT3 frees b3060)
+**Question:** WHY does the full world model destabilize under planner-collection on Cheetah (finals 117–585) but not on Hop? The inversion (stripped +104% over full at n=5) is observed but unexplained.
+**Hypothesis (poisoned-target loop):** under planner-collection the planner rolls the world model to both ACT (collect data) and score MPPI candidates. If the full model's open-loop rollout is over-optimistic on Cheetah, MPPI selects on hallucinated value → the collected data + value targets are poisoned → eval swings. The STRIPPED model's planner rolls an untrained/frozen dynamics net, so MPPI degrades to ~stable random-shooting: lower but tight. Hop's dynamics are simpler → full-model rollout stays calibrated → no poisoning.
+**Primary probe (low-risk, in-eval logger):** instrument the eval path to log, per eval, the **MPPI planned-return vs realized eval-return gap** (planner already runs at eval; just log its predicted value alongside the achieved return). Arms: {CheetahRun, HopperHop} × {full=none, stripped=consistency}, planner-collection, 2.5M, n≥2. 
+**Pre-registered prediction:** full-Cheetah shows a LARGE positive planned−realized gap that SPIKES in the volatile eval windows; stripped-Cheetah ≈0 gap; both Hop arms ≈0 gap (small, stable). 
+**GO (mechanism confirmed):** full-Cheetah mean |gap| ≥ 2× stripped-Cheetah AND gap correlates with eval variance (Pearson |r|≥0.4). **Kill/NULL:** gap comparable across arms → the instability is NOT planner-target poisoning (look elsewhere: value-target feedback, RunningScale). Either way it sharpens Paper 3.
+**Fallback if the eval-logger build is flaky (nan-smoke fails):** relaunch the inversion pair to n=8 for a bulletproof CI + quantify the already-observed within-run eval volatility (std of last-10 evals, full vs stripped) as the descriptive mechanism. run_benchmark.py backup = .bak_v2.
