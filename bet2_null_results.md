@@ -891,3 +891,26 @@ Under planner-collection on CheetahRun, the FULL model does not merely fail to b
 | 128 | 726.8 | 721.3 | **725.7** | 85% |
 
 s54 non-decreasing in width (564.7/593.8/613.7/721.3), lands on the curve; n=5 means barely move from n=4 (544/588/630/727 → 548/589/627/726). Cheetah's strictly-monotone value-sufficiency fingerprint is now rock-solid at n=5 (64→85%). Acrobot s54 VBN launched on freed b3060b GPUs 1-2 (→ n=5 on the last grid task).
+
+### 🔴 3-TASK PLANNER-COLLECTION DISSOCIATION — COMPLETE at n=4-5 (2026-07-13 03:40, V2C_EXT2_DONE + V2H_S54_DONE + Walker VBN s54; finals @2.5M / 5M, disk-verified)
+
+**Cheetah (n=5) — the INVERSION is confirmed, pre-registration decisively falsified:**
+| seed | full final | full last-6 median | stripped final | stripped last-6 median |
+|---|---|---|---|---|
+| 50 | 141.4 | ~306 | 459.3 | ~534 |
+| 51 | 584.8 | ~397 | 555.1 | ~544 |
+| 52 | 232.9 | ~230 | 474.8 | ~526 |
+| 53 | 523.4 | ~515 | 275.5* | ~515 |
+| 54 | 116.8 | ~95 | 541.8 | ~526 |
+| **agg** | **median 232.9, mean 320, range 117–585** | | **median 474.8, mean 461** | **tight ~515–544** |
+
+(*s53 stripped final 275.5 is an end-of-run dip; its last-6 median is 515.) Under planner-collection on CheetahRun the FULL model is severely **destabilized** (finals span 117–585 across seeds; within-run eval swings 50→540) while STRIPPED sits stably at ~460–555. Stripped beats full by **+104% on final medians (474.8 vs 232.9)** and ~+70% on last-6 medians. Pre-registration (943819c: stripped −15%+, kill <8%) is **falsified/inverted at n=5**. The claim "planner-collection amplifies WM importance" is **Walker-specific, not a law**; the collection-mode × WM interaction is task-dependent and non-monotone.
+
+**Hop (n=5): removability holds.** s54 full 472.9 / stripped 254.0 (a low stripped draw); with n=3 (465.0/465.8) + s53 (436.0/467.8), Hop shows **no systematic full>stripped** — arms overlap, no Walker-style dissociation. WM removable on Hop under planner-collection.
+
+**Walker (n=5, restated): full median 739 vs stripped 601, −18.7%.** The one task where the WM is load-bearing (higher but volatile regime).
+
+**Final Paper-3 table:** Hop = removable (stable) · Walker = load-bearing (−19%, volatile) · Cheetah = WM *actively destabilizing* under planner-collection (+100% median cost of KEEPING it). Three distinct regimes.
+
+### ✅ A1 — Walker VBN n=5 (Walker VBN s54: W16=647.5 W32=654.0 W64=674.9 W128=690.9)
+n=5 means: **625 / 643 / 666 / 694** vs vanilla 727 (86/88/92/95%). Flat-high fingerprint stable; grid VBN now n=5 on Cheetah+Walker, Acrobot s54 running → n=5.
