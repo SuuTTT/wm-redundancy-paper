@@ -881,3 +881,13 @@ Under planner-collection on CheetahRun, the FULL model does not merely fail to b
 **Hop (n=4, s53: full 436.0, stripped 467.8):** stripped ≥ full again; removability rock-solid.
 
 **The refined 3-task planner-collection picture:** Hop — WM removable, both arms stable. Walker — WM buys a higher but volatile regime (−19% median cost of stripping). Cheetah — WM under planner-collection is actively destabilizing; stripping HELPS (+40% median, n=2). The collection-mode × WM interaction is task-dependent and non-monotone in WM-load — a sharper (and more honest) Paper-3 centerpiece than the amplification story. EXTENSION LAUNCHED: V2C s52/s53/s54 pairs (6 arms, GPUs 1-3 b3060) → Cheetah n=5 to nail the inversion.
+
+### ✅ A1 — Cheetah VBN n=5 (2026-07-13 03:10, A1_CHEETAH_S54AB_DONE + A1_CHEETAH_S54CD_DONE; s54 finals @5,000,192, disk-verified)
+| D | n=4 mean | s54 | n=5 mean | % of van 855 |
+|---|---|---|---|---|
+| 16 | 544.0 | 564.7 | **548.1** | 64% |
+| 32 | 588.2 | 593.8 | **589.3** | 69% |
+| 64 | 629.7 | 613.7 | **626.5** | 73% |
+| 128 | 726.8 | 721.3 | **725.7** | 85% |
+
+s54 non-decreasing in width (564.7/593.8/613.7/721.3), lands on the curve; n=5 means barely move from n=4 (544/588/630/727 → 548/589/627/726). Cheetah's strictly-monotone value-sufficiency fingerprint is now rock-solid at n=5 (64→85%). Acrobot s54 VBN launched on freed b3060b GPUs 1-2 (→ n=5 on the last grid task).
