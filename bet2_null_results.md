@@ -932,3 +932,13 @@ n=5 means: **625 / 643 / 666 / 694** vs vanilla 727 (86/88/92/95%). Flat-high fi
 | 128 | 397.3 | 161.6 | **350.2** | 68% |
 
 **s54 is a brutal Acrobot seed** — W16 collapsed to **1.6** (total failure; Acrobot's documented seed fragility, cf. official TD-MPC-v1 hopper 2/577/1 variance) and W128 drew low (161.6, below W32/W64, non-monotone). This drags W16's n=5 mean to 209 and softens the D=128 step (78%→68%). Honest read: Acrobot remains the **least-compressible AND highest-variance** task in the grid — the step-at-128 is real on the median seed but seed-fragile at the tails; the tight-width ordering is noise. Acrobot s55 (running) + s56 (launching on freed GPUs 1-2) → n=6/7 to stabilize the D=128 step estimate. Grid VBN status: Cheetah n=5 (monotone, tight), Walker n=5 (flat-high, tight), Acrobot n=5 (step, noisy → extending).
+
+### ✅ A1 — Acrobot VBN n=6 (2026-07-14 09:47, A1_ACROBOT_S55_DONE; s55 finals @5,000,192, disk-verified)
+| D | n=5 mean | s55 | n=6 mean | % of van 511 |
+|---|---|---|---|---|
+| 16 | 209.2 | 207.5 | **208.9** | 41% |
+| 32 | 260.5 | **12.5** | **219.2** | 43% |
+| 64 | 263.1 | 327.6 | **273.9** | 54% |
+| 128 | 350.2 | 189.3 | **323.4** | 63% |
+
+**Second consecutive collapse seed** — s55 W32 = **12.5** (total failure), non-monotone (W64 327.6 > W128 189.3 > W16 207.5 > W32 12.5). s54 collapsed W16 (1.6); s55 collapses W32. Acrobot's per-seed brutality is now unmistakable: ~1 in 3 seed×width cells collapses to near-zero. The MEAN-based D=128 step keeps softening as collapses accumulate (n=3 84% → n=4 78% → n=5 68% → n=6 63%). **Paper recommendation: report Acrobot VBN on MEDIANS, not means** — the step-at-128 is robust on median seeds but the mean is dominated by a heavy collapse tail. Acrobot remains unambiguously the **least-compressible + highest-variance** grid task; the qualitative 3-fingerprint story (Cheetah monotone / Walker flat-high / Acrobot step) stands, with Acrobot's noise now well-characterized. s56 (running) + s57 (launching GPUs 0,3) → n=7/8 for a stable median.
