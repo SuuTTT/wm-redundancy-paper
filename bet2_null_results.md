@@ -974,3 +974,16 @@ The world model **raises eval variance ~3× on both tasks** under planner-collec
 | vanilla (van/van2) | 730.6 / 894.4 | 897.0 / 752.5 | **~818** | — |
 
 **Reading (n=2, tentative).** On CheetahRun, **uniformity ≈ VICReg** (751 vs 726, well within seed noise) and **both sit slightly BELOW vanilla** (~−9%). Neither anti-collapse lever buys generalization on this DMControl collapse task — a **NULL** consistent with the broader redundancy story (H-JEPA/SE NULLs on Panda #56/#57; TD-MPC2's value-driven latent doesn't collapse enough for an anti-collapse prior to help). Seed variance is high (vanilla s50=730 vs s51=897; vac s50 final crashed to 418 but last-6 median smooths to 779), so n=2 is thin. **Refill in progress:** launching urc/vac/van s52/s53 on b3060b when Acrobot frees → n=4 to firm up whether the small negative is real or noise. This is the resumed JEPA thread the user asked for (07-14).
+
+### 🟢 Acrobot VBN — CLEAN 5M harvest, n=5 complete seeds → fingerprint REFINES to "step-at-64" (2026-07-14 19:20, A1_ACROBOT_S56_DONE; final mppi, disk-verified)
+
+**Data-quality correction.** Re-harvesting all Acrobot VBN seed dirs revealed the prior n=6 "step-at-128" table mixed step budgets: **s50/s51 only reached ~2.7M** (partial), s57 still running (~3.1M). The clean **final-@5M** sample is **n=5 = {s52,s53,s54,s55,s56}** (all step=5000192). s56 (new) is the strongest seed yet — no collapse, all widths high (W16=314, W32=455, W64=502, W128=500).
+
+| width | per-seed finals {52,53,54,55,56} | median | (% vanilla 511) | mean |
+|---|---|---|---|---|
+| W16 | 1.6 / 207.5 / 213.6 / 270.8 / 314.1 | **213.6** | 41.8% | 201.5 |
+| W32 | 12.5 / 98.8 / 218.5 / 283.3 / 455.0 | **218.5** | 42.8% | 213.6 |
+| W64 | 186.9 / 230.6 / 315.7 / 327.6 / 501.9 | **315.7** | 61.8% | 312.5 |
+| W128 | 161.6 / 189.3 / 303.2 / 304.0 / 499.6 | **303.2** | 59.3% | 291.5 |
+
+**Refined fingerprint:** the step is at **W64, not W128**. W16≈W32 (~42% of vanilla, tight-width flat) → **W64≈W128 (~60%)**. The earlier "only D=128 recovers" claim was an artifact of the two partial low-step seeds; on complete-at-5M seeds **D=64 recovers as much as D=128** (62% vs 59%). The qualitative Paper-A story is *preserved and sharpened*: Acrobot is still the **least-compressible** grid task (tight widths flat far below vanilla; needs a mid-width to recover), and still the **noisiest** (2 collapse cells: s54 W16=1.6, s55 W32=12.5). But the recovery point is D≈64, and the three-fingerprint contrast becomes cleaner: **Cheetah monotone / Walker flat-high / Acrobot flat-low-then-step-at-64**. Report on MEDIANS (means dragged by the collapse tail). s57 completing (~5M later tonight) → n=6-at-5M for a final median; #59 refill now occupies the freed GPUs. Supersedes the n=6 mean table in edbb978 for the final-@5M paper figure.
