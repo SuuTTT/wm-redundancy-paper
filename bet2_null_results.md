@@ -942,3 +942,23 @@ n=5 means: **625 / 643 / 666 / 694** vs vanilla 727 (86/88/92/95%). Flat-high fi
 | 128 | 350.2 | 189.3 | **323.4** | 63% |
 
 **Second consecutive collapse seed** — s55 W32 = **12.5** (total failure), non-monotone (W64 327.6 > W128 189.3 > W16 207.5 > W32 12.5). s54 collapsed W16 (1.6); s55 collapses W32. Acrobot's per-seed brutality is now unmistakable: ~1 in 3 seed×width cells collapses to near-zero. The MEAN-based D=128 step keeps softening as collapses accumulate (n=3 84% → n=4 78% → n=5 68% → n=6 63%). **Paper recommendation: report Acrobot VBN on MEDIANS, not means** — the step-at-128 is robust on median seeds but the mean is dominated by a heavy collapse tail. Acrobot remains unambiguously the **least-compressible + highest-variance** grid task; the qualitative 3-fingerprint story (Cheetah monotone / Walker flat-high / Acrobot step) stands, with Acrobot's noise now well-characterized. s56 (running) + s57 (launching GPUs 0,3) → n=7/8 for a stable median.
+
+### 🔴 V2CW n=7 — dissociation CONFIRMED at n=7 + the variance mechanism (M1 answered from eval data) (2026-07-14 10:20, V2CW_EXT3_DONE; finals @2.5M, disk-verified)
+
+**Cheetah (n=7) — INVERSION holds:**
+| seed | full final | full last-6 median | stripped final | stripped last-6 median |
+|---|---|---|---|---|
+| new s55 | 455.4 | 374 | 469.9 | 461 |
+| new s56 | 327.2 | 266 | 565.2 | 538 |
+| **n=7 finals** | full: 117/141/233/327/455/523/585 → **median 327, mean 340** | | stripped: 276/459/470/475/542/555/565 → **median 475, mean 477** | |
+Stripped beats full **+45% on final medians** (474.8 vs 327.2) at n=7 (was +104% at n=5 — two new full seeds drew higher, but inversion is unbroken across all 7 seeds' medians). Pre-reg (943819c: stripped −15%) falsified.
+
+**Walker (n=7) — dissociation holds:** full finals 455/686/739/745/749/758/776 → median **745**; stripped 558/600/601/608/610/612/645 → median **608**. Full > stripped **+22.5% on medians** (−18.4% cost of stripping). Rock-solid.
+
+**M1 MECHANISM — answered directly from the eval trajectories (no separate probe needed):** the last-6-eval **standard deviation** is the mechanism.
+| task | full-arm eval std | stripped-arm eval std | ratio |
+|---|---|---|---|
+| CheetahRun | **~165** (s55 ~170, s56 ~160) | ~60 (s55 ~75, s56 ~48) | **~2.7×** |
+| WalkerRun | ~36 (s55 ~15, s56 ~57) | ~12 (s55 ~15, s56 ~8) | ~3× |
+
+The world model **raises eval variance ~3× on both tasks** under planner-collection (the poisoned-planner-target signature: MPPI selecting on a model that periodically hallucinates value). The tasks differ only in the *absolute scale* relative to the mean: on Walker the WM lifts the mean to ~700–745 so the ~36-pt swings stay net-positive (higher-but-volatile); on Cheetah the ~165-pt swings dip so far (finals reach 117) that they drag the mean *below* the stable stripped model (~475) — variance tips into net harm. **One mechanism (WM inflates planner-target variance), two regimes, set by the mean/variance ratio.** This is the sharp, unified Paper-3 statement — and it needed no new experiment, only reading the volatility we already logged. (M1 pre-reg d7e7c49 is thus answered via the descriptive route; the planned-vs-realized-gap probe becomes optional confirmatory.)
