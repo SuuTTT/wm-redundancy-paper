@@ -922,3 +922,13 @@ n=5 means: **625 / 643 / 666 / 694** vs vanilla 727 (86/88/92/95%). Flat-high fi
 **Pre-registered prediction:** full-Cheetah shows a LARGE positive planned−realized gap that SPIKES in the volatile eval windows; stripped-Cheetah ≈0 gap; both Hop arms ≈0 gap (small, stable). 
 **GO (mechanism confirmed):** full-Cheetah mean |gap| ≥ 2× stripped-Cheetah AND gap correlates with eval variance (Pearson |r|≥0.4). **Kill/NULL:** gap comparable across arms → the instability is NOT planner-target poisoning (look elsewhere: value-target feedback, RunningScale). Either way it sharpens Paper 3.
 **Fallback if the eval-logger build is flaky (nan-smoke fails):** relaunch the inversion pair to n=8 for a bulletproof CI + quantify the already-observed within-run eval volatility (std of last-10 evals, full vs stripped) as the descriptive mechanism. run_benchmark.py backup = .bak_v2.
+
+### ✅ A1 — Acrobot VBN n=5 (2026-07-14 03:05, A1_ACROBOT_S54_DONE; s54 finals @5,000,192, disk-verified)
+| D | n=4 mean | s54 | n=5 mean | % of van 511 |
+|---|---|---|---|---|
+| 16 | 261.1 | **1.6** | **209.2** | 41% |
+| 32 | 271.0 | 218.5 | **260.5** | 51% |
+| 64 | 282.1 | 186.9 | **263.1** | 51% |
+| 128 | 397.3 | 161.6 | **350.2** | 68% |
+
+**s54 is a brutal Acrobot seed** — W16 collapsed to **1.6** (total failure; Acrobot's documented seed fragility, cf. official TD-MPC-v1 hopper 2/577/1 variance) and W128 drew low (161.6, below W32/W64, non-monotone). This drags W16's n=5 mean to 209 and softens the D=128 step (78%→68%). Honest read: Acrobot remains the **least-compressible AND highest-variance** task in the grid — the step-at-128 is real on the median seed but seed-fragile at the tails; the tight-width ordering is noise. Acrobot s55 (running) + s56 (launching on freed GPUs 1-2) → n=6/7 to stabilize the D=128 step estimate. Grid VBN status: Cheetah n=5 (monotone, tight), Walker n=5 (flat-high, tight), Acrobot n=5 (step, noisy → extending).
