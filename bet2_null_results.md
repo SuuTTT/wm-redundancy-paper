@@ -962,3 +962,15 @@ Stripped beats full **+45% on final medians** (474.8 vs 327.2) at n=7 (was +104%
 | WalkerRun | ~36 (s55 ~15, s56 ~57) | ~12 (s55 ~15, s56 ~8) | ~3× |
 
 The world model **raises eval variance ~3× on both tasks** under planner-collection (the poisoned-planner-target signature: MPPI selecting on a model that periodically hallucinates value). The tasks differ only in the *absolute scale* relative to the mean: on Walker the WM lifts the mean to ~700–745 so the ~36-pt swings stay net-positive (higher-but-volatile); on Cheetah the ~165-pt swings dip so far (finals reach 117) that they drag the mean *below* the stable stripped model (~475) — variance tips into net harm. **One mechanism (WM inflates planner-target variance), two regimes, set by the mean/variance ratio.** This is the sharp, unified Paper-3 statement — and it needed no new experiment, only reading the volatility we already logged. (M1 pre-reg d7e7c49 is thus answered via the descriptive route; the planned-vs-realized-gap probe becomes optional confirmatory.)
+
+### 🟡 JEPA #59 — Uniformity vs VICReg on CheetahRun (DMControl collapse task), n=2 (2026-07-14 15:55; runs from 07-07, URC/VAC_CHEETAH_DONE; finals @5M, disk-verified; HARVEST of pre-existing un-ledgered data)
+
+**Context.** Extends task #58 (relational-anti-collapse lever: SE vs VICReg vs uniformity, on nav) to a DMControl collapse-prone task. Runner `run_vac.sh` (b3060b, tdmpc_glass): arms **urc**=uniformity regularizer (URC_LAM=1.0), **vac**=VICReg variance-covariance (VAC_LAM=1.0), **van/van2**=matched vanilla baselines (λ=0). TASK=CheetahRun, 5M steps, k_update=128, mppi_n_samples=2048, horizon=3. Metric = last-6 mppi-eval median (robust to the within-run volatility documented for Cheetah).
+
+| arm | s50 | s51 | seed-median | vs vanilla |
+|---|---|---|---|---|
+| **uniformity (urc)** | 684.4 | 767.2 | **725.8** | −11.3% |
+| **VICReg (vac)** | 778.7 | 723.9 | **751.3** | −8.2% |
+| vanilla (van/van2) | 730.6 / 894.4 | 897.0 / 752.5 | **~818** | — |
+
+**Reading (n=2, tentative).** On CheetahRun, **uniformity ≈ VICReg** (751 vs 726, well within seed noise) and **both sit slightly BELOW vanilla** (~−9%). Neither anti-collapse lever buys generalization on this DMControl collapse task — a **NULL** consistent with the broader redundancy story (H-JEPA/SE NULLs on Panda #56/#57; TD-MPC2's value-driven latent doesn't collapse enough for an anti-collapse prior to help). Seed variance is high (vanilla s50=730 vs s51=897; vac s50 final crashed to 418 but last-6 median smooths to 779), so n=2 is thin. **Refill in progress:** launching urc/vac/van s52/s53 on b3060b when Acrobot frees → n=4 to firm up whether the small negative is real or noise. This is the resumed JEPA thread the user asked for (07-14).
