@@ -20,7 +20,13 @@ how much of the latent the value function actually needs.
 |---|---|---|---|---|---|---|
 | CheetahRun (n=5) | 548 (64%) | 589 (69%) | 627 (73%) | 726 (85%) | 855 | **strictly monotone** — smooth information gradient; no width suffices |
 | WalkerRun (n=5) | 625 (86%) | 643 (88%) | 666 (92%) | 694 (95%) | 727 | **flat-high** — most compressible; D=16 already 86% |
-| AcrobotSwingup (n=4) | 261 (51%) | 271 (53%) | 282 (55%) | 397 (78%) | 511 | **step-at-128** — least compressible; tight widths flat, only D=128 recovers |
+| AcrobotSwingup (n=5, medians) | 214 (42%) | 219 (43%) | 316 (62%) | 303 (59%) | 511 | **step-at-64** — least compressible; tight widths (16,32) flat-low, D=64 recovers as much as D=128 |
+
+*Note on Acrobot (updated 07-14, ledger 7501d4f).* The clean final-@5M sample is n=5 {s52–s56}; the
+earlier "step-at-128" was an artifact of two partial seeds (s50/s51 only reached ~2.7M) contaminating
+the means. On complete seeds the recovery point is **D≈64** (D=64 ≈ D=128 ≈ 60% of vanilla), and the
+tight widths (16,32) sit flat-low at ~42%. Acrobot remains the least-compressible and noisiest task
+(two collapse cells: s54 W16, s55 W32); report on medians. s57 completing tonight → n=6.
 
 **Load-bearing ordering agrees.** The stripped-vs-full sufficiency ablation (delete the consistency
 loss, keep policy-collection, 5M) orders the tasks identically: HopperHop **0%** (n=8, removable) <
@@ -74,3 +80,32 @@ degrading to stable random-shooting. Probe: log the MPPI planned-return vs reali
 
 (Ledger: V2/V2W double dissociation 7d9c9fb/852a580; n=5 + inversion b907130/c0c5830; M1 pre-reg
 d7e7c49.)
+
+---
+
+## JEPA/SE thread — new section: "Anti-collapse regularizers are redundant on a DMControl collapse task" (#59)
+
+**Setup.** The JEPA/SE line (Part-10 Q2/Q7) asks whether an explicit anti-collapse objective on the
+latent buys generalization where the representation is prone to collapse. We test the two canonical
+levers head-to-head on **CheetahRun** — the DMControl task our VBN instrument flags as *least
+compressible / strictly-monotone* (i.e. the value function needs the most of the latent, the regime
+most likely to collapse): **uniformity** (a hypersphere-uniformity penalty, `urc`) vs **VICReg**
+(variance-covariance, `vac`), each against a matched vanilla baseline, 5M steps.
+
+**Result (n=2, last-6 mppi-eval medians; refill to n=4 running):**
+
+| arm | seed-median | vs vanilla (~818) |
+|---|---|---|
+| uniformity (urc) | 725.8 | −11.3% |
+| VICReg (vac) | 751.3 | −8.2% |
+| vanilla | ~818 | — |
+
+**Reading — a NULL, and it is the *expected* null.** Uniformity ≈ VICReg (within seed noise), and
+**both sit slightly below vanilla**. On this task the anti-collapse prior buys nothing — consistent
+with the H-JEPA multi-seed NULL on PandaPickCube (#56) and the SE-structured-JEPA NULL (#57). The
+unifying reason connects to Paper A's instrument: TD-MPC2's latent is *shaped by the value/TD
+objective*, which already prevents the degenerate collapse these regularizers defend against; adding an
+explicit anti-collapse term is therefore redundant (and mildly harmful via the extra loss term
+competing with the value signal). This is the JEPA-line analogue of the paper's central claim —
+*explicit structure is redundant exactly where the base objective already supplies it.* (Ledger
+0a0a599; refill urc/vac s52 running, s53 queued → n=4.)
