@@ -1015,3 +1015,11 @@ Added s57/s58 to the n=7 → **n=9 both tasks**. Metric = final mppi (v2mppicol 
 New front (user rented a 4×4070; kept idle b3060 on-task too). Tests the redundancy-law BOUNDARY: #59 found the anti-collapse null on **CheetahRun** (the strictly-monotone / least-compressible VBN fingerprint). WalkerRun is the opposite extreme — **flat-high**, the most-compressible task where the value function needs the *least* of the latent, i.e. the regime where an added anti-collapse objective has the MOST room to help. If uniformity/VICReg is *also* null here, the redundancy law is airtight; if structure ever helps, this is where it should.
 
 **Sweep (WalkerRun, 5M, run_vac.sh, last-6 mppi median):** uniformity(urc), VICReg(vac), vanilla(van), seeds 60/61/62 → **urc n=3, vac n=3, van n=2**. b3060 (4 GPUs): urc s60/vac s60/van s60/urc s61. 4070 (4 GPUs): vac s61/van s61/urc s62/vac s62. All 8 START-verified; 5M ≈ 6-10h → completes this afternoon, past the 08:00 session stop but survives via nohup. Harvest + verdict next session. Prediction (pre-registered): null again (uniformity ≈ VICReg ≈ vanilla), extending the redundancy law across both VBN-fingerprint extremes.
+
+### 🟡 JEPA #59 Cheetah → n=3 (s52 refill complete) — null CONFIRMED (2026-07-15 07:33; last-6 mppi median, disk-verified)
+
+s52 finished at 5M: urc last6med=739.0, vac last6med=821.3. Combined with s50/s51 → **n=3 medians**:
+- uniformity (urc): {684.4, 739.0, 767.2} → **739.0** (−9.7% vs vanilla ~818)
+- VICReg (vac): {723.9, 778.7, 821.3} → **778.7** (−4.8% vs ~818)
+
+Both still **below vanilla**, uniformity ≈ VICReg (within noise). The n=2 null holds at n=3; vac s52 came in high (~821 ≈ vanilla) which lifts vac's spread but the median stays sub-vanilla. s53 still running (partial). Interim WalkerRun boundary read @~2M/5M: all arms clustered ~695–724 (urc~695/vac~724/van~707), no separation yet — early-consistent with null; final ~10:00 UTC (harvest next session).
