@@ -1049,3 +1049,6 @@ Freeze compute on Papers A & 3 (data-complete at final n), **write** toward ~07-
 
 ### 🔵 JEPA/anti-collapse WalkerRun boundary — H-COMPRESS positive half FALSIFIED (2026-07-15 10:52; 4070 arms done @5M, b3060 arms ~3.3M partial)
 WalkerRun is the flat-high (most-compressible) task where anti-collapse had the MOST room to help. Last-6 mppi medians: **uniformity(urc) ~705, VICReg(vac) ~717-744, vanilla(van) 674-738** — all clustered, **vanilla at/above both structure arms**. So anti-collapse regularizers are **null even here** → imposed structure is redundant across BOTH VBN-fingerprint extremes (Cheetah monotone null #59 + Walker flat-high null). Revised law: **imposed structure helps NOWHERE tested; only the LEARNED world model carries weight, in low-compressibility tasks.** (b3060 arms finishing → final n=3; direction already clear.) This is the clean negative that lets the paper pivot to the positive "when does the *learned* world model hurt" contribution.
+
+### 🟡 JEPA/anti-collapse #59 Cheetah FINAL n=4 (s50-53) — null confirmed (2026-07-15 11:12)
+s53 done: urc last6med=749.1, vac=811.7. **n=4 medians: uniformity(urc)=744.1 (−9%), VICReg(vac)=795.2 (−3%), vanilla ~818** — both ≤ vanilla, urc≈vac. Anti-collapse regularizers redundant on Cheetah at n=4, consistent with WalkerRun flat-high null (3f32229). Imposed-structure-redundant-everywhere stands.
