@@ -987,3 +987,16 @@ The world model **raises eval variance ~3× on both tasks** under planner-collec
 | W128 | 161.6 / 189.3 / 303.2 / 304.0 / 499.6 | **303.2** | 59.3% | 291.5 |
 
 **Refined fingerprint:** the step is at **W64, not W128**. W16≈W32 (~42% of vanilla, tight-width flat) → **W64≈W128 (~60%)**. The earlier "only D=128 recovers" claim was an artifact of the two partial low-step seeds; on complete-at-5M seeds **D=64 recovers as much as D=128** (62% vs 59%). The qualitative Paper-A story is *preserved and sharpened*: Acrobot is still the **least-compressible** grid task (tight widths flat far below vanilla; needs a mid-width to recover), and still the **noisiest** (2 collapse cells: s54 W16=1.6, s55 W32=12.5). But the recovery point is D≈64, and the three-fingerprint contrast becomes cleaner: **Cheetah monotone / Walker flat-high / Acrobot flat-low-then-step-at-64**. Report on MEDIANS (means dragged by the collapse tail). s57 completing (~5M later tonight) → n=6-at-5M for a final median; #59 refill now occupies the freed GPUs. Supersedes the n=6 mean table in edbb978 for the final-@5M paper figure.
+
+### 🟢 Acrobot VBN — n=6 FINAL (all seeds {52-57} @5M) (2026-07-15 01:12, A1_ACROBOT_S57_DONE; final mppi, disk-verified)
+
+s57 finals: W16=109.4, W32=335.1, W64=306.9, W128=339.8 (all step 5000192). Combined with {52-56} → **n=6 {52,53,54,55,56,57}**:
+
+| width | median | (% van 511) | mean | per-seed sorted |
+|---|---|---|---|---|
+| W16 | **210.6** | 41.2% | 186.2 | 1.6, 109.4, 207.5, 213.6, 270.8, 314.1 |
+| W32 | **250.9** | 49.1% | 233.9 | 12.5, 98.8, 218.5, 283.3, 335.1, 455.0 |
+| W64 | **311.3** | 60.9% | 311.6 | 186.9, 230.6, 306.9, 315.7, 327.6, 501.9 |
+| W128 | **303.6** | 59.4% | 299.6 | 161.6, 189.3, 303.2, 304.0, 339.8, 499.6 |
+
+**Final fingerprint (n=6):** a **gradual climb W16(41%)→W32(49%)→W64(61%) that saturates at D=64** — W64 ≈ W128 (~60%), D=128 adds nothing over D=64. This is the mature form of the "step" (n=5 read it as a sharp step-at-64; n=6 with s57's higher W32=335 smooths the low end into a ramp). The Paper-A qualitative story is intact and now robust: **Cheetah strictly-monotone (no width suffices) / Walker flat-high (D=16 already 86%) / Acrobot ramp-to-D64 (least compressible, needs a mid-width, saturates well below vanilla at ~60%)**. Report medians (means dragged by 2 collapse cells: s54 W16=1.6, s55 W32=12.5). Acrobot VBN COMPLETE at n=6 — the grid is done. b3060b now runs JEPA #59 refill (urc/vac s52+s53). Supersedes 7501d4f n=5 for the final table.
