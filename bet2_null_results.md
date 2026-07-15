@@ -1023,3 +1023,26 @@ s52 finished at 5M: urc last6med=739.0, vac last6med=821.3. Combined with s50/s5
 - VICReg (vac): {723.9, 778.7, 821.3} → **778.7** (−4.8% vs ~818)
 
 Both still **below vanilla**, uniformity ≈ VICReg (within noise). The n=2 null holds at n=3; vac s52 came in high (~821 ≈ vanilla) which lifts vac's spread but the median stays sub-vanilla. s53 still running (partial). Interim WalkerRun boundary read @~2M/5M: all arms clustered ~695–724 (urc~695/vac~724/van~707), no separation yet — early-consistent with null; final ~10:00 UTC (harvest next session).
+
+---
+
+## ★ DISCUSSION-PREP SUMMARY — Wednesday 16:00 SGT (2026-07-15 08:05 UTC campaign stop)
+
+**#59 final at stop:** urc s52=739.0 (5M), vac s52=821.3 (5M) → Cheetah n=3 medians **urc 739 (−10%) / vac 779 (−5%) / vanilla ~818 — NULL holds**. s53 partials (urc 733.5 @3.85M, vac 812.1 @3.55M) confirm same picture; s53 continues via nohup.
+
+### What we now answer (this week's deliverables — all pushed, ledger thru 3c51069)
+- **VBN instrument (3 fingerprints):** Cheetah *monotone* / Walker *flat-high* (D16=86%) / Acrobot *ramp-to-D64* (n=6). Valid replacement for decode-R². **Q6** re-framed.
+- **Collection-mode dissociation n=9 (FINAL):** Cheetah **inversion +45%** (stripped>full), Walker **−18%**, Hopper ≈0. Pre-registration (stripped ≥15% degrade) falsified on Cheetah.
+- **H-VARIANCE mechanism:** WM inflates planner-target eval variance **~3× on both**; mean/variance ratio sets the sign (Walker net-positive, Cheetah net-harmful). Answers the "why" behind (a) WM-value-is-task-dependent.
+- **Q5:** TD-MPC2 clears Hopper via off-policy deterministic-actor planning (SAC 0/9 vs planner-free TD 8/8); PPO wall = conjunctive reward, independent of WM. **Q8** resolved (strip removes WM accuracy, not the planner; Hopper = clean case where neither abstraction is needed).
+- **JEPA #59 Cheetah null (n=3).**
+
+### Honest open items / corrections (raise at discussion)
+- **H-COMPRESS positive half is UNPROVEN** ("imposed structure helps in flat-high"): #59 Cheetah null + WalkerRun interim null → at risk of falsification. WalkerRun boundary sweep (urc/vac/van n=3/3/2) **running on b3060+4070, finishes ~10:00-14:00 UTC** (nohup, past this stop) — harvest next session; it decides H-COMPRESS.
+- **Reader-caught conflation (corrected in Part-19):** the strip-cost co-ranking is evidence for **H-WM-ABSTRACT** (LEARNED world model load-bearing in LOW-compress), NOT for imposed-structure-helps-in-flat-high. Two separate claims; only the learned-abstraction one is proven.
+- **Official-parity / dual-implementation test NOT done** — biggest risk before Papers A/3 cite the reimpl (issue #2).
+
+### Recommendation
+Freeze compute on Papers A & 3 (data-complete at final n), **write** toward ~07-28. New front = **H-WM-ABSTRACT cross-ablation** (issue #5) + close H-COMPRESS boundary (Walker + issues #3/#4). Issues **#2–#6** filed to SuuTTT/tdmpc-glass. Blog **Part-19** live (hypotheses H-COMPRESS/H-WM-ABSTRACT/H-COLLECT/H-VARIANCE, plots+tables, corrections through 060ac39).
+
+**Fleet at stop:** b3060 + 4×4070 running WalkerRun boundary sweep (nohup, continue into next week); b3060b #59 s53 finishing; monitoring loop STOPS here per the Wednesday-discussion directive.
