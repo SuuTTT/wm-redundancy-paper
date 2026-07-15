@@ -1000,3 +1000,12 @@ s57 finals: W16=109.4, W32=335.1, W64=306.9, W128=339.8 (all step 5000192). Comb
 | W128 | **303.6** | 59.4% | 299.6 | 161.6, 189.3, 303.2, 304.0, 339.8, 499.6 |
 
 **Final fingerprint (n=6):** a **gradual climb W16(41%)→W32(49%)→W64(61%) that saturates at D=64** — W64 ≈ W128 (~60%), D=128 adds nothing over D=64. This is the mature form of the "step" (n=5 read it as a sharp step-at-64; n=6 with s57's higher W32=335 smooths the low end into a ramp). The Paper-A qualitative story is intact and now robust: **Cheetah strictly-monotone (no width suffices) / Walker flat-high (D=16 already 86%) / Acrobot ramp-to-D64 (least compressible, needs a mid-width, saturates well below vanilla at ~60%)**. Report medians (means dragged by 2 collapse cells: s54 W16=1.6, s55 W32=12.5). Acrobot VBN COMPLETE at n=6 — the grid is done. b3060b now runs JEPA #59 refill (urc/vac s52+s53). Supersedes 7501d4f n=5 for the final table.
+
+### 🔴 V2CW n=9 FINAL — dissociation + Cheetah inversion CONFIRMED (2026-07-15 02:12, V2CW_S5758_DONE; finals @2.5M, disk-verified)
+
+Added s57/s58 to the n=7 → **n=9 both tasks**. Metric = final mppi (v2mppicol CSV schema task,seed,step,reward; new-seed last-6 medians confirm direction, shown below).
+
+**Cheetah (n=9) — INVERSION holds, +45.3%:** FULL finals [117,141,233,235,327,350,455,523,585] median **327**; STRIP [217,276,459,470,475,539,542,555,565] median **475**. Stripped beats full **+45%** (was +45% at n=7, +104% at n=5 — stable now). New seeds' last-6 medians: full s57=171/s58=162 (low+volatile), stripped s57=541/s58=296 — same direction.
+**Walker (n=9) — dissociation holds, −18.0%:** FULL finals median **739**; STRIP median **605.7**. Full > stripped +22% (−18% cost of stripping). New full s57 final dipped to 291 (last-6 median 715 — a terminal within-run dip, the variance-mechanism signature; robust on median). New last-6 medians: full s57=715/s58=701, stripped s57=584/s58=607 — same direction.
+
+**Paper-3 dissociation is FINAL at n=9:** planner-collection makes the world model *load-bearing on Walker* (−18% to strip) but *actively harmful on Cheetah* (stripped +45%), one variance-inflation mechanism (WM ~3× eval-variance on both), two regimes set by the mean/variance ratio. The pre-registered "stripped degrades ≥15%" (943819c) stays falsified on Cheetah. This is the compute-complete Paper-3 core; remaining is write-up. b3060 now fully idle (Hopper-only box; acceptable pre-stop). #59 refill continues on b3060b.
