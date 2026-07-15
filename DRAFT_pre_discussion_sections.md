@@ -20,13 +20,14 @@ how much of the latent the value function actually needs.
 |---|---|---|---|---|---|---|
 | CheetahRun (n=5) | 548 (64%) | 589 (69%) | 627 (73%) | 726 (85%) | 855 | **strictly monotone** — smooth information gradient; no width suffices |
 | WalkerRun (n=5) | 625 (86%) | 643 (88%) | 666 (92%) | 694 (95%) | 727 | **flat-high** — most compressible; D=16 already 86% |
-| AcrobotSwingup (n=5, medians) | 214 (42%) | 219 (43%) | 316 (62%) | 303 (59%) | 511 | **step-at-64** — least compressible; tight widths (16,32) flat-low, D=64 recovers as much as D=128 |
+| AcrobotSwingup (n=6, medians) | 211 (41%) | 251 (49%) | 311 (61%) | 304 (59%) | 511 | **ramp-to-D64** — least compressible; climbs W16→W64 then saturates (D=128 adds nothing over D=64, ~60% ceiling) |
 
-*Note on Acrobot (updated 07-14, ledger 7501d4f).* The clean final-@5M sample is n=5 {s52–s56}; the
-earlier "step-at-128" was an artifact of two partial seeds (s50/s51 only reached ~2.7M) contaminating
-the means. On complete seeds the recovery point is **D≈64** (D=64 ≈ D=128 ≈ 60% of vanilla), and the
-tight widths (16,32) sit flat-low at ~42%. Acrobot remains the least-compressible and noisiest task
-(two collapse cells: s54 W16, s55 W32); report on medians. s57 completing tonight → n=6.
+*Note on Acrobot (final n=6 {s52–s57}, ledger 888d3f4).* The grid is complete. The earlier "step-at-128"
+was an artifact of two partial seeds (s50/s51 only reached ~2.7M) contaminating the means; on the six
+complete-at-5M seeds the curve is a **ramp that saturates at D≈64** — W16 41% → W32 49% → W64 61%, with
+D=128 (59%) adding nothing over D=64. The recovery point is D=64 and the ceiling is ~60% of vanilla.
+Acrobot remains the least-compressible and noisiest task (two collapse cells: s54 W16=1.6, s55 W32=12.5);
+report on medians (means dragged by the collapse tail).
 
 **Load-bearing ordering agrees.** The stripped-vs-full sufficiency ablation (delete the consistency
 loss, keep policy-collection, 5M) orders the tasks identically: HopperHop **0%** (n=8, removable) <
