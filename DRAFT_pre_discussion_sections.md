@@ -55,12 +55,14 @@ mechanism predicts collection mode should *modulate* the world model's value.
 | Task | full (none) | stripped (consistency) | Δ (median) | reading |
 |---|---|---|---|---|
 | HopperHop (n=5) | ~455 | ~468 | ≈0 | removable — both arms stable |
-| WalkerRun (n=5) | median **739** | median **601** | **−18.7%** | load-bearing — higher but volatile regime |
-| CheetahRun (n=5) | median **232.9** (finals span 117–585) | median **474.8** (tight ~515–544) | **+104% (stripped > full)** | **INVERSION** — the WM is *actively destabilizing* |
+| WalkerRun (n=9) | median **739** | median **606** | **−18.0%** | load-bearing — higher but volatile regime |
+| CheetahRun (n=9) | median **327** (finals span 117–585) | median **475** (tighter) | **+45% (stripped > full)** | **INVERSION** — the WM is *actively destabilizing* |
 
 **The inversion, and why it matters.** On CheetahRun under planner-collection the full model does not
 merely fail to beat stripped — it *destabilizes*: eval returns swing 141→585 within 250k steps across
-every seed, while the stripped model sits tightly at ~460–555. We **pre-registered** (943819c) that
+every seed, while the stripped model sits tightly at ~460–555. The inversion magnitude settled from
++104% (n=5) to a stable **+45% at n=9** as more full-arm seeds came in — the *direction* never wavered.
+We **pre-registered** (943819c) that
 stripped would degrade ≥15% (kill <8%); it did the opposite. That falsification is the section's spine:
 "planner-collection amplifies the world model's importance" is **Walker-specific, not a law.** The
 collection-mode × world-model interaction is non-monotone in how much the value function needs the
