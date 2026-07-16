@@ -1058,3 +1058,6 @@ Fills the HopperHop cell of the value-sufficiency-bottleneck grid (Paper A instr
 
 ### 🟢 VBN HopperHop grid COMPLETE n=3 (2026-07-16)
 Medians (vanilla~455): D16=430(95%) D32=417(92%) D64=339(75%) D128=531(117%). Large per-seed spread (D128 241-563) — noisiest VBN task; net flat-high/compressible (D16~95%), no clean monotone → removable-WM family (like WalkerRun). Seeds s60/s61/s64/s65.
+
+### 🟢 Dreamer generalization FINAL (2026-07-16) — task-dependent WM benefit, cross-model
+cheetah van732/strip667 (+9.7%, WM helps); walker van736.6/strip743.4 (tie, WM null). Same per-task ordering as TD-MPC2 (cheetah WM-load-bearing / walker WM-redundant) → the help-vs-hurt axis is a task property (value-info structure), not WM-architecture-specific. Holds across TD-MPC2 (latent-consistency) + Dreamer (reconstruction-RSSM). hopper van OOM infra-fail (strip=138.87 only). #8.
