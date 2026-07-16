@@ -1055,3 +1055,6 @@ s53 done: urc last6med=749.1, vac=811.7. **n=4 medians: uniformity(urc)=744.1 (�
 
 ### 🟢 VBN HopperHop s60 — the MISSING row is filled (#3) (2026-07-15 14:53; n=1 provisional)
 Fills the HopperHop cell of the value-sufficiency-bottleneck grid (Paper A instrument). Last-6 mppi medians (col `reward`, vanilla HopperHop ~455): **D16=429.7 (95%), D32=416.65 (92%), D64=338.8 (75%), D128=531 (@4.75M, 117%)**. Shape at n=1 is **noisy/non-monotone** (HopperHop is the volatile task) — D16 already ≈vanilla (95%) points tentatively toward the **flat-high / most-compressible** family (like WalkerRun), which is the expected fingerprint for the *removable-WM* task (value head needs little of the latent → structure has room but the WM is redundant). NOT interpreting the D64 dip / D128 bump at n=1. Refill running: s61 (b3060b, D16-128) + s64 (4070, D16/32/64) → clean fingerprint at n=3. (Harvest-column bug fixed: reward is CSV col 2, not col 4=seed — earlier "60"s were the seed value.)
+
+### 🟢 VBN HopperHop grid COMPLETE n=3 (2026-07-16)
+Medians (vanilla~455): D16=430(95%) D32=417(92%) D64=339(75%) D128=531(117%). Large per-seed spread (D128 241-563) — noisiest VBN task; net flat-high/compressible (D16~95%), no clean monotone → removable-WM family (like WalkerRun). Seeds s60/s61/s64/s65.
