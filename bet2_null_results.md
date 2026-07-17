@@ -1076,3 +1076,6 @@ Third seed s3d @~1.09M: vanilla last30-median 710.2 vs stripped 637.3 -> vanilla
 ## Gated-WM n=2 REVERSAL (2026-07-17)
 seed2 @2.5M cheetah planner-collection: g1.0(s113)=695.6 g0.25(s114)=637.0 g0.0(s115)=654.6; +g0.5(s100)=637.3.
 n=2 means: g1.0=686.3 g0.25=676.0 g0.0=673.3 g0.5=635.2. n=1 g0.25>+5.6% was SEED ARTIFACT (g0.25 seed2=637 vs seed1=715). At n=2 full WM g1.0 on top; gate does NOT robustly help. NEGATIVE result for gated-WM prescription. n=3 firming (s116/117/118/119).
+
+## Walker Dreamer n=3 (2026-07-17)
+seed3 @~1.09M: van_n3=722.3 strip_n3=775.6 -> stripped>=vanilla +7.4%. Walker WM-redundant confirmed n=3 (n=2 van736.6/strip743.4 tied). Contrast cheetah WM-helps +11.4%. Cross-model ordering holds n=3 in Dreamer. gated g0.25 n=3 seed s116=694.65 (mean 682.2, noise cluster, reversal holds). Acrobot Dreamer 3rd-task launched.
