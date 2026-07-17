@@ -1061,3 +1061,6 @@ Medians (vanilla~455): D16=430(95%) D32=417(92%) D64=339(75%) D128=531(117%). La
 
 ### 🟢 Dreamer generalization FINAL (2026-07-16) — task-dependent WM benefit, cross-model
 cheetah van732/strip667 (+9.7%, WM helps); walker van736.6/strip743.4 (tie, WM null). Same per-task ordering as TD-MPC2 (cheetah WM-load-bearing / walker WM-redundant) → the help-vs-hurt axis is a task property (value-info structure), not WM-architecture-specific. Holds across TD-MPC2 (latent-consistency) + Dreamer (reconstruction-RSSM). hopper van OOM infra-fail (strip=138.87 only). #8.
+
+### 🟢 Dreamer multi-seed n=2 (2026-07-17)
+cheetah van{732,712}/strip{667,172} — WM HELPS + stripped UNSTABLE (seed2 collapse 172). walker van{737,449}/strip{743,665} — WM null/hurts. Per-task WM-value, cross-model (TD-MPC2+Dreamer): cheetah WM-load-bearing+stabilizing, walker WM-redundant. cheetah n=3 (s3 pair) running; gated-WM g-sweep g{0,.25,.5,1} training. #8.
