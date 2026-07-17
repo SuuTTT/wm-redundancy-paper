@@ -1069,3 +1069,6 @@ cheetah van{732,712}/strip{667,172} — WM HELPS + stripped UNSTABLE (seed2 coll
 cheetah planner-collection @2.5M last-6 median: g0.0=692 g0.25=715 g0.5=633(@1.7M) g1.0=677. Plan-time WM-rollout-trust gate g<1 MODESTLY beats full WM (g0.25 +5.6
 ### Gated-WM g-sweep preliminary (2026-07-17, n=1/g)
 cheetah planner-collection @2.5M last-6 median: g0.0=692 g0.25=715 g0.5=633(@1.7M) g1.0=677. Plan-time WM-rollout-trust gate g<1 modestly beats full WM (g0.25 +5.6pct, g0.0 +2.2pct). Positive but small+noisy at n=1; n=2 (s113/114/115) launching. Isolates scoring-trust channel vs strip-WM +45pct (co-varies training). #8.
+
+## Dreamer cheetah n=3 (2026-07-17)
+Third seed s3d @~1.09M: vanilla last30-median 710.2 vs stripped 637.3 -> vanilla>stripped +11.4% (WM helps). Consistent w/ n=1,n=2 (+9.7%). Cheetah WM-load-bearing holds at n=3 in Dreamer. Walker Dreamer n=3 launched (walker_van_n3/walker_strip_n3) to firm the null side.
