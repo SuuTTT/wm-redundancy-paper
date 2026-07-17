@@ -1072,3 +1072,7 @@ cheetah planner-collection @2.5M last-6 median: g0.0=692 g0.25=715 g0.5=633(@1.7
 
 ## Dreamer cheetah n=3 (2026-07-17)
 Third seed s3d @~1.09M: vanilla last30-median 710.2 vs stripped 637.3 -> vanilla>stripped +11.4% (WM helps). Consistent w/ n=1,n=2 (+9.7%). Cheetah WM-load-bearing holds at n=3 in Dreamer. Walker Dreamer n=3 launched (walker_van_n3/walker_strip_n3) to firm the null side.
+
+## Gated-WM n=2 REVERSAL (2026-07-17)
+seed2 @2.5M cheetah planner-collection: g1.0(s113)=695.6 g0.25(s114)=637.0 g0.0(s115)=654.6; +g0.5(s100)=637.3.
+n=2 means: g1.0=686.3 g0.25=676.0 g0.0=673.3 g0.5=635.2. n=1 g0.25>+5.6% was SEED ARTIFACT (g0.25 seed2=637 vs seed1=715). At n=2 full WM g1.0 on top; gate does NOT robustly help. NEGATIVE result for gated-WM prescription. n=3 firming (s116/117/118/119).
