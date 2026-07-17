@@ -1064,3 +1064,6 @@ cheetah van732/strip667 (+9.7%, WM helps); walker van736.6/strip743.4 (tie, WM n
 
 ### 🟢 Dreamer multi-seed n=2 (2026-07-17)
 cheetah van{732,712}/strip{667,172} — WM HELPS + stripped UNSTABLE (seed2 collapse 172). walker van{737,449}/strip{743,665} — WM null/hurts. Per-task WM-value, cross-model (TD-MPC2+Dreamer): cheetah WM-load-bearing+stabilizing, walker WM-redundant. cheetah n=3 (s3 pair) running; gated-WM g-sweep g{0,.25,.5,1} training. #8.
+
+### 🟡 Gated-WM g-sweep preliminary (2026-07-17, n=1/g)
+cheetah planner-collection @2.5M last-6 median: g0.0=692 g0.25=715 g0.5=633(@1.7M) g1.0=677. Plan-time WM-rollout-trust gate g<1 MODESTLY beats full WM (g0.25 +5.6
