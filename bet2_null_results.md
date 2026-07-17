@@ -1067,3 +1067,5 @@ cheetah van{732,712}/strip{667,172} — WM HELPS + stripped UNSTABLE (seed2 coll
 
 ### 🟡 Gated-WM g-sweep preliminary (2026-07-17, n=1/g)
 cheetah planner-collection @2.5M last-6 median: g0.0=692 g0.25=715 g0.5=633(@1.7M) g1.0=677. Plan-time WM-rollout-trust gate g<1 MODESTLY beats full WM (g0.25 +5.6
+### Gated-WM g-sweep preliminary (2026-07-17, n=1/g)
+cheetah planner-collection @2.5M last-6 median: g0.0=692 g0.25=715 g0.5=633(@1.7M) g1.0=677. Plan-time WM-rollout-trust gate g<1 modestly beats full WM (g0.25 +5.6pct, g0.0 +2.2pct). Positive but small+noisy at n=1; n=2 (s113/114/115) launching. Isolates scoring-trust channel vs strip-WM +45pct (co-varies training). #8.
