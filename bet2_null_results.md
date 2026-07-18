@@ -1088,3 +1088,6 @@ acrobot_swingup Dreamer n=1 @~1.09M: van=408.1 strip=26.2 -> vanilla>>stripped +
 
 ## Gated-WM n=4/5 (2026-07-18) — reversal rock-solid
 4th seeds: s121 g0.0=708.2, s122 g1.0=665.35, s123 g0.25=685.1. Means: g0.0=701.9(n4) g1.0=686.5(n5) g0.25=682.9(n4) g0.5=649.5(n3,s124/125 running). Top-3 gap ~19pts vs within-g spread ~80-100pts = NOISE. No gate beats full WM at n=4-5. Tunable gate = confirmed negative. Contribution = diagnostic (VBN predicts WM-dependence 3 Dreamer tasks). Also acrobot n=2 @~93% van356/strip41 (+770%, holds). Acrobot n=3 launched on b3060.
+
+## Acrobot n=2 confirm (2026-07-18)
+seed2 @1.09M: van=420.0 strip=56.4 -> +644% (7.4x). Confirms n=1 (408.1/26.2,+1458%). Agg n=2: van~414 strip~41. WM ESSENTIAL on acrobot, multi-seed. 3-task VBN-predicts gradient now multi-seed on high-dep anchor. Acrobot n=3 running b3060. 4070 refilled VBN s80/81/82.
