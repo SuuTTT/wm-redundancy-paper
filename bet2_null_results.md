@@ -1085,3 +1085,6 @@ cheetah planner-collection @2.5M last6-median, 3 seeds/g: g0.0=[692,654.6,752.7]
 
 ## Acrobot Dreamer 3rd-task (2026-07-17) — STRONGEST WM effect
 acrobot_swingup Dreamer n=1 @~1.09M: van=408.1 strip=26.2 -> vanilla>>stripped +1458% (15.6x; strip near-failing). WM ESSENTIAL. Completes monotone gradient matching VBN: acrobot(ramp,+1458%) > cheetah(monotone,+11.4%) > walker(flat-high,null). VBN PREDICTS WM-dependence ordering in Dreamer. 2nd acrobot seed launched (acrobot_van_n2/strip_n2). This is the paper's headline: cheap probe predicts when WM matters, cross-model, 3 tasks.
+
+## Gated-WM n=4/5 (2026-07-18) — reversal rock-solid
+4th seeds: s121 g0.0=708.2, s122 g1.0=665.35, s123 g0.25=685.1. Means: g0.0=701.9(n4) g1.0=686.5(n5) g0.25=682.9(n4) g0.5=649.5(n3,s124/125 running). Top-3 gap ~19pts vs within-g spread ~80-100pts = NOISE. No gate beats full WM at n=4-5. Tunable gate = confirmed negative. Contribution = diagnostic (VBN predicts WM-dependence 3 Dreamer tasks). Also acrobot n=2 @~93% van356/strip41 (+770%, holds). Acrobot n=3 launched on b3060.
