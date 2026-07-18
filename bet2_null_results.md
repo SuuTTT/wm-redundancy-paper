@@ -1091,3 +1091,6 @@ acrobot_swingup Dreamer n=1 @~1.09M: van=408.1 strip=26.2 -> vanilla>>stripped +
 
 ## Acrobot n=2 confirm (2026-07-18)
 seed2 @1.09M: van=420.0 strip=56.4 -> +644% (7.4x). Confirms n=1 (408.1/26.2,+1458%). Agg n=2: van~414 strip~41. WM ESSENTIAL on acrobot, multi-seed. 3-task VBN-predicts gradient now multi-seed on high-dep anchor. Acrobot n=3 running b3060. 4070 refilled VBN s80/81/82.
+
+## Acrobot n=3 FINAL (2026-07-18)
+seed3 settled @1.09M: van=409.4 strip=99.7 (+311%). Agg n=3: van=[408.1,420.0,409.4]mean412.5(tight); strip=[26.2,56.4,99.7]mean60.8(range26-100,HIGH var). Vanilla dominates every seed 4-16x (+311..1458%). WM ESSENTIAL on acrobot unshakable across 3 seeds; collapse magnitude varies. Anchors high-dep end of VBN gradient (acrobot>>cheetah+11.4%>>walker null). gated g0.5 n5=688.4 -> all 4 gates 19pt band, gate-negative definitive. Gated s128(g1.0)/s129(g0.25) launched keep-busy.
