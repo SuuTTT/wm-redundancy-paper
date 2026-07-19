@@ -1097,3 +1097,6 @@ seed3 settled @1.09M: van=409.4 strip=99.7 (+311%). Agg n=3: van=[408.1,420.0,40
 
 ## Phase-1 breadth started (2026-07-19)
 Launched Dreamer van+strip: pendulum_swingup (predict essential, 4070 G1/G2) + finger_spin (predict redundant, b3060 G0/G1), n=1, ~1.1M target. Goal: quantify VBN<->WM-dependence correlation across >=10 tasks (turn 3 anecdotes into a predictor). VBN fingerprints for new tasks pending run_vbn wiring. Make-work continues on other 4 GPUs.
+
+## Breadth pt 4: pendulum-swingup (2026-07-19)
+Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactuated). Most extreme WM-essential point; predicted a priori. Gradient: pendulum(total collapse)>=acrobot(+311-1458%)>>cheetah(+11.4%)>>walker(null). cartpole pair launched 4070 G1/G2; VBN s109 G0.
