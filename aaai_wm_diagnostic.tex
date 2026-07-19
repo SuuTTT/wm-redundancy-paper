@@ -125,10 +125,16 @@ predicts that the learned WM is load-bearing; high compressibility
 \section{Cross-Model, Cross-Task Result}
 \label{sec:cross}
 We ablate the WM in each framework and measure the change in return per task.
-For Dreamer we report the last-30-episode median return at $\sim$1.1M
-environment steps; for TD-MPC2 the certified JAX reimplementation matches the
-official release (cheetah $\sim$919, hopper $\sim$581 for the reference implementation; ours is a non-anomalous baseline: hopper within the official seed spread, cheetah $-5\%$, walker $-17\%$, acrobot $-23\%$, with known causes (collection mode, physics backend) under active verification. All TD-MPC2 claims here are within-implementation relative comparisons). The strip
-ablation removes only the forward-dynamics learning signal.
+For Dreamer we use the unmodified official DreamerV3 and report the
+last-30-episode median return at $\sim$1.1M environment steps. For TD-MPC2 we
+use our JAX reimplementation, audited against the official release: hopper-hop
+is at parity (within the official run-to-run seed spread), cheetah $-5\%$,
+walker $-17\%$, acrobot $-23\%$, with known causes (data-collection mode,
+physics backend) under verification. All TD-MPC2 results here are
+\emph{within-implementation relative} comparisons (vanilla vs.\ ablated under
+identical code), so these absolute gaps do not affect the claims; the
+architecture-general headline rests on unmodified Dreamer. The strip ablation
+removes only the forward-dynamics learning signal.
 
 \begin{table}[t]
 \centering\small
