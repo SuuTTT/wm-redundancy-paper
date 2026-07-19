@@ -9,7 +9,7 @@ Repo: `SuuTTT/wm-redundancy-paper` · Results log: `SuuTTT/tdmpc-glass` issue [#
 
 | Component | Location | Status / verification |
 |---|---|---|
-| TD-MPC2 JAX reimpl. | `helios_wmablate/src/helios/algorithms/tdmpc2.py` (b3060) | **Parity-certified** vs official release (cheetah 919/hopper 581 ref ≥ our 855/455) — issue #2 |
+| TD-MPC2 JAX reimpl. | `helios_wmablate/src/helios/algorithms/tdmpc2.py` (b3060) | **Non-anomalous baseline, NOT full parity** (corrected 07-19; see §7): hopper ≈0% (within official's own 373–594 seed spread), cheetah −5%, walker −17%, acrobot −23%. Known causes: π+noise collection (canonical = planner-collection) + MJX backend. Parity-fix runs launched. All paper claims are *within-implementation relative* comparisons, so unaffected; externally-referencing claims scoped to "our TD-MPC2 variant". |
 | Strip-WM ablation (TD-MPC2) | `--consistency_coef 0` | used in planner-collection inversion runs |
 | Strip-WM ablation (Dreamer) | `--agent.loss_scales.dyn 0.0` (dreamerv3, JAX) | kills RSSM forward-dynamics learning; van/strip pairs on both boxes |
 | Gated-WM patch | `tdmpc2.py` L1031/L1104/L1130: `ret = _WM_GATE·Σγr_wm + γ^H·V`, `WM_GATE` env var | one `NameError` fixed via `__import__("os")` inline; verified 0 errors, 20+ seeds run |
@@ -61,6 +61,12 @@ TD-MPC2 + Dreamer: covered, VBN is native (both have value heads). **DINO-WM doe
 3. **Paper integration:** add breadth table/figure to `aaai_wm_diagnostic.tex`; then optional §6 expansion (reward-propagation-horizon math) + real `aaai2026.sty`.
 4. **Decision point (~2–3 days):** if correlation is strong → submit-track scope locked; then choose whether Panda/nav/DINO expansion (and renting) is worth it as camera-ready/follow-up work.
 5. **Fleet:** 4070 + b3060 stay up doing breadth (no longer make-work). If you prefer to cut spend, both are disposable at any time — everything is on GitHub (git clean, 0 unpushed).
+
+## 7. Corrections from user review (2026-07-19, post-report)
+
+**(i) Parity claim corrected.** "Parity-certified" overstated it. Full V1 audit: hopper-hop **≈0% parity** (449 official [seeds 373/380/594] vs ~420±113 ours — the "581 vs 455" line compared one official seed to our mean), cheetah **−5%**, walker **−17%**, acrobot **−23%**. Documented causes: (1) our default collection is π+Gaussian-noise; canonical TD-MPC2 collects with the planner; (2) MJX physics vs dm_control MuJoCo numerics. **Fix attempt launched:** vanilla walker + acrobot under planner-collection (`MPPI_COLLECT=1`), 4M steps, b3060 G2/G3 (s201/s202) — if gaps close, collection mode was the cause. Paper impact: none of the paper's claims are absolute-performance claims; strip/gate/VBN are within-implementation comparisons, and the headline 3-task gradient rests on **unmodified official DreamerV3**. Wording in the paper will be scoped to "our TD-MPC2 variant".
+
+**(ii) Gate negative is an *explained* null, not a mysterious one.** With H=3, γ=0.99, the MPPI score = g·Σγᵗr + γ³V decomposes as ≈2.97·r̄ (gated term) vs ≈97·r̄ (terminal value) → **the gated term is ~3% of the score**; sweeping g∈[0,1] perturbs the planner objective by ≤3%, so a null was structurally near-guaranteed. Moreover **g=0 ≠ WM-free planning**: V(z₃) is still evaluated on a state rolled through the learned dynamics, and value/policy were trained with the WM regardless — the gate removes imagined *reward*, not imagined *state*. Conceptually correct variants (future work, not claims): horizon-gating (H→0 = value-greedy planning), per-step uncertainty weighting (STEVE-style), or training-time gating. This analysis will be added to the paper's §4 so the negative reads as understood, not unexplained.
 
 ## 6. Status snapshot (as of this report)
 
