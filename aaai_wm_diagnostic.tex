@@ -35,7 +35,7 @@ We introduce the \textbf{Value-sufficiency BottleNeck (VBN)}, a cheap,
 checkpoint-time probe that measures how much of an agent's latent the value
 function actually needs, and show that this single scalar \emph{predicts}
 whether ablating the world model's forward-dynamics learning helps or hurts
-return. Across eight DeepMind Control tasks and two independent WM families
+return. Across nine DeepMind Control tasks and two independent WM families
 (Dreamer, TD-MPC2) the world model's value ranges from \emph{essential}
 (stripping it collapses return to near zero on pendulum-swingup, ball-in-cup,
 reacher-hard, acrobot) to \emph{redundant} (the stripped agent is better on
@@ -83,7 +83,7 @@ as a single-pass decision procedure (Fig.~\ref{fig:framework}).
 \begin{enumerate}\itemsep2pt
 \item \textbf{VBN}, a checkpoint-time probe of value-relevant
 compressibility, and its three-shape task fingerprint (Sec.~\ref{sec:vbn}).
-\item A \textbf{cross-model, cross-task} result over eight DMControl tasks:
+\item A \textbf{cross-model, cross-task} result over nine DMControl tasks:
 world-model value ranges from essential (collapse) to redundant (strip-wins)
 on a fixed architecture, reproduces across Dreamer and TD-MPC2, and is
 predicted by the VBN fingerprint at Spearman $\rho{=}{-}0.94$
@@ -215,9 +215,10 @@ Task & van & strip & WM-dep. & regime \\
 \textsc{cartpole-swingup}  & 867.5 & 845.7         & $-3\%$            & marginal \\
 \textsc{finger-spin}       & 662.0 & 695.0         & $+5\%$            & redundant \\
 \textsc{walker-run}        & 722.0 & 776.0         & $+7\%$            & redundant \\
+\textsc{quadruped-walk}    & 958.1 & 963.7         & $+1\%$            & redundant \\
 \bottomrule
 \end{tabular}
-\caption{\textbf{Eight-task WM-dependence gradient} (Dreamer, last-30-episode
+\caption{\textbf{Nine-task WM-dependence gradient} (Dreamer, last-30-episode
 median return at $\sim$1.1M steps). WM-dependence $=(\text{van}-\text{strip})/
 \text{van}$ is the fraction of return lost when the forward-dynamics signal is
 removed; negative means the stripped agent is \emph{better}. Core tasks

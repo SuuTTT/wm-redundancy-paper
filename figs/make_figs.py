@@ -69,6 +69,7 @@ tasks = [  # name, vanilla, stripped, regime-colour, label
     ("cartpole-swingup", 867.5, 845.7, C_MARG),
     ("finger-spin",      662.0, 695.0, C_RED),
     ("walker-run",       722.0, 776.0, C_RED),
+    ("quadruped-walk",   958.1, 963.7, C_RED),
 ]
 dep = [ (v - s) / v for (_, v, s, _) in tasks ]
 order = np.argsort(dep)                    # ascending: redundant -> essential
@@ -97,7 +98,7 @@ ax.text(1.13, 6.5, "essential", rotation=90, va="center", ha="center",
         fontsize=7.6, color=C_ESS, weight="bold")
 ax.text(1.13, 0.5, "redundant", rotation=90, va="center", ha="center",
         fontsize=7.6, color=C_RED, weight="bold")
-ax.set_title("Eight-task WM-dependence gradient (Dreamer)", fontsize=9.2, pad=6)
+ax.set_title("Nine-task WM-dependence gradient (Dreamer)", fontsize=9.2, pad=6)
 fig.savefig("fig_gradient.pdf")
 plt.close(fig)
 print("fig_gradient.pdf written")
