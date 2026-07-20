@@ -1106,3 +1106,10 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - vs official 663 / our pi-collect 511: planner-collection made vanilla WORSE (-40% vs -23%).
 - Verdict: collection mode NOT the cause of acrobot gap; planner-collect actively hurts on WM-essential task (matches inversion mechanism). Posted to #2.
 - Walker s202 interim @3.7M: med 809.7 (-7.7% vs official 877, was -17%) — closing; final next window.
+
+## 2026-07-20 ~05:30 UTC — breadth pts 5+6 FINAL + walker parity FINAL
+- finger-spin (pt5): van 662.0 / strip 695.0 → -4.7% (strip>=van) → REDUNDANT (as pre-registered). n=1, 1.1M.
+- cartpole-swingup (pt6): van 867.5 / strip 845.7 → +2.6% → marginal. n=1, 1.1M.
+- 6-task gradient complete: pendulum collapse > acrobot essential > cheetah +11.4% > cartpole +2.6% > finger -4.7% > walker -7.0%.
+- Walker parity s202 FINAL @4M: 817.1 vs official 877 = -6.8% (was -17% pi-collect) → collection mode explains walker gap. Posted #2.
+- Relaunching: cup_catch pair (b3060 G0/G1), reacher_hard pair (4070 G1/G2), gated mw s144 (b3060 G3).
