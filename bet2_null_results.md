@@ -1124,3 +1124,10 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - Structure: essential end = sparse/long-horizon (pendulum,acrobot,reacher); redundant end = dense control (walker,finger).
 - VBN probes DONE rc=0: PendulumSwingup D16 s112 (11:38), FingerSpin D16 s113 (12:32) — harvesting probe metric.
 - cup-catch pt8 (van971/strip0.0) finalizing.
+
+## 2026-07-20 ~13:15 UTC — VBN fingerprint harvest (breadth extremes)
+- PendulumSwingup D16 s112: last-6 med MPPI = 332.65 (~43% of ~766 vanilla) → LOW/volatile → least compressible → predicts WM ESSENTIAL. MATCHES strip→0.0 collapse.
+- FingerSpin D16 s113: last-6 med MPPI = 961.15 (~98% of ~980) → HIGH → most compressible → predicts WM REDUNDANT. MATCHES strip-wins.
+- VBN a-priori prediction CONFIRMED on both new breadth tasks. Metric = MPPI eval return of TD-MPC2 trained with value-path bottleneck width D (exp/vac/logs/vbnNN_<Task>_s<seed>.log, grep MPPI= last-6 median).
+- In flight for width-curve: CartpoleSwingup D16 s114 (G0), PendulumSwingup D64 s115 (G3).
+- 4070 relaunch: quad_van_n1 (G1, Dreamer); reacher_strip still on G2.
