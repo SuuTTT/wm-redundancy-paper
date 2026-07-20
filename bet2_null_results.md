@@ -1100,3 +1100,9 @@ Launched Dreamer van+strip: pendulum_swingup (predict essential, 4070 G1/G2) + f
 
 ## Breadth pt 4: pendulum-swingup (2026-07-19)
 Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactuated). Most extreme WM-essential point; predicted a priori. Gradient: pendulum(total collapse)>=acrobot(+311-1458%)>>cheetah(+11.4%)>>walker(null). cartpole pair launched 4070 G1/G2; VBN s109 G0.
+
+## 2026-07-20 ~04:15 UTC — parity-fix acrobot FINAL (s201, planner-collection)
+- AcrobotSwingup vanilla MPPI_COLLECT=1 s201 @4M: last-6 median **395.0**.
+- vs official 663 / our pi-collect 511: planner-collection made vanilla WORSE (-40% vs -23%).
+- Verdict: collection mode NOT the cause of acrobot gap; planner-collect actively hurts on WM-essential task (matches inversion mechanism). Posted to #2.
+- Walker s202 interim @3.7M: med 809.7 (-7.7% vs official 877, was -17%) — closing; final next window.
