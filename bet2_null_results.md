@@ -1113,3 +1113,8 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - 6-task gradient complete: pendulum collapse > acrobot essential > cheetah +11.4% > cartpole +2.6% > finger -4.7% > walker -7.0%.
 - Walker parity s202 FINAL @4M: 817.1 vs official 877 = -6.8% (was -17% pi-collect) → collection mode explains walker gap. Posted #2.
 - Relaunching: cup_catch pair (b3060 G0/G1), reacher_hard pair (4070 G1/G2), gated mw s144 (b3060 G3).
+
+## 2026-07-20 ~06:26 UTC — VBN fingerprints for breadth tasks STARTED
+- Confirmed MJX registry has PendulumSwingup/CartpoleSwingup/FingerSpin/BallInCup.
+- Swapped 4070 make-work VBN seeds (s110 acro-D64, s111 cheetah-D32, killed clean) for critical-path: VBN PendulumSwingup D16 s112 (G0), FingerSpin D16 s113 (G3) — the D16 point discriminates essential (low) vs redundant (flat-high).
+- reacher_strip relaunched after silent launch failure (cd-subshell trap: 'cd X && cmd &' backgrounds the cd too; second command in same ssh ran from /root). Lesson: one launch per ssh call.
