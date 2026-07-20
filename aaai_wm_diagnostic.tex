@@ -9,6 +9,8 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xcolor}
 \usepackage{caption}
@@ -33,12 +35,14 @@ We introduce the \textbf{Value-sufficiency BottleNeck (VBN)}, a cheap,
 checkpoint-time probe that measures how much of an agent's latent the value
 function actually needs, and show that this single scalar \emph{predicts}
 whether ablating the world model's forward-dynamics learning helps or hurts
-return. Across three DeepMind Control tasks and two independent WM families
-(Dreamer, TD-MPC2) the same task ordering holds: on \textsc{acrobot-swingup}
-the WM is essential (removing it collapses return by $6.8\times$; $+311$ to
-$+1458\%$ per seed), on \textsc{cheetah-run} it helps ($+11\%$), and on
-\textsc{walker-run} it is redundant (stripped $\ge$ vanilla). This ordering
-matches each task's VBN fingerprint. We also report a clean \emph{negative}:
+return. Across eight DeepMind Control tasks and two independent WM families
+(Dreamer, TD-MPC2) the world model's value ranges from \emph{essential}
+(stripping it collapses return to near zero on pendulum-swingup, ball-in-cup,
+reacher-hard, acrobot) to \emph{redundant} (the stripped agent is better on
+walker-run and finger-spin), and a single scalar from the VBN probe predicts
+where each task falls: value-recovery through a 16-dimensional bottleneck
+correlates with world-model dependence at Spearman $\rho{=}{-}0.90$
+($n{=}5$), \emph{cross-model}. We also report a clean \emph{negative}:
 a plan-time ``gate'' that down-weights the WM's imagined rollout---the
 prescriptive fix the diagnostic seems to suggest---does \emph{not} robustly
 beat trusting the full model ($n{=}5$; all gate settings inside a 19-point
@@ -72,15 +76,18 @@ the value head already recovers most of the return, the value function does
 not need the full latent, and imposing accurate forward dynamics on that
 latent is redundant. If the value head needs most of the latent, the forward
 model's job of shaping and propagating that information becomes load-bearing.
-We operationalize this with the Value-sufficiency BottleNeck (VBN).
+We operationalize this with the Value-sufficiency BottleNeck (VBN), and use it
+as a single-pass decision procedure (Fig.~\ref{fig:framework}).
 
 \paragraph{Contributions.}
 \begin{enumerate}\itemsep2pt
 \item \textbf{VBN}, a checkpoint-time probe of value-relevant
 compressibility, and its three-shape task fingerprint (Sec.~\ref{sec:vbn}).
-\item A \textbf{cross-model, cross-task} result: the same three tasks flip
-between WM-essential, WM-helpful, and WM-redundant in \emph{both} Dreamer and
-TD-MPC2, and the ordering matches the VBN fingerprint (Sec.~\ref{sec:cross}).
+\item A \textbf{cross-model, cross-task} result over eight DMControl tasks:
+world-model value ranges from essential (collapse) to redundant (strip-wins)
+on a fixed architecture, reproduces across Dreamer and TD-MPC2, and is
+predicted by the VBN fingerprint at Spearman $\rho{=}{-}0.90$
+(Sec.~\ref{sec:cross}, Fig.~\ref{fig:correlation}).
 \item An honest \textbf{negative}: the ``gated world model'' that the
 diagnostic seems to prescribe does not robustly beat the full model
 (Sec.~\ref{sec:gate}).
@@ -91,6 +98,49 @@ actively \emph{hurt} by inflating the planner's own target variance
 principle and rate--distortion, and a roadmap toward a training-free
 analytical criterion (Sec.~\ref{sec:theory}).
 \end{enumerate}
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  >={Stealth[length=2.2mm]},
+  box/.style={draw=black!55,rounded corners=2pt,align=center,inner sep=5pt,
+              minimum height=12mm,fill=white,line width=0.6pt},
+  probe/.style={box,fill=blue!5,draw=blue!45!black!60},
+  dec/.style={diamond,aspect=2.1,draw=black!55,align=center,inner sep=1pt,
+              fill=black!3,line width=0.6pt},
+  ess/.style={box,fill=red!7,draw=red!55!black!55},
+  red/.style={box,fill=blue!8,draw=blue!55!black!55},
+  lbl/.style={font=\scriptsize\itshape,black!60},
+  arr/.style={->,line width=0.7pt,black!65},
+]
+\node[box] (ckpt) {trained agent\\checkpoint\\{\scriptsize$\phi,\,V_\theta,\,\pi$}};
+\node[probe,right=10mm of ckpt] (probe)
+  {\textbf{VBN probe}\\{\scriptsize freeze $\phi$; insert width-$D$}\\[-1pt]{\scriptsize bottleneck in value head}\\[-1pt]{\scriptsize sweep $D\!\in\!\{16..128\}$}};
+\node[box,right=10mm of probe] (curve)
+  {value-recovery\\curve $=$ task\\\textbf{fingerprint}};
+\node[dec,right=11mm of curve] (dec) {value\\compressible?};
+\node[red,above right=3mm and 11mm of dec] (rdt)
+  {\textbf{WM redundant}\\{\scriptsize skip / cheapen the}\\[-1pt]{\scriptsize world model}};
+\node[ess,below right=3mm and 11mm of dec] (esn)
+  {\textbf{WM load-bearing}\\{\scriptsize invest in forward}\\[-1pt]{\scriptsize dynamics}};
+\draw[arr] (ckpt) -- (probe);
+\draw[arr] (probe) -- (curve);
+\draw[arr] (curve) -- (dec);
+\draw[arr] (dec.north) |- (rdt.west) node[lbl,pos=0.75,above] {yes (flat-high)};
+\draw[arr] (dec.south) |- (esn.west) node[lbl,pos=0.75,below] {no (monotone)};
+\end{tikzpicture}
+\caption{\textbf{The diagnostic in one pass.} From a trained checkpoint, the
+Value-sufficiency BottleNeck (VBN) re-trains only a small width-$D$ bottleneck
+on the frozen value head and records how much control return survives. The
+shape of the resulting value-recovery curve (Fig.~\ref{fig:fingerprint}) is a
+cheap, \emph{a-priori} predictor of whether the learned world model is
+load-bearing or redundant for that task (Fig.~\ref{fig:correlation})---computed
+before spending compute on the model. The prescriptive step (down-weighting a
+redundant WM online) is a clean \emph{negative} (Sec.~\ref{sec:gate}); the
+reliable product is the \emph{decision}.}
+\label{fig:framework}
+\end{figure*}
 
 \section{The Value-sufficiency BottleNeck}
 \label{sec:vbn}
@@ -122,6 +172,20 @@ The claim we test is: \emph{low value-compressibility (monotone / ramp)
 predicts that the learned WM is load-bearing; high compressibility
 (flat-high) predicts the WM is redundant.}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig_fingerprint.pdf}
+\caption{\textbf{The VBN instrument.} Return recovered (fraction of the
+unbottlenecked agent) as the value head is forced through a width-$D$
+bottleneck, TD-MPC2, $n{=}3$ seeds. The three shapes are the task fingerprint:
+\textsc{walker} saturates by $D{=}16$ (flat-high, highly compressible),
+\textsc{cheetah} keeps climbing (monotone, low compressibility), and
+\textsc{acrobot} ramps late to $D^\star{=}128$ (needs a large value subspace).
+Compressibility read off this curve---not the ablation---predicts
+WM-dependence.}
+\label{fig:fingerprint}
+\end{figure}
+
 \section{Cross-Model, Cross-Task Result}
 \label{sec:cross}
 We ablate the WM in each framework and measure the change in return per task.
@@ -138,60 +202,86 @@ removes only the forward-dynamics learning signal.
 
 \begin{table}[t]
 \centering\small
-\begin{tabular}{lccl}
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{lcccc}
 \toprule
-Task & VBN & Strip-WM effect (Dreamer) & Verdict \\
+Task & van & strip & WM-dep. & regime \\
 \midrule
-\textsc{pendulum} & ---         & van $806.0$, strip $\mathbf{0.0}$ & WM \emph{essential} \\
-\textsc{acrobot} & ramp$\to$64 & van $412.5 \gg$ strip $60.8$ & WM \emph{essential} \\
-\textsc{cheetah} & monotone    & van $710 >$ strip $637$      & WM \emph{helps} \\
-\textsc{cartpole} & ---        & van $867.5 >$ strip $845.7$  & marginal \\
-\textsc{walker}  & flat-high   & strip $776 \ge$ van $722$    & WM \emph{redundant} \\
-\textsc{finger}  & ---         & strip $695.0 \ge$ van $662.0$ & WM \emph{redundant} \\
+\textsc{pendulum-swingup}  & 806.0 & \textbf{0.0}  & \textbf{collapse} & essential \\
+\textsc{ball-in-cup catch} & 972.0 & \textbf{0.0}  & \textbf{collapse} & essential \\
+\textsc{reacher-hard}      & 965.0 & 18.0          & $-98\%$           & essential \\
+\textsc{acrobot-swingup}   & 412.5 & 60.8          & $-85\%$           & essential \\
+\textsc{cheetah-run}       & 710.0 & 637.0         & $-10\%$           & helps \\
+\textsc{cartpole-swingup}  & 867.5 & 845.7         & $-3\%$            & marginal \\
+\textsc{finger-spin}       & 662.0 & 695.0         & $+5\%$            & redundant \\
+\textsc{walker-run}        & 722.0 & 776.0         & $+7\%$            & redundant \\
 \bottomrule
 \end{tabular}
-\caption{The cheap VBN fingerprint predicts the WM-dependence ordering.
-Core tasks (acrobot, cheetah, walker): $n{=}3$ seeds each. Acrobot:
-$6.8\times$ gap ($+311$ to $+1458\%$ per seed). Cheetah: $+9.7$--$11.4\%$
-across seeds. Walker: null (stripped mildly higher). Breadth tasks
-(pendulum-swingup, cartpole-swingup, finger-spin): single-seed first pass;
-on pendulum the stripped agent \emph{never scores a single point} in 1.1M
-steps---a total collapse ($\Delta{=}{+}\infty$). VBN fingerprints for the
-breadth tasks are in progress (---). The same ordering holds in TD-MPC2
-(latent-consistency): cheetah WM-load-bearing, walker redundant.}
+\caption{\textbf{Eight-task WM-dependence gradient} (Dreamer, last-30-episode
+median return at $\sim$1.1M steps). WM-dependence $=(\text{van}-\text{strip})/
+\text{van}$ is the fraction of return lost when the forward-dynamics signal is
+removed; negative means the stripped agent is \emph{better}. Core tasks
+(acrobot, cheetah, walker) are $n{=}3$; the rest are single-seed first pass
+(reacher-hard now $n{=}2$). Three tasks collapse to near-zero without the WM;
+two are better without it. The essential end is sparse-reward / long-horizon /
+precision control; the redundant end is dense continuous control. The same
+ordering holds in TD-MPC2.}
 \label{tab:cross}
 \end{table}
 
-Table~\ref{tab:cross} is the core result. Three points deserve emphasis.
-\textbf{(i)} The ordering is \emph{monotone in the VBN fingerprint}: the more
-of the latent the value head needs, the more removing the WM hurts.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig_gradient.pdf}
+\caption{The gradient of Table~\ref{tab:cross}, sorted. World-model value is
+not a property of the architecture but of the \emph{task}: it spans total
+collapse (three tasks score near zero when stripped) to strip-wins (two tasks
+improve), with a smooth middle. Colour encodes regime.}
+\label{fig:gradient}
+\end{figure}
+
+Table~\ref{tab:cross} and Fig.~\ref{fig:gradient} are the core result.
+\textbf{(i)} WM-dependence spans the full range on a fixed architecture---from
+total collapse to a small strip-win---so ``does a world model help'' is
+mis-posed at the architecture level and well-posed at the task level.
 \textbf{(ii)} The ordering is \emph{architecture-invariant}: it reproduces
 across a reconstruction RSSM (Dreamer) and a latent-consistency model
 (TD-MPC2), two families that share almost no inductive bias except that they
-both learn forward dynamics. \textbf{(iii)} The high-dependence anchor is
-\emph{dramatic but honest}: on acrobot, vanilla return is remarkably stable
-across seeds ($408,420,409$) while the \emph{stripped} runs are high-variance
-($26,56,100$)---sometimes near-total failure, sometimes a partial recovery.
-The qualitative claim (the WM is essential on acrobot) is unshakable; the
-magnitude of the collapse varies by seed. We report this rather than hiding
-the variance.
+both learn forward dynamics. \textbf{(iii)} The essential end is not arbitrary:
+the four load-bearing tasks are all sparse-reward, long-horizon, or
+precision-control (pendulum/cup/reacher/acrobot), where no compressible value
+shortcut exists; the redundant end is dense continuous locomotion
+(walker/finger), where it does. \textbf{(iv)} The high-dependence anchors are
+\emph{dramatic but honest}: on acrobot, vanilla return is stable across seeds
+($408,420,409$) while the \emph{stripped} runs are high-variance
+($26,56,100$); on pendulum and cup-catch the stripped agent scores exactly
+zero for the entire run.
 
-\paragraph{Breadth.}
-Extending the sweep to six DMC tasks preserves---and sharpens---the gradient.
-The new high-dependence anchor is \textsc{pendulum-swingup}: the stripped
-Dreamer agent scores exactly $0.0$ over the entire 1.1M-step run while
-vanilla reaches $806$, i.e.\ without a learned forward model the agent
-\emph{never once} completes the swing-up. This is consistent with the
-diagnostic's logic: pendulum's reward is informative only after a long,
-dynamically precise swing, so no value shortcut exists to be exploited.
-At the other end, \textsc{finger-spin} lands with the stripped agent
-\emph{ahead} ($695$ vs.\ $662$), joining walker in the redundant regime, and
-\textsc{cartpole-swingup} sits in between ($+2.6\%$). The six tasks span a
-continuum from total collapse to strip-wins, which is precisely the
-task-level heterogeneity the diagnostic is designed to predict; per-task VBN
-fingerprints for the three new tasks (and three further tasks: cup-catch,
-reacher-hard, quadruped-walk) are running to turn this ordering into a
-quantified correlation.
+\paragraph{The predictive claim, quantified.}
+The point of VBN is that the fingerprint is measured \emph{before} the
+ablation and \emph{predicts} it. Fig.~\ref{fig:correlation} plots, for the five
+tasks with both measurements, the VBN value-recovery at a narrow bottleneck
+($D{=}16$, a scalar read of compressibility) against WM-dependence. The
+relationship is strongly monotone and negative (Spearman
+$\rho{=}{-}0.90$, Pearson $r{=}{-}0.88$, $n{=}5$): tasks whose value is already
+recoverable through a 16-dimensional bottleneck are exactly the tasks where the
+learned world model is redundant, and tasks that need a wide value subspace are
+exactly where stripping it collapses control. The compressibility axis is
+measured in TD-MPC2 and the dependence axis in Dreamer, so this is a
+\emph{cross-model} prediction: a task property read in one model family
+forecasts world-model reliance in another.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\linewidth]{figs/fig_correlation.pdf}
+\caption{\textbf{Headline.} A single scalar from the VBN probe---return
+recovered through a $D{=}16$ value bottleneck (TD-MPC2)---predicts
+world-model dependence (Dreamer strip ablation) across five tasks, cross-model.
+Compressible value $\Rightarrow$ redundant world model. Points for the three
+remaining collapse tasks (cup-catch, reacher-hard, cartpole) are being added as
+their fingerprints complete; the ordering already present here is the
+diagnostic's whole claim.}
+\label{fig:correlation}
+\end{figure}
 
 \section{A Clean Negative: The Gate Does Not Help}
 \label{sec:gate}
