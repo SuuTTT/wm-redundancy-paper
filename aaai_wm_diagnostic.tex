@@ -142,16 +142,23 @@ removes only the forward-dynamics learning signal.
 \toprule
 Task & VBN & Strip-WM effect (Dreamer) & Verdict \\
 \midrule
+\textsc{pendulum} & ---         & van $806.0$, strip $\mathbf{0.0}$ & WM \emph{essential} \\
 \textsc{acrobot} & ramp$\to$64 & van $412.5 \gg$ strip $60.8$ & WM \emph{essential} \\
 \textsc{cheetah} & monotone    & van $710 >$ strip $637$      & WM \emph{helps} \\
+\textsc{cartpole} & ---        & van $867.5 >$ strip $845.7$  & marginal \\
 \textsc{walker}  & flat-high   & strip $776 \ge$ van $722$    & WM \emph{redundant} \\
+\textsc{finger}  & ---         & strip $695.0 \ge$ van $662.0$ & WM \emph{redundant} \\
 \bottomrule
 \end{tabular}
-\caption{The cheap VBN fingerprint predicts the WM-dependence ordering,
-$n{=}3$ seeds each. Acrobot: $6.8\times$ gap ($+311$ to $+1458\%$ per seed).
-Cheetah: $+9.7$--$11.4\%$ across seeds. Walker: null (stripped mildly higher).
-The same ordering holds in TD-MPC2 (latent-consistency): cheetah
-WM-load-bearing, walker redundant.}
+\caption{The cheap VBN fingerprint predicts the WM-dependence ordering.
+Core tasks (acrobot, cheetah, walker): $n{=}3$ seeds each. Acrobot:
+$6.8\times$ gap ($+311$ to $+1458\%$ per seed). Cheetah: $+9.7$--$11.4\%$
+across seeds. Walker: null (stripped mildly higher). Breadth tasks
+(pendulum-swingup, cartpole-swingup, finger-spin): single-seed first pass;
+on pendulum the stripped agent \emph{never scores a single point} in 1.1M
+steps---a total collapse ($\Delta{=}{+}\infty$). VBN fingerprints for the
+breadth tasks are in progress (---). The same ordering holds in TD-MPC2
+(latent-consistency): cheetah WM-load-bearing, walker redundant.}
 \label{tab:cross}
 \end{table}
 
@@ -168,6 +175,23 @@ across seeds ($408,420,409$) while the \emph{stripped} runs are high-variance
 The qualitative claim (the WM is essential on acrobot) is unshakable; the
 magnitude of the collapse varies by seed. We report this rather than hiding
 the variance.
+
+\paragraph{Breadth.}
+Extending the sweep to six DMC tasks preserves---and sharpens---the gradient.
+The new high-dependence anchor is \textsc{pendulum-swingup}: the stripped
+Dreamer agent scores exactly $0.0$ over the entire 1.1M-step run while
+vanilla reaches $806$, i.e.\ without a learned forward model the agent
+\emph{never once} completes the swing-up. This is consistent with the
+diagnostic's logic: pendulum's reward is informative only after a long,
+dynamically precise swing, so no value shortcut exists to be exploited.
+At the other end, \textsc{finger-spin} lands with the stripped agent
+\emph{ahead} ($695$ vs.\ $662$), joining walker in the redundant regime, and
+\textsc{cartpole-swingup} sits in between ($+2.6\%$). The six tasks span a
+continuum from total collapse to strip-wins, which is precisely the
+task-level heterogeneity the diagnostic is designed to predict; per-task VBN
+fingerprints for the three new tasks (and three further tasks: cup-catch,
+reacher-hard, quadruped-walk) are running to turn this ordering into a
+quantified correlation.
 
 \section{A Clean Negative: The Gate Does Not Help}
 \label{sec:gate}
