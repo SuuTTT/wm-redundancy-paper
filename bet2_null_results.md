@@ -1138,3 +1138,9 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - 8-task gradient: pendulum(806/0) cup(972/0) reacher(965/18) acrobot(412/61) | cheetah(+11.4%) cartpole(+2.6%) | walker(-7%) finger(-4.7%).
 - STRUCTURE: WM-essential = sparse/long-horizon/precision (tasks 1-4); WM-redundant = dense continuous control (7-8). Mechanistic reading matches VBN.
 - Posted 8-task table to #8. All 8 GPUs busy (quad pair + 2 VBN + b3060 cup/gated).
+
+## 2026-07-20 ~20:10 UTC — breadth pt9 quadruped-walk FINAL + reacher n=2 confirm → 9-task gradient
+- quadruped-walk (pt9): van 958.1 / strip 963.7 (@944 strip, med stable) → +1% strip-wins → REDUNDANT. High-DoF dense locomotion, joins walker/finger.
+- reacher-hard n=2: seed-2 van 971.0/strip 6.0 (seed-1 965/18) → collapse CONFIRMED multi-seed.
+- 9-task gradient: essential[pendulum,cup,reacher,acrobot] | helps/marginal[cheetah,cartpole] | redundant[finger,walker,quadruped].
+- Paper Fig3+Table1 updated to 9 tasks; correlation ρ=−0.94 n=6 (cartpole D16 74% added). Pushed. compiles 5pp.
