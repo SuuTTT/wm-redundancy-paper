@@ -1131,3 +1131,10 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - VBN a-priori prediction CONFIRMED on both new breadth tasks. Metric = MPPI eval return of TD-MPC2 trained with value-path bottleneck width D (exp/vac/logs/vbnNN_<Task>_s<seed>.log, grep MPPI= last-6 median).
 - In flight for width-curve: CartpoleSwingup D16 s114 (G0), PendulumSwingup D64 s115 (G3).
 - 4070 relaunch: quad_van_n1 (G1, Dreamer); reacher_strip still on G2.
+
+## 2026-07-20 ~14:50 UTC — breadth pt8 cup-catch FINAL → 8-TASK GRADIENT COMPLETE
+- ball-in-cup catch (pt8): van 972.0 / strip 0.0 (@1056 flat-zero) → COLLAPSE → WM ESSENTIAL. 3rd collapse anchor.
+- reacher-hard strip final @1088 = 18.0 (was 9.0 @1008); verdict COLLAPSE unchanged.
+- 8-task gradient: pendulum(806/0) cup(972/0) reacher(965/18) acrobot(412/61) | cheetah(+11.4%) cartpole(+2.6%) | walker(-7%) finger(-4.7%).
+- STRUCTURE: WM-essential = sparse/long-horizon/precision (tasks 1-4); WM-redundant = dense continuous control (7-8). Mechanistic reading matches VBN.
+- Posted 8-task table to #8. All 8 GPUs busy (quad pair + 2 VBN + b3060 cup/gated).
