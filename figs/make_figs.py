@@ -111,6 +111,7 @@ pts = [  # task, VBN D16 recovery (frac of vanilla), WM-dependence (frac lost), 
     ("pendulum", 332.7/766.0,  1.000, C_ESS),
     ("acrobot",  258.0/511.0,  0.853, C_ESS),
     ("cheetah",  517.0/855.0,  0.103, C_HELP),
+    ("cartpole", 640.7/868.0,  0.025, C_MARG),
     ("walker",   622.0/727.0, -0.075, C_RED),
     ("finger",   961.2/980.0, -0.050, C_RED),
 ]

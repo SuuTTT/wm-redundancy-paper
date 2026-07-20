@@ -41,8 +41,8 @@ return. Across eight DeepMind Control tasks and two independent WM families
 reacher-hard, acrobot) to \emph{redundant} (the stripped agent is better on
 walker-run and finger-spin), and a single scalar from the VBN probe predicts
 where each task falls: value-recovery through a 16-dimensional bottleneck
-correlates with world-model dependence at Spearman $\rho{=}{-}0.90$
-($n{=}5$), \emph{cross-model}. We also report a clean \emph{negative}:
+correlates with world-model dependence at Spearman $\rho{=}{-}0.94$
+($n{=}6$), \emph{cross-model}. We also report a clean \emph{negative}:
 a plan-time ``gate'' that down-weights the WM's imagined rollout---the
 prescriptive fix the diagnostic seems to suggest---does \emph{not} robustly
 beat trusting the full model ($n{=}5$; all gate settings inside a 19-point
@@ -86,7 +86,7 @@ compressibility, and its three-shape task fingerprint (Sec.~\ref{sec:vbn}).
 \item A \textbf{cross-model, cross-task} result over eight DMControl tasks:
 world-model value ranges from essential (collapse) to redundant (strip-wins)
 on a fixed architecture, reproduces across Dreamer and TD-MPC2, and is
-predicted by the VBN fingerprint at Spearman $\rho{=}{-}0.90$
+predicted by the VBN fingerprint at Spearman $\rho{=}{-}0.94$
 (Sec.~\ref{sec:cross}, Fig.~\ref{fig:correlation}).
 \item An honest \textbf{negative}: the ``gated world model'' that the
 diagnostic seems to prescribe does not robustly beat the full model
@@ -262,7 +262,7 @@ ablation and \emph{predicts} it. Fig.~\ref{fig:correlation} plots, for the five
 tasks with both measurements, the VBN value-recovery at a narrow bottleneck
 ($D{=}16$, a scalar read of compressibility) against WM-dependence. The
 relationship is strongly monotone and negative (Spearman
-$\rho{=}{-}0.90$, Pearson $r{=}{-}0.88$, $n{=}5$): tasks whose value is already
+$\rho{=}{-}0.94$, Pearson $r{=}{-}0.87$, $n{=}6$): tasks whose value is already
 recoverable through a 16-dimensional bottleneck are exactly the tasks where the
 learned world model is redundant, and tasks that need a wide value subspace are
 exactly where stripping it collapses control. The compressibility axis is
@@ -275,9 +275,9 @@ forecasts world-model reliance in another.
 \includegraphics[width=0.92\linewidth]{figs/fig_correlation.pdf}
 \caption{\textbf{Headline.} A single scalar from the VBN probe---return
 recovered through a $D{=}16$ value bottleneck (TD-MPC2)---predicts
-world-model dependence (Dreamer strip ablation) across five tasks, cross-model.
-Compressible value $\Rightarrow$ redundant world model. Points for the three
-remaining collapse tasks (cup-catch, reacher-hard, cartpole) are being added as
+world-model dependence (Dreamer strip ablation) across six tasks, cross-model.
+Compressible value $\Rightarrow$ redundant world model. Points for the two
+remaining collapse tasks (cup-catch, reacher-hard) are being added as
 their fingerprints complete; the ordering already present here is the
 diagnostic's whole claim.}
 \label{fig:correlation}
