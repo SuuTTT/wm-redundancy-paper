@@ -1118,3 +1118,9 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - Confirmed MJX registry has PendulumSwingup/CartpoleSwingup/FingerSpin/BallInCup.
 - Swapped 4070 make-work VBN seeds (s110 acro-D64, s111 cheetah-D32, killed clean) for critical-path: VBN PendulumSwingup D16 s112 (G0), FingerSpin D16 s113 (G3) — the D16 point discriminates essential (low) vs redundant (flat-high).
 - reacher_strip relaunched after silent launch failure (cd-subshell trap: 'cd X && cmd &' backgrounds the cd too; second command in same ssh ran from /root). Lesson: one launch per ssh call.
+
+## 2026-07-20 ~12:35 UTC — breadth pt7 reacher-hard FINAL + VBN pendulum/finger DONE
+- reacher-hard (pt7): van 965.0 / strip 9.0 (@1008 med30, collapse) → WM ESSENTIAL. 2nd collapse anchor after pendulum.
+- Structure: essential end = sparse/long-horizon (pendulum,acrobot,reacher); redundant end = dense control (walker,finger).
+- VBN probes DONE rc=0: PendulumSwingup D16 s112 (11:38), FingerSpin D16 s113 (12:32) — harvesting probe metric.
+- cup-catch pt8 (van971/strip0.0) finalizing.
