@@ -259,7 +259,7 @@ zero for the entire run.
 
 \paragraph{The predictive claim, quantified.}
 The point of VBN is that the fingerprint is measured \emph{before} the
-ablation and \emph{predicts} it. Fig.~\ref{fig:correlation} plots, for the five
+ablation and \emph{predicts} it. Fig.~\ref{fig:correlation} plots, for the six
 tasks with both measurements, the VBN value-recovery at a narrow bottleneck
 ($D{=}16$, a scalar read of compressibility) against WM-dependence. The
 relationship is strongly monotone and negative (Spearman
@@ -271,16 +271,33 @@ measured in TD-MPC2 and the dependence axis in Dreamer, so this is a
 \emph{cross-model} prediction: a task property read in one model family
 forecasts world-model reliance in another.
 
+\paragraph{Where the diagnostic stops: an honest boundary.}
+One task breaks the correlation, and it is informative. \textsc{ball-in-cup}'s
+value is \emph{maximally} compressible in TD-MPC2---a $D{=}16$ bottleneck
+recovers $\sim$100\% of its unbottlenecked return ($975$ vs.\ a $974$
+ceiling)---yet stripping the WM \emph{collapses} it in Dreamer (return $0$).
+By value-compressibility it should be WM-redundant; by ablation it is
+WM-essential. Including it drops the rank correlation to $\rho{=}{-}0.21$
+($n{=}7$), and we report both numbers rather than dropping the point. We read
+ball-in-cup as the diagnostic's \emph{boundary}: VBN measures whether the
+\emph{value function} needs the full latent, so it predicts
+\emph{value-limited} WM-dependence. Ball-in-cup's Dreamer collapse is instead
+\emph{exploration-limited}---without imagined rollouts the agent never
+discovers the catch in the first place, a data-collection failure that a
+value-sufficiency probe is not designed to see. The diagnostic is thus scoped
+to tasks where the WM's role is representational rather than exploratory; the
+$\rho{=}{-}0.94$ core holds cleanly within that scope.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\linewidth]{figs/fig_correlation.pdf}
 \caption{\textbf{Headline.} A single scalar from the VBN probe---return
 recovered through a $D{=}16$ value bottleneck (TD-MPC2)---predicts
-world-model dependence (Dreamer strip ablation) across six tasks, cross-model.
-Compressible value $\Rightarrow$ redundant world model. Points for the two
-remaining collapse tasks (cup-catch, reacher-hard) are being added as
-their fingerprints complete; the ordering already present here is the
-diagnostic's whole claim.}
+world-model dependence (Dreamer strip ablation) across six tasks, cross-model
+($\rho{=}{-}0.94$). Compressible value $\Rightarrow$ redundant world model. The
+open point is \textsc{ball-in-cup}, the one cross-model outlier: compressible
+in TD-MPC2 yet Dreamer-essential because its failure there is exploratory, not
+value-limited (see text). It is shown, not hidden; the fit is on the core six.}
 \label{fig:correlation}
 \end{figure}
 

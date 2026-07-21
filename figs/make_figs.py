@@ -116,14 +116,20 @@ pts = [  # task, VBN D16 recovery (frac of vanilla), WM-dependence (frac lost), 
     ("walker",   622.0/727.0, -0.075, C_RED),
     ("finger",   961.2/980.0, -0.050, C_RED),
 ]
-x = np.array([p[1] for p in pts], dtype=float)
-yv = np.array([p[2] for p in pts], dtype=float)
+# ball-in-cup: value maximally compressible in TD-MPC2 (D16 recovers ~100% of
+# the D128 ceiling) yet Dreamer-essential (strip collapses) -> a cross-model
+# OUTLIER, plotted distinctly and excluded from the core fit. Reported honestly.
+cup = ("ball-in-cup", 975.5 / 974.5, 1.000, C_ESS)
+
 def _rank(a):
     order = np.argsort(a); rk = np.empty_like(order, dtype=float); rk[order] = np.arange(len(a)); return rk
-rho = np.corrcoef(_rank(x), _rank(yv))[0, 1]
+x = np.array([p[1] for p in pts], dtype=float)
+yv = np.array([p[2] for p in pts], dtype=float)
+rho = np.corrcoef(_rank(x), _rank(yv))[0, 1]           # core n=6
 r = np.corrcoef(x, yv)[0, 1]
-prho = pr = float("nan")
-# OLS trend
+xa = np.append(x, cup[1]); ya = np.append(yv, cup[2])   # with cup, n=7
+rho_all = np.corrcoef(_rank(xa), _rank(ya))[0, 1]
+# OLS trend on the CORE six (cup is the labelled exception)
 b, a = np.polyfit(x, yv, 1)
 xs = np.linspace(0.38, 1.02, 50)
 
@@ -132,12 +138,18 @@ ax.plot(xs, a + b * xs, color=INK, lw=1.1, ls=(0, (4, 3)), zorder=2)
 ax.axhline(0, color="#BBB", lw=0.7, zorder=1)
 for name, xi, yi, col in pts:
     ax.scatter([xi], [yi], color=col, s=64, zorder=4, edgecolor="white", lw=0.8)
-    dx = 0.012
-    ha = "left"
+    dx, ha = 0.012, "left"
     if name in ("finger", "walker"):
         ha, dx = "right", -0.012
     ax.annotate(name, (xi, yi), xytext=(xi + dx, yi + 0.045),
                 fontsize=7.8, color=col, ha=ha, weight="bold")
+# cup outlier: open marker, red edge, explicit label
+ax.scatter([cup[1]], [cup[2]], facecolor="white", edgecolor=C_ESS, s=95,
+           lw=1.6, marker="o", zorder=5)
+ax.annotate("ball-in-cup\n(outlier)", (cup[1], cup[2]),
+            xytext=(cup[1] - 0.02, cup[2] - 0.10), fontsize=7.6, color=C_ESS,
+            ha="right", va="top", weight="bold",
+            arrowprops=dict(arrowstyle="-", color=C_ESS, lw=0.7))
 ax.set_xlim(0.37, 1.03)
 ax.set_ylim(-0.2, 1.12)
 ax.set_xticks([0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
@@ -147,12 +159,12 @@ ax.set_yticklabels(["0", "25%", "50%", "75%", "100%"])
 ax.set_xlabel(r"value compressibility: VBN $D{=}16$ recovery")
 ax.set_ylabel("WM-dependence (return lost)")
 ax.spines[["top", "right"]].set_visible(False)
-ax.text(0.40, 1.05, f"Spearman $\\rho = {rho:.2f}$\nPearson $r = {r:.2f}$",
-        fontsize=8.2, va="top", ha="left",
+ax.text(0.40, 1.05,
+        f"core $\\rho = {rho:.2f}$ ($n{{=}}6$)\nwith cup $\\rho = {rho_all:.2f}$ ($n{{=}}7$)",
+        fontsize=8.0, va="top", ha="left",
         bbox=dict(boxstyle="round,pad=0.3", fc="#EEF2F8", ec="#C6D2E4", lw=0.6))
-ax.text(0.985, 1.02, "essential", fontsize=7.4, color=C_ESS, ha="right", va="top", weight="bold")
 ax.text(0.985, -0.13, "redundant", fontsize=7.4, color=C_RED, ha="right", va="bottom", weight="bold")
 ax.set_title("Compressible value $\\Rightarrow$ redundant world model", fontsize=9.2, pad=6)
 fig.savefig("fig_correlation.pdf")
 plt.close(fig)
-print(f"fig_correlation.pdf written  (rho={rho:.3f} p={prho:.3g}; r={r:.3f} p={pr:.3g})")
+print(f"fig_correlation.pdf written  (core rho={rho:.3f} r={r:.3f}; with-cup rho={rho_all:.3f})")
