@@ -1144,3 +1144,10 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - reacher-hard n=2: seed-2 van 971.0/strip 6.0 (seed-1 965/18) → collapse CONFIRMED multi-seed.
 - 9-task gradient: essential[pendulum,cup,reacher,acrobot] | helps/marginal[cheetah,cartpole] | redundant[finger,walker,quadruped].
 - Paper Fig3+Table1 updated to 9 tasks; correlation ρ=−0.94 n=6 (cartpole D16 74% added). Pushed. compiles 5pp.
+
+## 2026-07-21 ~00:05 UTC — CUP outlier resolved + integrated honestly + reacher n=2 final
+- BallInCup VBN D16 s122=975.5 (DONE), D128 s123 ceiling=974.5 → recovery ~100% → maximally compressible in TD-MPC2 BUT Dreamer-essential (collapse). Cross-model OUTLIER.
+- Correlation: core n=6 ρ=−0.94 / with-cup n=7 ρ=−0.21. BOTH reported. Fig4 shows cup as labeled open outlier; fit on core 6.
+- §3 'honest boundary' para added: VBN predicts value-limited WM-dependence; cup collapse is exploration-limited (not value-insufficiency) → diagnostic scoped to representational WM role.
+- Grid-confirms n=2: acrobot 253.65(grid258✓), walker 645.25(grid622✓). reacher n=2 FINAL van966/strip6 (collapse robust).
+- Paper pushed 5pp clean. Pruning reacher_*_n2 dirs.
