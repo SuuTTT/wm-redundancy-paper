@@ -288,6 +288,24 @@ value-sufficiency probe is not designed to see. The diagnostic is thus scoped
 to tasks where the WM's role is representational rather than exploratory; the
 $\rho{=}{-}0.94$ core holds cleanly within that scope.
 
+\paragraph{An independent cross-check from a third method.}
+The exploration-limited boundary is corroborated by data we did not generate:
+the official TD-MPC2 release \cite{hansen2024tdmpc2} also reports SAC, a
+model-free off-policy learner with \emph{no} world model at all. On the tasks
+we label exploration-limited, SAC nonetheless solves them---the
+TD-MPC2$-$SAC final-return gap is only $+5$ on ball-in-cup ($984$ vs.\ $979$)
+and $+38$ on reacher-hard ($982$ vs.\ $944$). Their Dreamer collapse therefore
+cannot be a value-representation deficit; it is an exploration/reconstruction
+failure specific to Dreamer's generative objective---precisely the boundary a
+value probe cannot see. The genuinely value- and planning-hard tasks instead
+show large gaps (acrobot $+591$, hopper-hop $+332$). One caution, which opens a
+separate question we leave to future work: on hopper-hop the gap is $+332$ even
+though TD-MPC2's self-predictive (consistency) loss is \emph{removable} there
+and plan-time lookahead adds nothing---so what beats SAC on hopper-hop is
+TD-MPC2's value pathway, not its world model. Here this third signal serves
+only to confirm that our exploration-limited tasks are model-free--solvable,
+hence not value-limited.
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.92\linewidth]{figs/fig_correlation.pdf}
