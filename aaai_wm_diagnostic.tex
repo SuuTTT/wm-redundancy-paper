@@ -418,6 +418,34 @@ a larger task suite is a clean, falsifiable next experiment. If it does, the
 diagnostic becomes an \emph{a priori} test---decide whether to pay for a world
 model before training one.
 
+\paragraph{Why a value-sufficiency probe has a boundary.}
+The ball-in-cup exception (Sec.~\ref{sec:cross}) is not noise but a consequence
+of \emph{what} VBN measures, and it is worth making precise. Decompose the
+benefit of a learned WM into two channels: a \emph{representational} channel,
+in which the WM shapes the latent so the value and policy heads can express and
+propagate long-horizon credit; and an \emph{exploratory} channel, in which
+imagined rollouts steer data collection toward states the policy would
+otherwise never visit. Writing the achieved return as
+$J \approx J_{\text{rep}}(\phi) + J_{\text{expl}}(\mathcal{D})$---a term set by
+the representation on a fixed dataset and a term set by the induced state
+occupancy $\mathcal{D}$---VBN instruments only $J_{\text{rep}}$: it freezes
+$\phi$ and $\mathcal{D}$ and asks whether the value head needs the full latent.
+On tasks whose difficulty is representational (\textsc{acrobot},
+\textsc{pendulum}, \textsc{reacher}) the two channels move together and VBN
+predicts WM-dependence tightly. \textsc{Ball-in-cup} is the corner case where
+the value is trivially compressible \emph{once the goal region is reached}
+(so $J_{\text{rep}}$ is bottleneck-insensitive, giving $\sim$100\% recovery)
+yet the goal is almost never reached without imagined rollouts (so
+$J_{\text{expl}}$ dominates the ablation). A value-sufficiency probe is silent
+on $J_{\text{expl}}$ by construction; a complete a-priori criterion needs a
+second, exploration-side statistic---a hitting-time or reward-sparsity measure
+of the induced occupancy---and the reward-propagation horizon above is a
+natural candidate because it couples to both. We state this as the precise
+scope of the diagnostic, not a defect: VBN answers ``does the value function
+need the world model to \emph{represent} return?'', which is exactly the
+question a practitioner deciding whether to pay for one wants answered on the
+large class of representation-limited tasks.
+
 \section{Related Work}
 Model-based RL with learned latent dynamics: Dreamer
 \cite{hafner2023dreamerv3}, TD-MPC2 \cite{hansen2024tdmpc2}, MuZero
