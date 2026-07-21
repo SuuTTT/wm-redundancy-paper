@@ -1151,3 +1151,10 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - §3 'honest boundary' para added: VBN predicts value-limited WM-dependence; cup collapse is exploration-limited (not value-insufficiency) → diagnostic scoped to representational WM role.
 - Grid-confirms n=2: acrobot 253.65(grid258✓), walker 645.25(grid622✓). reacher n=2 FINAL van966/strip6 (collapse robust).
 - Paper pushed 5pp clean. Pruning reacher_*_n2 dirs.
+
+## 2026-07-21 ~09:40 UTC — pendulum n=2 FINAL + n=3 in progress (bimodal confirmed)
+- pendulum_van_n2 FINAL @1088 med30=764 (vanilla itself volatile within-run: bounced 805/887/838/764).
+- pendulum_strip_n2 FINAL @1072 med30=727 → seed-2 strip ≈ van (−5%, REDUNDANT). Seed-1 was strip=0 (collapse). Seed-3 strip=0 @640 (collapsing).
+- PENDULUM STRIP BIMODAL n=3: {0, 727, 0} vs van {806,764,~800} → 2/3 total collapse, 1/3 fully matched. Exploration-lottery signature.
+- CROSS-VALIDATION (official TD-MPC2 results/ CSVs, no compute): TD-MPC2−SAC final-return gap per task — acrobot +591, hopper-hop +332, pendulum +263, walker +191, cheetah +125, cartpole +52, reacher +38, finger +10, cup +5. KEY: hopper-hop gap +332 despite consistency REMOVABLE + planning NULL → the TD-MPC2 win = VALUE PATHWAY, not the world model. And cup(+5)/reacher(+38) SAC-solved → their Dreamer strip-collapse is exploration/reconstruction-specific, NOT value-limited → independent confirmation of the value-limited vs exploration-limited split. Files: scratchpad/off/{tdmpc2,sac}__*.csv.
+- PENDING (user judgment): pendulum reword (bimodal/high-variance, exploration-influenced but intermediate per SAC gap +263, NOT a clean cup-twin). Do at n3 @1088.
