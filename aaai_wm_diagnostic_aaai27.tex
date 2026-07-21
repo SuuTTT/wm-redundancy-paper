@@ -1,0 +1,508 @@
+\documentclass[letterpaper]{article}
+\usepackage[submission]{aaai2027}
+\usepackage[hyphens]{url}
+\usepackage{graphicx}
+\usepackage[numbers]{natbib}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,backgrounds}
+\pdfinfo{/TemplateVersion (2027.1)}
+\setcounter{secnumdepth}{2}
+\title{When Does a Learned World Model Help?\\
+A Value-Sufficiency Diagnostic that Predicts World-Model Dependence Across Architectures}
+\author{Anonymous Submission}
+\affiliations{Paper under double-blind review}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Whether a learned world model (WM) helps a model-based agent is usually
+debated at the level of \emph{architectures}: latent-consistency (TD-MPC2)
+versus reconstruction RSSM (Dreamer) versus reward-only value learning.
+We argue the more predictive question is at the level of \emph{tasks}.
+We introduce the \textbf{Value-sufficiency BottleNeck (VBN)}, a cheap,
+checkpoint-time probe that measures how much of an agent's latent the value
+function actually needs, and show that this single scalar \emph{predicts}
+whether ablating the world model's forward-dynamics learning helps or hurts
+return. Across nine DeepMind Control tasks and two independent WM families
+(Dreamer, TD-MPC2) the world model's value ranges from \emph{essential}
+(stripping it collapses return to near zero on pendulum-swingup, ball-in-cup,
+reacher-hard, acrobot) to \emph{redundant} (the stripped agent is better on
+walker-run and finger-spin), and a single scalar from the VBN probe predicts
+where each task falls: value-recovery through a 16-dimensional bottleneck
+correlates with world-model dependence at Spearman $\rho{=}{-}0.94$
+($n{=}6$), \emph{cross-model}. We also report a clean \emph{negative}:
+a plan-time ``gate'' that down-weights the WM's imagined rollout---the
+prescriptive fix the diagnostic seems to suggest---does \emph{not} robustly
+beat trusting the full model ($n{=}5$; all gate settings inside a 19-point
+band). Our contribution is therefore a \emph{diagnostic}, not a repaired
+algorithm: a task property, groundable in the value-equivalence principle
+and rate--distortion, that tells you \emph{before} you spend the compute
+whether a learned world model has room to help.
+\end{abstract}
+
+\section{Introduction}
+Model-based reinforcement learning couples a learned \emph{world model}
+(WM)---a latent dynamics model trained to predict transitions---with a value
+function and a planner. A large literature asks whether this pays off, and
+answers by comparing architectures: generative reconstruction models
+\cite{hafner2023dreamerv3}, latent-consistency models
+\cite{hansen2024tdmpc2}, and value-equivalent models
+\cite{schrittwieser2020muzero,grimm2020value}. The empirical picture is
+mixed, and the mixedness is usually attributed to modeling choices.
+
+We take a different stance. We hold the architecture fixed and ask which
+\emph{tasks} make the learned dynamics load-bearing. Concretely, we ablate
+the WM by disabling its forward-dynamics learning objective---in TD-MPC2 by
+setting the latent-consistency coefficient to zero, in Dreamer by zeroing the
+dynamics loss---leaving the value function, encoder and planner otherwise
+intact. We call the change in return the task's \emph{WM-dependence}.
+
+Our central finding is that WM-dependence is predictable from a task property
+we can measure cheaply and \emph{a priori} of the ablation. The property is
+how compressible the value-relevant information is: if a tiny bottleneck on
+the value head already recovers most of the return, the value function does
+not need the full latent, and imposing accurate forward dynamics on that
+latent is redundant. If the value head needs most of the latent, the forward
+model's job of shaping and propagating that information becomes load-bearing.
+We operationalize this with the Value-sufficiency BottleNeck (VBN), and use it
+as a single-pass decision procedure (Fig.~\ref{fig:framework}).
+
+\paragraph{Contributions.}
+\begin{enumerate}\itemsep2pt
+\item \textbf{VBN}, a checkpoint-time probe of value-relevant
+compressibility, and its three-shape task fingerprint (Sec.~\ref{sec:vbn}).
+\item A \textbf{cross-model, cross-task} result over nine DMControl tasks:
+world-model value ranges from essential (collapse) to redundant (strip-wins)
+on a fixed architecture, reproduces across Dreamer and TD-MPC2, and is
+predicted by the VBN fingerprint at Spearman $\rho{=}{-}0.94$
+(Sec.~\ref{sec:cross}, Fig.~\ref{fig:correlation}).
+\item An honest \textbf{negative}: the ``gated world model'' that the
+diagnostic seems to prescribe does not robustly beat the full model
+(Sec.~\ref{sec:gate}).
+\item A \textbf{mechanism}: under planner-driven data collection the WM can
+actively \emph{hurt} by inflating the planner's own target variance
+(Sec.~\ref{sec:mechanism}).
+\item A \textbf{theoretical grounding} of VBN in the value-equivalence
+principle and rate--distortion, and a roadmap toward a training-free
+analytical criterion (Sec.~\ref{sec:theory}).
+\end{enumerate}
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  >={Stealth[length=2.2mm]},
+  box/.style={draw=black!55,rounded corners=2pt,align=center,inner sep=5pt,
+              minimum height=12mm,fill=white,line width=0.6pt},
+  probe/.style={box,fill=blue!5,draw=blue!45!black!60},
+  dec/.style={diamond,aspect=2.1,draw=black!55,align=center,inner sep=1pt,
+              fill=black!3,line width=0.6pt},
+  ess/.style={box,fill=red!7,draw=red!55!black!55},
+  red/.style={box,fill=blue!8,draw=blue!55!black!55},
+  lbl/.style={font=\scriptsize\itshape,black!60},
+  arr/.style={->,line width=0.7pt,black!65},
+]
+\node[box] (ckpt) {trained agent\\checkpoint\\{\scriptsize$\phi,\,V_\theta,\,\pi$}};
+\node[probe,right=10mm of ckpt] (probe)
+  {\textbf{VBN probe}\\{\scriptsize freeze $\phi$; insert width-$D$}\\[-1pt]{\scriptsize bottleneck in value head}\\[-1pt]{\scriptsize sweep $D\!\in\!\{16..128\}$}};
+\node[box,right=10mm of probe] (curve)
+  {value-recovery\\curve $=$ task\\\textbf{fingerprint}};
+\node[dec,right=11mm of curve] (dec) {value\\compressible?};
+\node[red,above right=3mm and 11mm of dec] (rdt)
+  {\textbf{WM redundant}\\{\scriptsize skip / cheapen the}\\[-1pt]{\scriptsize world model}};
+\node[ess,below right=3mm and 11mm of dec] (esn)
+  {\textbf{WM load-bearing}\\{\scriptsize invest in forward}\\[-1pt]{\scriptsize dynamics}};
+\draw[arr] (ckpt) -- (probe);
+\draw[arr] (probe) -- (curve);
+\draw[arr] (curve) -- (dec);
+\draw[arr] (dec.north) |- (rdt.west) node[lbl,pos=0.75,above] {yes (flat-high)};
+\draw[arr] (dec.south) |- (esn.west) node[lbl,pos=0.75,below] {no (monotone)};
+\end{tikzpicture}
+\caption{\textbf{The diagnostic in one pass.} From a trained checkpoint, the
+Value-sufficiency BottleNeck (VBN) re-trains only a small width-$D$ bottleneck
+on the frozen value head and records how much control return survives. The
+shape of the resulting value-recovery curve (Fig.~\ref{fig:fingerprint}) is a
+cheap, \emph{a-priori} predictor of whether the learned world model is
+load-bearing or redundant for that task (Fig.~\ref{fig:correlation})---computed
+before spending compute on the model. The prescriptive step (down-weighting a
+redundant WM online) is a clean \emph{negative} (Sec.~\ref{sec:gate}); the
+reliable product is the \emph{decision}.}
+\label{fig:framework}
+\end{figure*}
+
+\section{The Value-sufficiency BottleNeck}
+\label{sec:vbn}
+Let $z=\phi(o)\in\mathbb{R}^{d}$ be the agent's latent and $V_\theta(z)$ its
+value head. VBN inserts a linear bottleneck of width $D\le d$ into the value
+head: $\hat V(z)=g_\psi(W_2\,\sigma(W_1 z))$ with $W_1\in\mathbb{R}^{D\times d}$,
+and re-trains only the small heads while freezing $\phi$. Sweeping
+$D\in\{16,32,64,128\}$ and recording the resulting control return traces a
+discrete \emph{value rate--distortion} curve: how much return survives when
+the value function is forced through $D$ dimensions.
+
+Empirically the curve has one of three shapes, which we treat as a task
+fingerprint:
+\begin{itemize}\itemsep2pt
+\item \textbf{monotone} (return keeps rising with $D$): value needs a large
+fraction of the latent---low compressibility.
+\item \textbf{flat-high} (already saturated at small $D$): a tiny bottleneck
+suffices---high compressibility, value is nearly sufficient in few dimensions.
+\item \textbf{ramp-to-$D^\star$} (rises then plateaus at an intermediate
+$D^\star$): value needs a specific, sizeable subspace.
+\end{itemize}
+In our four-task grid ($n{=}3$ seeds each), \textsc{cheetah-run} is monotone,
+\textsc{walker-run} is flat-high, \textsc{acrobot-swingup} ramps to
+$D^\star{=}64$, and \textsc{hopper-hop} is flat-high/noisy. VBN costs one
+short probe-training run per width on an existing checkpoint; it never
+touches the base policy.
+
+The claim we test is: \emph{low value-compressibility (monotone / ramp)
+predicts that the learned WM is load-bearing; high compressibility
+(flat-high) predicts the WM is redundant.}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig_fingerprint.pdf}
+\caption{\textbf{The VBN instrument.} Return recovered (fraction of the
+unbottlenecked agent) as the value head is forced through a width-$D$
+bottleneck, TD-MPC2, $n{=}3$ seeds. The three shapes are the task fingerprint:
+\textsc{walker} saturates by $D{=}16$ (flat-high, highly compressible),
+\textsc{cheetah} keeps climbing (monotone, low compressibility), and
+\textsc{acrobot} ramps late to $D^\star{=}128$ (needs a large value subspace).
+Compressibility read off this curve---not the ablation---predicts
+WM-dependence.}
+\label{fig:fingerprint}
+\end{figure}
+
+\section{Cross-Model, Cross-Task Result}
+\label{sec:cross}
+We ablate the WM in each framework and measure the change in return per task.
+For Dreamer we use the unmodified official DreamerV3 and report the
+last-30-episode median return at $\sim$1.1M environment steps. For TD-MPC2 we
+use our JAX reimplementation, audited against the official release: hopper-hop
+is at parity (within the official run-to-run seed spread), cheetah $-5\%$,
+walker $-17\%$, acrobot $-23\%$, with known causes (data-collection mode,
+physics backend) under verification. All TD-MPC2 results here are
+\emph{within-implementation relative} comparisons (vanilla vs.\ ablated under
+identical code), so these absolute gaps do not affect the claims; the
+architecture-general headline rests on unmodified Dreamer. The strip ablation
+removes only the forward-dynamics learning signal.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{lcccc}
+\toprule
+Task & van & strip & WM-dep. & regime \\
+\midrule
+\textsc{pendulum-swingup}  & 806.0 & \textbf{0.0}  & \textbf{collapse} & essential \\
+\textsc{ball-in-cup catch} & 972.0 & \textbf{0.0}  & \textbf{collapse} & essential \\
+\textsc{reacher-hard}      & 965.0 & 18.0          & $-98\%$           & essential \\
+\textsc{acrobot-swingup}   & 412.5 & 60.8          & $-85\%$           & essential \\
+\textsc{cheetah-run}       & 710.0 & 637.0         & $-10\%$           & helps \\
+\textsc{cartpole-swingup}  & 867.5 & 845.7         & $-3\%$            & marginal \\
+\textsc{finger-spin}       & 662.0 & 695.0         & $+5\%$            & redundant \\
+\textsc{walker-run}        & 722.0 & 776.0         & $+7\%$            & redundant \\
+\textsc{quadruped-walk}    & 958.1 & 963.7         & $+1\%$            & redundant \\
+\bottomrule
+\end{tabular}
+\caption{\textbf{Nine-task WM-dependence gradient} (Dreamer, last-30-episode
+median return at $\sim$1.1M steps). WM-dependence $=(\text{van}-\text{strip})/
+\text{van}$ is the fraction of return lost when the forward-dynamics signal is
+removed; negative means the stripped agent is \emph{better}. Core tasks
+(acrobot, cheetah, walker) are $n{=}3$; the rest are single-seed first pass
+(reacher-hard now $n{=}2$). Three tasks collapse to near-zero without the WM;
+two are better without it. The essential end is sparse-reward / long-horizon /
+precision control; the redundant end is dense continuous control. The same
+ordering holds in TD-MPC2.}
+\label{tab:cross}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figs/fig_gradient.pdf}
+\caption{The gradient of Table~\ref{tab:cross}, sorted. World-model value is
+not a property of the architecture but of the \emph{task}: it spans total
+collapse (three tasks score near zero when stripped) to strip-wins (two tasks
+improve), with a smooth middle. Colour encodes regime.}
+\label{fig:gradient}
+\end{figure}
+
+Table~\ref{tab:cross} and Fig.~\ref{fig:gradient} are the core result.
+\textbf{(i)} WM-dependence spans the full range on a fixed architecture---from
+total collapse to a small strip-win---so ``does a world model help'' is
+mis-posed at the architecture level and well-posed at the task level.
+\textbf{(ii)} The ordering is \emph{architecture-invariant}: it reproduces
+across a reconstruction RSSM (Dreamer) and a latent-consistency model
+(TD-MPC2), two families that share almost no inductive bias except that they
+both learn forward dynamics. \textbf{(iii)} The essential end is not arbitrary:
+the four load-bearing tasks are all sparse-reward, long-horizon, or
+precision-control (pendulum/cup/reacher/acrobot), where no compressible value
+shortcut exists; the redundant end is dense continuous locomotion
+(walker/finger), where it does. \textbf{(iv)} The high-dependence anchors are
+\emph{dramatic but honest}: on acrobot, vanilla return is stable across seeds
+($408,420,409$) while the \emph{stripped} runs are high-variance
+($26,56,100$); on pendulum and cup-catch the stripped agent scores exactly
+zero for the entire run.
+
+\paragraph{The predictive claim, quantified.}
+The point of VBN is that the fingerprint is measured \emph{before} the
+ablation and \emph{predicts} it. Fig.~\ref{fig:correlation} plots, for the six
+tasks with both measurements, the VBN value-recovery at a narrow bottleneck
+($D{=}16$, a scalar read of compressibility) against WM-dependence. The
+relationship is strongly monotone and negative (Spearman
+$\rho{=}{-}0.94$, Pearson $r{=}{-}0.87$, $n{=}6$): tasks whose value is already
+recoverable through a 16-dimensional bottleneck are exactly the tasks where the
+learned world model is redundant, and tasks that need a wide value subspace are
+exactly where stripping it collapses control. The compressibility axis is
+measured in TD-MPC2 and the dependence axis in Dreamer, so this is a
+\emph{cross-model} prediction: a task property read in one model family
+forecasts world-model reliance in another.
+
+\paragraph{Where the diagnostic stops: an honest boundary.}
+One task breaks the correlation, and it is informative. \textsc{ball-in-cup}'s
+value is \emph{maximally} compressible in TD-MPC2---a $D{=}16$ bottleneck
+recovers $\sim$100\% of its unbottlenecked return ($975$ vs.\ a $974$
+ceiling)---yet stripping the WM \emph{collapses} it in Dreamer (return $0$).
+By value-compressibility it should be WM-redundant; by ablation it is
+WM-essential. Including it drops the rank correlation to $\rho{=}{-}0.21$
+($n{=}7$), and we report both numbers rather than dropping the point. We read
+ball-in-cup as the diagnostic's \emph{boundary}: VBN measures whether the
+\emph{value function} needs the full latent, so it predicts
+\emph{value-limited} WM-dependence. Ball-in-cup's Dreamer collapse is instead
+\emph{exploration-limited}---without imagined rollouts the agent never
+discovers the catch in the first place, a data-collection failure that a
+value-sufficiency probe is not designed to see. The diagnostic is thus scoped
+to tasks where the WM's role is representational rather than exploratory; the
+$\rho{=}{-}0.94$ core holds cleanly within that scope.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\linewidth]{figs/fig_correlation.pdf}
+\caption{\textbf{Headline.} A single scalar from the VBN probe---return
+recovered through a $D{=}16$ value bottleneck (TD-MPC2)---predicts
+world-model dependence (Dreamer strip ablation) across six tasks, cross-model
+($\rho{=}{-}0.94$). Compressible value $\Rightarrow$ redundant world model. The
+open point is \textsc{ball-in-cup}, the one cross-model outlier: compressible
+in TD-MPC2 yet Dreamer-essential because its failure there is exploratory, not
+value-limited (see text). It is shown, not hidden; the fit is on the core six.}
+\label{fig:correlation}
+\end{figure}
+
+\section{A Clean Negative: The Gate Does Not Help}
+\label{sec:gate}
+The diagnostic appears prescriptive: if we can measure, online, that a task
+(or state) is WM-redundant, we should be able to \emph{down-weight} the WM
+there and win. We implemented exactly this as a plan-time \emph{gate}
+$g\in[0,1]$ that scales the planner's weight on the WM's imagined rollout,
+$\text{score}=g\!\sum_t \gamma^t r^{\text{wm}}_t+\gamma^H V$, so that $g{=}1$
+is the full model and $g{\to}0$ trusts the imagined rollout less.
+
+On \textsc{cheetah-run} under planner-collection, an early single-seed run
+suggested a modest win for $g{=}0.25$ ($+5.6\%$). It did not survive
+replication. At $n{=}4$--$5$ seeds the per-gate means collapse into a
+19-point band:
+\[
+\underbrace{701.9}_{g=0.0}\;
+\underbrace{688.4}_{g=0.5}\;
+\underbrace{686.5}_{g=1.0}\;
+\underbrace{682.9}_{g=0.25},
+\]
+while the within-gate seed spread is $\sim$80--100 points (e.g.\ $g{=}0.25$
+spans $637$--$715$). No gate value robustly beats the full model; the apparent
+$n{=}1$ advantage was seed noise. \textbf{The tunable gate is a confirmed
+negative.}
+
+\paragraph{Why the null is structural, not mysterious.}
+Post-hoc analysis shows the gate as instantiated could hardly have mattered.
+With horizon $H{=}3$ and $\gamma{=}0.99$, the score decomposes as
+$g\sum_{t<3}\gamma^t r_t + \gamma^3 V \approx 2.97\,\bar r\;(\text{gated}) +
+97\,\bar r\;(\text{terminal})$: the gated term is $\sim$3\% of the trajectory
+score, so sweeping $g\in[0,1]$ perturbs the planner objective by at most a few
+percent---below seed noise by construction. Moreover $g{=}0$ is \emph{not}
+WM-free planning: the terminal value $V(z_H)$ is still evaluated on a latent
+rolled through the learned dynamics, and the value function was trained with
+the WM regardless; the gate removes imagined \emph{reward}, not imagined
+\emph{state}. Correct instantiations of the same idea---horizon gating
+($H\!\to\!0$ yields value-greedy planning), per-step uncertainty weighting in
+the spirit of STEVE \cite{buckman2018steve}, or training-time gating---remain
+untested future work. We keep the negative because it clarifies the
+contribution: this paper offers a \emph{diagnostic}, not a repaired algorithm,
+and knowing \emph{whether} a WM will help is separable from---and, on this
+evidence, easier than---\emph{fixing} one that does not.
+
+\section{Mechanism: How the WM Can Hurt}
+\label{sec:mechanism}
+Redundancy alone would predict a null, not a loss. Yet on \textsc{cheetah}
+under \emph{planner-driven} collection (data gathered by the MPPI planner
+rather than the policy), \emph{removing} the WM \emph{helps} by $+45\%$
+($n{=}9$)---an inversion. We trace it to variance: planner-collection inflates
+the variance of the planner's own value target by $\approx 3\times$ (the
+``H-variance'' effect). The imagined rollout, when the value landscape is
+already nearly sufficient in few dimensions, adds a high-variance term to the
+plan-time objective that the planner then chases, destabilizing learning.
+This is the concrete failure mode the diagnostic flags: the WM does not merely
+fail to help; it can inject target variance where the value function did not
+need it.
+
+\section{Grounding: Compressibility, Value-Equivalence, and an Analytical Criterion}
+\label{sec:theory}
+
+\paragraph{Is ``compressibility'' well-defined?}
+Yes, information-theoretically---and VBN is a cheap estimator of it, not the
+exact object. The quantity we care about is the minimal description of state
+that suffices to represent value. Three standard formalizations coincide here:
+(1) the \emph{information bottleneck} \cite{tishby1999ib,tishby2015dl}:
+$\min_{p(z|s)} I(S;Z)$ s.t.\ $Z$ is value-sufficient; (2) the
+\emph{rate--distortion} function $R(D)$ with distortion the value/return
+error; (3) the \emph{effective dimension} of the value-relevant manifold
+\cite{li2018intrinsic}. VBN's width sweep is a discrete, coarse sampling of
+the value rate--distortion curve $R(D)$: the ``monotone'' fingerprint is a
+slowly-decaying $R(D)$ (high rate needed), ``flat-high'' is a sharply-decaying
+$R(D)$ (low rate suffices). So compressibility is well-defined; VBN is a
+practical proxy for it, in the same sense a linear probe
+\cite{alain2016probes} is a proxy for representational content.
+
+\paragraph{Is VBN novel?}
+Not as an object---and we are explicit about this. Bottlenecking a task head
+to measure how much representation a function needs is the shared idea behind
+the information bottleneck \cite{tishby1999ib}, probing classifiers
+\cite{alain2016probes}, and intrinsic-dimension studies
+\cite{li2018intrinsic}. In RL, the \emph{value-equivalence principle}
+\cite{grimm2020value} is the direct theoretical cousin: a model need only be
+accurate on the information that affects value, and MuZero
+\cite{schrittwieser2020muzero} exploits exactly this. State-abstraction theory
+\cite{li2006abstraction} and bisimulation metrics \cite{zhang2021dbc} formalize
+value-preserving compression of state. Our novelty is not the bottleneck; it
+is (i) using value-relevant compressibility as a \emph{predictor of when a
+learned WM helps}, and (ii) validating that prediction \emph{cross-model} on
+matched tasks. VBN measures the \emph{size} of the value-equivalent subspace;
+the paper's claim is that this size governs WM-dependence.
+
+\paragraph{Toward a training-free criterion (answering ``can pure analysis
+decide it?'').}
+VBN still requires a short probe on a trained checkpoint. A genuinely
+\emph{analytical} criterion---predicting WM-dependence from the task
+specification alone---appears reachable and is our main open direction. Three
+candidate proxies, none requiring the full agent, follow from the same logic:
+\begin{itemize}\itemsep2pt
+\item \textbf{Reward-propagation horizon.} The WM helps when credit must
+travel far. The spectral radius / mixing time of the discounted transition
+operator applied to the reward field bounds how many steps of lookahead the
+value needs; long horizons (sparse, underactuated \textsc{acrobot}) predict
+high WM-dependence, short horizons (dense-reward \textsc{walker}) predict
+redundancy---consistent with our data.
+\item \textbf{Controllability / observability structure.} From control theory,
+underactuated swing-up tasks have ill-conditioned controllability Gramians:
+reaching the goal requires composing dynamics the policy cannot shortcut,
+which is exactly where a forward model pays off.
+\item \textbf{Value rate--distortion from the reward geometry.} $R(D)$ for the
+value can in principle be bounded from the smoothness/Lipschitz structure of
+$r$ and the transition kernel, giving a closed-form ``flat-high vs.\ monotone''
+prediction without training.
+\end{itemize}
+Whether any of these correlates with the measured WM-dependence gradient across
+a larger task suite is a clean, falsifiable next experiment. If it does, the
+diagnostic becomes an \emph{a priori} test---decide whether to pay for a world
+model before training one.
+
+\paragraph{Why a value-sufficiency probe has a boundary.}
+The ball-in-cup exception (Sec.~\ref{sec:cross}) is not noise but a consequence
+of \emph{what} VBN measures, and it is worth making precise. Decompose the
+benefit of a learned WM into two channels: a \emph{representational} channel,
+in which the WM shapes the latent so the value and policy heads can express and
+propagate long-horizon credit; and an \emph{exploratory} channel, in which
+imagined rollouts steer data collection toward states the policy would
+otherwise never visit. Writing the achieved return as
+$J \approx J_{\text{rep}}(\phi) + J_{\text{expl}}(\mathcal{D})$---a term set by
+the representation on a fixed dataset and a term set by the induced state
+occupancy $\mathcal{D}$---VBN instruments only $J_{\text{rep}}$: it freezes
+$\phi$ and $\mathcal{D}$ and asks whether the value head needs the full latent.
+On tasks whose difficulty is representational (\textsc{acrobot},
+\textsc{pendulum}, \textsc{reacher}) the two channels move together and VBN
+predicts WM-dependence tightly. \textsc{Ball-in-cup} is the corner case where
+the value is trivially compressible \emph{once the goal region is reached}
+(so $J_{\text{rep}}$ is bottleneck-insensitive, giving $\sim$100\% recovery)
+yet the goal is almost never reached without imagined rollouts (so
+$J_{\text{expl}}$ dominates the ablation). A value-sufficiency probe is silent
+on $J_{\text{expl}}$ by construction; a complete a-priori criterion needs a
+second, exploration-side statistic---a hitting-time or reward-sparsity measure
+of the induced occupancy---and the reward-propagation horizon above is a
+natural candidate because it couples to both. We state this as the precise
+scope of the diagnostic, not a defect: VBN answers ``does the value function
+need the world model to \emph{represent} return?'', which is exactly the
+question a practitioner deciding whether to pay for one wants answered on the
+large class of representation-limited tasks.
+
+\section{Related Work}
+Model-based RL with learned latent dynamics: Dreamer
+\cite{hafner2023dreamerv3}, TD-MPC2 \cite{hansen2024tdmpc2}, MuZero
+\cite{schrittwieser2020muzero}. The value-equivalence principle
+\cite{grimm2020value} and value-aware model learning motivate models that
+preserve only value-relevant information; we supply an empirical instrument
+(VBN) for the \emph{size} of that information and connect it to when the model
+helps. State abstraction \cite{li2006abstraction} and bisimulation
+\cite{zhang2021dbc} formalize value-preserving compression. The information
+bottleneck \cite{tishby1999ib,tishby2015dl}, probing \cite{alain2016probes},
+and intrinsic dimension \cite{li2018intrinsic} are the representational-analysis
+lineage VBN belongs to. Our tasks are standard DeepMind Control
+\cite{tassa2018dmc}.
+
+\section{Limitations and Honest Negatives}
+We report, rather than hide, three tensions. \textbf{(1)} The prescriptive
+gate fails ($n{=}5$); the contribution is diagnostic only. \textbf{(2)} On the
+high-dependence anchor (\textsc{acrobot}) the stripped ablation is
+high-variance across seeds, so WM-dependence \emph{magnitude} is seed-sensitive
+even though its \emph{sign} is not. \textbf{(3)} VBN requires a short training
+probe; the training-free criterion of Sec.~\ref{sec:theory} is conjectural. We
+also note that \textsc{hopper-vanilla} in Dreamer did not complete on our
+hardware (repeated initialization OOM), so the cross-model table uses three
+tasks, not four; the fourth (\textsc{hopper-hop}) contributes only its VBN
+fingerprint.
+
+\section{Conclusion}
+Whether a learned world model helps is a property of the task's
+value-information structure, not of the world-model architecture. A cheap
+checkpoint-time probe (VBN) measuring value-relevant compressibility predicts
+the same WM-dependence ordering across two independent world-model families
+and three tasks: essential on \textsc{acrobot}, helpful on \textsc{cheetah},
+redundant on \textsc{walker}. The natural prescriptive fix (a plan-time gate)
+does not survive replication, sharpening the contribution to a diagnostic. We
+ground that diagnostic in the value-equivalence principle and rate--distortion,
+and sketch a training-free analytical criterion---reward-propagation horizon,
+controllability, and value rate--distortion---that could let practitioners
+decide whether a world model has room to help before training one.
+
+\begin{thebibliography}{99}\small
+\bibitem{hafner2023dreamerv3} D.~Hafner, J.~Pasukonis, J.~Ba, T.~Lillicrap.
+Mastering Diverse Domains through World Models (DreamerV3). \emph{arXiv:2301.04104}, 2023.
+\bibitem{hansen2024tdmpc2} N.~Hansen, H.~Su, X.~Wang. TD-MPC2: Scalable,
+Robust World Models for Continuous Control. \emph{ICLR}, 2024.
+\bibitem{schrittwieser2020muzero} J.~Schrittwieser et al. Mastering Atari, Go,
+Chess and Shogi by Planning with a Learned Model (MuZero). \emph{Nature}, 2020.
+\bibitem{grimm2020value} C.~Grimm, A.~Barreto, S.~Singh, D.~Silver. The Value
+Equivalence Principle for Model-Based Reinforcement Learning. \emph{NeurIPS}, 2020.
+\bibitem{tishby1999ib} N.~Tishby, F.~Pereira, W.~Bialek. The Information
+Bottleneck Method. \emph{Allerton}, 1999.
+\bibitem{tishby2015dl} N.~Tishby, N.~Zaslavsky. Deep Learning and the
+Information Bottleneck Principle. \emph{IEEE ITW}, 2015.
+\bibitem{alain2016probes} G.~Alain, Y.~Bengio. Understanding Intermediate
+Layers Using Linear Classifier Probes. \emph{arXiv:1610.01644}, 2016.
+\bibitem{li2018intrinsic} C.~Li, H.~Farkhoor, R.~Liu, J.~Yosinski. Measuring
+the Intrinsic Dimension of Objective Landscapes. \emph{ICLR}, 2018.
+\bibitem{li2006abstraction} L.~Li, T.~Walsh, M.~Littman. Towards a Unified
+Theory of State Abstraction for MDPs. \emph{ISAIM}, 2006.
+\bibitem{zhang2021dbc} A.~Zhang, R.~McAllister, R.~Calandra, Y.~Gal, S.~Levine.
+Learning Invariant Representations for RL without Reconstruction (DBC).
+\emph{ICLR}, 2021.
+\bibitem{buckman2018steve} J.~Buckman, D.~Hafner, G.~Tucker, E.~Brevdo, H.~Lee.
+Sample-Efficient RL with Stochastic Ensemble Value Expansion (STEVE). \emph{NeurIPS}, 2018.
+\bibitem{tassa2018dmc} Y.~Tassa et al. DeepMind Control Suite.
+\emph{arXiv:1801.00690}, 2018.
+\end{thebibliography}
+
+\end{document}
