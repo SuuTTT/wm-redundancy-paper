@@ -1172,3 +1172,9 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 ## 2026-07-21 ~14:30 UTC — (b) RUNG-LADDER interim (1.75-3M, matched seeds 60/61) — DECISIVE
 - LADDER HopperHop: SAC(these seeds ~47; n=12 avg 188) | strip+pi=VALUE-PATHWAY s60=478/s61=469 | strip+mppi(+plan) s60=460/s61=373 | full s60=481/s61=495.
 - FINDING: the VALUE PATHWAY ALONE (value-equivalent latent + off-policy value, consistency-OFF + pi-only, NO world model, NO planner) ≈ FULL TD-MPC2 (~470 vs ~485) and captures the ENTIRE gap over SAC (~47→470). Consistency loss adds ~0; MPPI planning adds ~0 (even -100 on s61). CONFIRMS: what beats SAC on HopperHop = value pathway, NOT the world model or planner. (interim, runs continue to 5M; pattern stable across 2 seeds). CSVs: exp/tdmpc_glass/HopperHop_wmabl_HopperHop_{none,consistency}_s6X/seed_6X.csv (pi/mppi cols).
+
+## 2026-07-21 ~17:45 UTC — LADDER FINAL (s60@5M, s61@4M stable): value pathway = full TD-MPC2
+- SAC 47(matched)/188(n12) | value-pathway(strip+pi) 502 | +plan(strip+mppi) 487 | full(none+mppi) 509.
+- value pathway ALONE ≈ full (502 vs 509), captures entire gap over SAC. WM consistency + planner add <2%. Planning hurt s61 (449<485).
+- CONCLUSION: on HopperHop the TD-MPC2 win = value-equivalent latent + off-policy value, NOT the world model or planner. Paper-2 seed. CAMPAIGN COMPLETE.
+- s61 finishes 5M ~18:20 (won't change conclusion). Boxes 44941373(4070 idle)+41649155(b3060) safe to spin down — all on GitHub.
