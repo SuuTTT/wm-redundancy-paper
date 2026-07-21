@@ -1168,3 +1168,7 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 ## 2026-07-21 ~12:40 UTC — PENDULUM EDIT DONE (paper fully corrected)
 - pendulum n=3 strip 0/727/0 (bimodal), van ~803. Dropped from clean-collapse + correlation core. Core ρ=−0.90 n=5 (was −0.94 n=6). Reclassified exploration-influenced w/ cup.
 - Both tex builds 6pp clean, pushed. Table1/Fig3/Fig4/abstract/§3 all updated. Paper now FULLY honest + submit-ready.
+
+## 2026-07-21 ~14:30 UTC — (b) RUNG-LADDER interim (1.75-3M, matched seeds 60/61) — DECISIVE
+- LADDER HopperHop: SAC(these seeds ~47; n=12 avg 188) | strip+pi=VALUE-PATHWAY s60=478/s61=469 | strip+mppi(+plan) s60=460/s61=373 | full s60=481/s61=495.
+- FINDING: the VALUE PATHWAY ALONE (value-equivalent latent + off-policy value, consistency-OFF + pi-only, NO world model, NO planner) ≈ FULL TD-MPC2 (~470 vs ~485) and captures the ENTIRE gap over SAC (~47→470). Consistency loss adds ~0; MPPI planning adds ~0 (even -100 on s61). CONFIRMS: what beats SAC on HopperHop = value pathway, NOT the world model or planner. (interim, runs continue to 5M; pattern stable across 2 seeds). CSVs: exp/tdmpc_glass/HopperHop_wmabl_HopperHop_{none,consistency}_s6X/seed_6X.csv (pi/mppi cols).
