@@ -37,12 +37,12 @@ function actually needs, and show that this single scalar \emph{predicts}
 whether ablating the world model's forward-dynamics learning helps or hurts
 return. Across nine DeepMind Control tasks and two independent WM families
 (Dreamer, TD-MPC2) the world model's value ranges from \emph{essential}
-(stripping it collapses return to near zero on pendulum-swingup, ball-in-cup,
+(stripping it collapses return to near zero on ball-in-cup,
 reacher-hard, acrobot) to \emph{redundant} (the stripped agent is better on
 walker-run and finger-spin), and a single scalar from the VBN probe predicts
 where each task falls: value-recovery through a 16-dimensional bottleneck
-correlates with world-model dependence at Spearman $\rho{=}{-}0.94$
-($n{=}6$), \emph{cross-model}. We also report a clean \emph{negative}:
+correlates with world-model dependence at Spearman $\rho{=}{-}0.90$
+($n{=}5$), \emph{cross-model}. We also report a clean \emph{negative}:
 a plan-time ``gate'' that down-weights the WM's imagined rollout---the
 prescriptive fix the diagnostic seems to suggest---does \emph{not} robustly
 beat trusting the full model ($n{=}5$; all gate settings inside a 19-point
@@ -86,7 +86,7 @@ compressibility, and its three-shape task fingerprint (Sec.~\ref{sec:vbn}).
 \item A \textbf{cross-model, cross-task} result over nine DMControl tasks:
 world-model value ranges from essential (collapse) to redundant (strip-wins)
 on a fixed architecture, reproduces across Dreamer and TD-MPC2, and is
-predicted by the VBN fingerprint at Spearman $\rho{=}{-}0.94$
+predicted by the VBN fingerprint at Spearman $\rho{=}{-}0.90$
 (Sec.~\ref{sec:cross}, Fig.~\ref{fig:correlation}).
 \item An honest \textbf{negative}: the ``gated world model'' that the
 diagnostic seems to prescribe does not robustly beat the full model
@@ -207,8 +207,8 @@ removes only the forward-dynamics learning signal.
 \toprule
 Task & van & strip & WM-dep. & regime \\
 \midrule
-\textsc{pendulum-swingup}  & 806.0 & \textbf{0.0}  & \textbf{collapse} & essential \\
-\textsc{ball-in-cup catch} & 972.0 & \textbf{0.0}  & \textbf{collapse} & essential \\
+\textsc{ball-in-cup catch} & 972.0 & \textbf{0.0}  & \textbf{collapse} & essential$^\dagger$ \\
+\textsc{pendulum-swingup}  & 803.0 & 242 (bimodal)  & $-70\%$ & ess.$^\dagger$/bimodal \\
 \textsc{reacher-hard}      & 965.0 & 18.0          & $-98\%$           & essential \\
 \textsc{acrobot-swingup}   & 412.5 & 60.8          & $-85\%$           & essential \\
 \textsc{cheetah-run}       & 710.0 & 637.0         & $-10\%$           & helps \\
@@ -221,11 +221,15 @@ Task & van & strip & WM-dep. & regime \\
 \caption{\textbf{Nine-task WM-dependence gradient} (Dreamer, last-30-episode
 median return at $\sim$1.1M steps). WM-dependence $=(\text{van}-\text{strip})/
 \text{van}$ is the fraction of return lost when the forward-dynamics signal is
-removed; negative means the stripped agent is \emph{better}. Core tasks
-(acrobot, cheetah, walker) are $n{=}3$; the rest are single-seed first pass
-(reacher-hard now $n{=}2$). Three tasks collapse to near-zero without the WM;
-two are better without it. The essential end is sparse-reward / long-horizon /
-precision control; the redundant end is dense continuous control. The same
+removed; negative means the stripped agent is \emph{better}. Acrobot, cheetah,
+walker are $n{=}3$; reacher-hard and pendulum $n{=}2$--$3$; the rest single-seed.
+$^\dagger$ marks the two \emph{exploration-influenced} tasks (ball-in-cup,
+pendulum): their collapse is a data-collection failure, not value-insufficiency
+(Sec.~\ref{sec:cross}, boundary), so they are excluded from the value-limited
+correlation. Pendulum is \emph{bimodal} across seeds (strip $0/727/0$)---it
+either fails to discover the swing-up or matches vanilla---hence the $-70\%$
+mean is not a graded deficit. The essential end is sparse-reward / long-horizon
+/ precision control; the redundant end is dense continuous control. The same
 ordering holds in TD-MPC2.}
 \label{tab:cross}
 \end{table}
@@ -234,9 +238,10 @@ ordering holds in TD-MPC2.}
 \centering
 \includegraphics[width=\linewidth]{figs/fig_gradient.pdf}
 \caption{The gradient of Table~\ref{tab:cross}, sorted. World-model value is
-not a property of the architecture but of the \emph{task}: it spans total
-collapse (three tasks score near zero when stripped) to strip-wins (two tasks
-improve), with a smooth middle. Colour encodes regime.}
+not a property of the architecture but of the \emph{task}: it spans near-total
+collapse (ball-in-cup and reacher-hard score near zero when stripped) to
+strip-wins (three tasks improve), with a smooth middle. Colour encodes regime;
+pendulum's bar is its bimodal $n{=}3$ mean (see Table~\ref{tab:cross}).}
 \label{fig:gradient}
 \end{figure}
 
@@ -254,16 +259,18 @@ shortcut exists; the redundant end is dense continuous locomotion
 (walker/finger), where it does. \textbf{(iv)} The high-dependence anchors are
 \emph{dramatic but honest}: on acrobot, vanilla return is stable across seeds
 ($408,420,409$) while the \emph{stripped} runs are high-variance
-($26,56,100$); on pendulum and cup-catch the stripped agent scores exactly
-zero for the entire run.
+($26,56,100$); on cup-catch and reacher-hard the stripped agent scores near
+zero for the entire run. Pendulum is the same pattern taken to the extreme---
+bimodal across seeds (strip $0/727/0$)---which is why we treat it, with
+cup-catch, as exploration-influenced rather than value-limited (below).
 
 \paragraph{The predictive claim, quantified.}
 The point of VBN is that the fingerprint is measured \emph{before} the
-ablation and \emph{predicts} it. Fig.~\ref{fig:correlation} plots, for the six
-tasks with both measurements, the VBN value-recovery at a narrow bottleneck
-($D{=}16$, a scalar read of compressibility) against WM-dependence. The
-relationship is strongly monotone and negative (Spearman
-$\rho{=}{-}0.94$, Pearson $r{=}{-}0.87$, $n{=}6$): tasks whose value is already
+ablation and \emph{predicts} it. Fig.~\ref{fig:correlation} plots, for the five
+value-limited tasks with both measurements, the VBN value-recovery at a narrow
+bottleneck ($D{=}16$, a scalar read of compressibility) against WM-dependence.
+The relationship is strongly monotone and negative (Spearman
+$\rho{=}{-}0.90$, Pearson $r{=}{-}0.79$, $n{=}5$): tasks whose value is already
 recoverable through a 16-dimensional bottleneck are exactly the tasks where the
 learned world model is redundant, and tasks that need a wide value subspace are
 exactly where stripping it collapses control. The compressibility axis is
@@ -286,7 +293,15 @@ ball-in-cup as the diagnostic's \emph{boundary}: VBN measures whether the
 discovers the catch in the first place, a data-collection failure that a
 value-sufficiency probe is not designed to see. The diagnostic is thus scoped
 to tasks where the WM's role is representational rather than exploratory; the
-$\rho{=}{-}0.94$ core holds cleanly within that scope.
+$\rho{=}{-}0.90$ core holds cleanly within that scope.
+\textsc{Pendulum-swingup} is a second, milder case of the same effect: its
+stripped ablation is \emph{bimodal} across seeds (strip returns $0/727/0$ at
+$n{=}3$ versus vanilla $\sim$$800$)---the agent either never discovers the
+swing-up or matches vanilla with no representational deficit---so its
+WM-dependence is exploration-influenced rather than value-limited, and we
+exclude it from the value-limited core as well. (It is less extreme than
+ball-in-cup: SAC reaches $575$ on pendulum vs.\ $\sim$$980$ on ball-in-cup,
+so pendulum is only partly model-free-solvable.)
 
 \paragraph{An independent cross-check from a third method.}
 The exploration-limited boundary is corroborated by data we did not generate:
@@ -311,11 +326,12 @@ hence not value-limited.
 \includegraphics[width=0.92\linewidth]{figs/fig_correlation.pdf}
 \caption{\textbf{Headline.} A single scalar from the VBN probe---return
 recovered through a $D{=}16$ value bottleneck (TD-MPC2)---predicts
-world-model dependence (Dreamer strip ablation) across six tasks, cross-model
-($\rho{=}{-}0.94$). Compressible value $\Rightarrow$ redundant world model. The
+world-model dependence (Dreamer strip ablation) across five value-limited tasks, cross-model
+($\rho{=}{-}0.90$). Compressible value $\Rightarrow$ redundant world model. The
 open point is \textsc{ball-in-cup}, the one cross-model outlier: compressible
 in TD-MPC2 yet Dreamer-essential because its failure there is exploratory, not
-value-limited (see text). It is shown, not hidden; the fit is on the core six.}
+value-limited (see text). It is shown, not hidden; the fit is on the core five
+value-limited tasks (pendulum-swingup is likewise excluded as exploration-influenced).}
 \label{fig:correlation}
 \end{figure}
 
