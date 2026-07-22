@@ -1416,3 +1416,45 @@ eval is the statistic. Decide at 1.5M.
 
 METHOD NOTE TO SELF: monitoring with `tail -1` on the CSV reads ONE eval and
 is not the paper statistic. Always compute the last-6 median per eval_type.
+
+## 2026-07-22 23:30 UTC — PENDULUM n=5 FINAL: RECLASSIFIED, NOT SIGNIFICANT
+
+per-seed pi last-6-eval median at 1.5M:
+  full  {818.8, 842.0, 815.6, 852.3, 0.0}   solves 4/5   mean 666
+  strip {22.7, 188.7, 799.5, 0.0, 661.8}    solves 2/5   mean 335
+  Fisher one-tailed 4/5 vs 2/5 -> p = 0.26  NOT SIGNIFICANT
+  power: this effect size needs n~15 (12/15 vs 6/15 -> p=0.030)
+
+The stripped agent FULLY SOLVES on 2 seeds; the full agent FAILS on 1. Reported
+"strip pi = 189" was the median of {22.7,188.7,799.5} — the middle of a bimodal
+arm. Hopper failure mode with the sign reversed: there a bad seed manufactured
+an effect, here a good seed was averaged away.
+
+ACTION TAKEN: pendulum moved representation -> exploration channel, marked
+under-powered. Paper commit 63ced38.
+
+### Where the representation evidence actually lives (per-seed, n=3, UNIMODAL)
+  CheetahRun  full {710.3, 746.2, 762.5} vs strip {498.3, 543.5, 587.6}
+              COMPLETE SEPARATION, exact permutation p = 0.050, gap +196.5
+  WalkerRun   full {699.5, 699.9, 735.1} vs strip {638.3, 646.9, 651.3}
+              COMPLETE SEPARATION, exact permutation p = 0.050, gap +66.0
+  FingerSpin  full {953.9, 982.8, 985.1} vs strip {926.4, 957.5, 966.7}
+              OVERLAP (strip 966.7 > full 953.9), p = 0.150, gap +23.7
+              -> this is exactly what "redundant" should look like
+
+So the representation channel is graded, unimodal and reliable on dense-reward
+tasks, and does NOT depend on pendulum. Cheetah/Walker now lead that row.
+
+### Taxonomy correction that falls out of this
+The channels differ in KIND, not just magnitude:
+  representation = GRADED effect, valid only where every seed learns and the
+                   per-seed distribution is unimodal (dense reward)
+  exploration    = ALL-OR-NOTHING, must be read as a SUCCESS-RATE, never as a
+                   mean or median (ball-in-cup, pendulum)
+Conflating them is the error we made twice today. rho=-0.90 is unaffected —
+pendulum was already excluded from that fit as exploration-influenced on
+independent Dreamer + SAC evidence; TD-MPC2 per-seed now confirms it in-family.
+
+### GPU: 5060 refilled
+Pendulum done 23:05Z -> launched CheetahRun + WalkerRun seeds 3,4 (8 jobs) to
+take the representation channel to n=5, since it is now the paper core.
