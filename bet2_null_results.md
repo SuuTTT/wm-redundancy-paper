@@ -1249,3 +1249,139 @@ FULL representation channel (full pi vs strip pi): BallInCup +488(essential), Pe
 HopperHop n=3: full 286/297, strip 436/387 -> WM HURTS holds at n=3 (strip pi 436 > full pi 286, +150). n=1 full=6 was one collapsed seed; median favors strip. High full-variance (one seed collapse) -> report median + note.
 FingerSpin n=3: 983/986 | 958/827 (redundant +25). PendulumSwingup n=3: 819/855 | 189/19 (essential +630).
 CLEAN n=3 REPRESENTATION SPECTRUM (full pi vs strip pi): BallInCup +488(essential) | Pendulum +630 | Panda +488 | Cheetah +202 | Walker +53 | Acrobot +50 | Finger +25(redundant) | Hopper -150(WM HURTS). Full spectrum essential->helps->redundant->hurts, config-matched fresh sweep. This IS the core paper result.
+
+=== n=3 HARVEST 2026-07-22 (fresh 1.5M; full pi/mppi | strip pi/mppi; median last-6) ===
+task                 full_pi full_mppi strip_pi strip_mppi  n(f/s)  verdict
+HopperHop              286     297      436      387       3/3   WM HURTS (strip beats full +150) -- HEADLINE, n=3 confirms
+PendulumSwingup        819     855      189       19       3/3   ESSENTIAL (strip collapses 819->189)
+CheetahRun             746     749      544      493       3/3   helps (+202)
+WalkerRun              700     719      647      510       3/3   helps modest (+53 pi)
+FingerSpin             983     986      958      827       3/3   redundant (pi +25; mppi gap only)
+BallInCup                0       0        0        0       3/3   EXPLORATION CLIFF -- see per-seed below
+CartpoleSwingupSparse    0       0        0        0       3/3   all-fail (too sparse, no signal at 1.5M)
+AcrobotSwingup         376     387      326      144       1/1   PLANNING collapse (strip mppi 144<<full 387); n=3 STILL RUNNING box1
+PandaPickCube         3382    1499     2894     2501       2/2   PLANNER HURTS (full pi 3382 > full mppi 1499)
+
+BallInCup per-seed (median hides it; report MEAN + success-rate):
+  full : s0=976  s1=0  s2=0  -> mean 325, solves 1/3 (WM gives a SHOT at escaping)
+  strip: s0=0    s1=0  s2=0  -> mean   0, solves 0/3 (no WM = never escapes)
+  => exploration-essential but STOCHASTIC: WM enables escape on a fraction of seeds; strip removes it entirely.
+
+Representation spectrum (pi full-strip): Pendulum +630 ess > Cheetah +202 > Walker +53 > Finger +25 redund > Hopper -150 HURTS.
+Exploration channel: BallInCup (full 1/3 vs strip 0/3), CartpoleSparse (0/0 both -- beyond reach at 1.5M).
+Planning channel: Acrobot strip-mppi collapse; Panda planner-hurts.
+
+=== HopperHop HEADLINE SCRUTINY 2026-07-22 (per-seed reveal) ===
+model = TD-MPC2. full = consistency_coef 2.0 (standard TD-MPC2); strip = consistency_coef 0.0 (dynamics/consistency loss removed, still MPPI-plans).
+FULL  per-seed final pi: s0=286  s1=425  s2=6(COLLAPSED)  -> median 286, mean 239
+STRIP per-seed final pi: s0=437  s1=225  s2=436          -> median 436, mean 366
+Curves converged by ~1M (full s0 290->286; full s1 431->425 plateau). NOT undertrained. full s2 is a training DIVERGENCE/collapse, not slow learning.
+CAVEAT: the "+150 WM-hurts" is driven MAINLY by one full seed collapsing. Drop s2: full{286,425} mean 355 ~= strip mean 366 => effect ~vanishes.
+HONEST CLAIM: on hopper-hop the consistency loss adds TRAINING INSTABILITY (1/3 full seeds collapse) that strip avoids; WM does not help & can destabilize. NOT a clean mean-improvement.
+CONTEXT: hopper-hop is HARD (recent algos top ~500) & documented UNRELIABLE (Voelcker 2024: rankings/abs perf do not hold across hopper variants). Our 286-436 is in-range, full NOT broken.
+TD-MPC2 official: no clean per-task hopper-hop number surfaced (aggregate 104-task release; hopper-hop is a known-flaky task). "TD-MPC2 best on hopper" = relative-to-SAC/Dreamer reputation, low absolute (~200-300).
+DECIDER: n=5 running. If >=2/5 full seeds collapse -> real robustness story (keep, reframe as instability). If 0-1/5 -> DEMOTE hopper from headline; lead with Pendulum-essential / BallInCup-exploration.
+
+=== OFFICIAL TD-MPC2 hopper-hop (github nicklashansen/tdmpc2 results/) 2026-07-22 ===
+Official per-seed (planning eval), matched budgets:
+  tdmpc2    @1.5M=[335,364,331] mean343 (STABLE, 0 collapse)   @4M=[380,373,594] mean449
+  dreamerv3 @1.5M=[251,207,185] mean215                        @3.9M=[212,247,398] mean286
+  tdmpc(v1) @1.5M=[66,565,133] mean255                         @4M=[2,577,1] mean193 (2/3 COLLAPSE)
+  sac       @1.5M=[0,230,56] mean95                            @4M=[0,246,105] mean117 (1/3 COLLAPSE)
+OURS full @1.5M=[286,425,6] mean239 (1/3 collapse); strip=[437,225,436] mean366.
+VERDICT: our full MATCHES official when not collapsing (no-collapse mean355 ~= official343; best seed425 near official final). strip366 ~= full-no-collapse355 ~= official343 => NO real WM-hurts effect.
+The apparent strip>full is ENTIRELY our one collapsed full seed. hopper-hop is COLLAPSE-PRONE ACROSS METHODS (tdmpc-v1 2/3, sac 1/3 collapse) => our collapse is a BENCHMARK property (cf Voelcker), NOT caused by the world model.
+DECISION: DROP HopperHop as the "WM-hurts" headline. It is a NULL (WM neither helps nor hurts at 1.5M) contaminated by hopper collapse-noise. Lead headline with Pendulum-essential + BallInCup-exploration. Present hopper (if kept) honestly as no-effect + high variance per Voelcker. n=5 confirms collapse-rate.
+
+=== H-JEPA THIRD FAMILY: CHARACTERIZED NON-RESULT (2026-07-22) -- EXCLUDED FROM PAPER ===
+Ran 4x PointMaze nav (250k steps, n=2 per arm) on b3060: hjepa2 (full JEPA predictor) vs flat_raw (stripped: no JEPA, raw obs).
+Raw numbers (fixed_eval_success, n=256 eval):
+  hjepa2 (full)      : s0=0.531  s1=0.535
+  flat_raw (stripped): s0=1.000  s1=0.996
+Surface reading would be "stripping the world model nearly DOUBLES success" -- a third-family WM-hurts point.
+WE DO NOT MAKE THAT CLAIM. The full arm is a BROKEN MODEL, so the gap measures breakage, not a WM property.
+
+Evidence the full arm is broken (all 4 runs report latent_collapsed=true):
+  z_eff_rank trajectory (of 32 dims): s0 1.0 -> 0.4 -> 0.4 -> 0.0 -> 0.0 ; s1 0.9 -> 1.1 -> 0.0 -> 0.0 -> 0.0
+  => ALREADY collapsed at the FIRST eval (50k steps). There is no healthy phase to lose.
+  simnorm code entropy = 0.00 at EVERY eval, from 50k onward. z_std ~1e-4 throughout.
+
+Mechanism (diagnosed, zero-GPU, from code + logs):
+  Anti-collapse IS applied -- run_hjepa_nav.py line 325 adds 1.0*(vicreg var) + 0.1*(vicreg cov) to total loss;
+  defaults vicreg=1.0 viccov=0.1 vic_gamma=0.05. So the regularizer is NOT missing and NOT zero-weighted.
+  BUT vicreg() computes std=sqrt(z.var+1e-4); under total collapse std floors at 0.01, so the hinge
+  relu(gamma-std)=relu(0.05-0.01)=0.04 per term, x3 terms = 0.12 -- matching the observed Lvar pinned at
+  0.1185 for the ENTIRE run. The variance penalty sits saturated at its max-collapse value and never falls.
+  Meanwhile simnorm (simplicial softmax, V=4) saturates to one-hot codes (code_ent=0.00 from first eval),
+  which zeroes the gradient path back through the encoder. The anti-collapse term is active but cannot move
+  the latent. => optimization/config pathology (simnorm saturation defeating VICReg), NOT a property of
+  joint-embedding predictive models.
+
+Also not like-for-like: PointMaze nav, not a DMC task, so it is not a comparable cell to the TD-MPC2/Dreamer grid.
+DECISION: third family DROPPED from the paper claims. Same error class as the collapsing hopper seed being retracted;
+we will not trade one artifact for another. Future fix targets simnorm temperature/V or the vicreg weight ratio --
+NOT more seeds of the collapsed config.
+
+## 2026-07-22 20:15 UTC — AUDIT + RETRACTION (paper af47cab, blog Part 21)
+
+### 1. HopperHop headline RETRACTED
+full  n=5: {286, 425, 6(collapse), 262@1.0M, 265@1.0M}   seed-2 collapse REPRODUCED on rerun (0.0)
+strip n=5: {437, 225, 436, 230@0.75M, 259@1.0M}          never collapses
+official TD-MPC2 @1.5M: {335, 364, 331} mean 343, ZERO collapses
+Verdict: collapse rate 1/5 -> pre-registered rule says DEMOTE. The "+150 strip
+advantage" was one collapsed seed inside a median over n=3. No real effect.
+Official baselines also show hopper-hop collapse-prone across methods
+(tdmpc-v1 2/3, sac 1/3) -- matches Voelcker "Can we hop in general?".
+
+### 2. Ablation renamed: strip is NOT model-free
+consistency_coef=0 removes ONLY the self-predictive term. The latent dynamics
+still receives gradient from the reward head and the Q head (both evaluated on
+latents rolled out THROUGH dyn), and MPPI still plans through it. So:
+  strip = purely value-equivalent model (Grimm 2020)
+  full  = value-equivalent + self-predictive consistency
+This reframing is explanatory: strip stays competitive wherever reward/value
+gradients alone shape a usable latent, and fails where they do not (pendulum
+819->189; acrobot planner 387->144).
+
+### 3. TD-MPC2 fidelity audit vs official release
+Unit-matched loss weights (official mse=mean over 512 dims + /num_q; ours
+sum-over-dims + sum-over-Q), normalized to value:
+  official c:r:v = 1.96 : 5.0 : 1
+  ours     c:r:v = 2.00 : 2.0 : 1
+=> THE ABLATED COEFFICIENT IS AT PARITY (within 2 pct). Full arm is not a
+straw man. Adam is scale-invariant so only ratios matter.
+Real deviations, now disclosed in the paper:
+  (a) planner is CEM (unweighted mean/std over top-64), NOT softmax-weighted
+      MPPI at temperature 0.5 -> planning-channel magnitudes are ours-specific
+  (b) pi loss has no entropy term and no reparameterized sample -> the policy
+      log_std head is NEVER trained; exploration is an additive noise schedule
+      (0.3 until 25k). Bears on the exploration channel.
+  (c) 2 Q-heads not 5; value support +-20 not +-10; TD target clamped max(.,0);
+      UTD 0.5 vs official 1.0 (half the gradient budget at equal step count --
+      explains cheetah -5 pct, walker -17 pct, acrobot -23 pct)
+
+### 4. Design: four cells ATTRIBUTE, they do not IDENTIFY
+Both arms collect their own data with their own planner, so J_full(pi) -
+J_strip(pi) mixes representation with the induced state distribution. Channel
+labels come from the probes. Identifying control = buffer swap (train strip on
+full replay). Named in Limitations as the next experiment.
+
+### 5. Exploration channel is the weakest leg
+BallInCup 1/3 vs 0/3 -> Fisher exact p = 1.0. CartpoleSwingupSparse is 0 in all
+four cells (non-result, not evidence). Extending BallInCup to n=8 on the 4070.
+
+### 6. JEPA arm EXCLUDED (characterized non-result)
+PointMaze: hjepa2 full 0.531/0.535 vs flat_raw strip 1.000/0.996.
+All runs latent_collapsed=true, z_eff_rank ~1e-5, collapsed at FIRST eval
+(1.0/32 at 50k -> 0.0 by 150-200k), never a healthy phase.
+Mechanism: vicreg std floors at 0.01 (sqrt(var+1e-4)), hinge pins at
+relu(0.05-0.01)=0.04 x3 = 0.12 -- Lvar stuck at 0.1185 all run; simnorm (V=4)
+one-hot from first eval kills the gradient path to the encoder. Regularizer is
+active but cannot move the latent. So the 1.00-vs-0.53 gap measures a saturated
+softmax, not a world model. Any fix targets simnorm temperature/V or the
+vicreg weight ratio -- NOT more seeds.
+
+### 7. New standing rule: COLLAPSE SCREEN
+Stated inclusion criterion for any "removing the model helps" claim: exclude a
+run whose return or latent effective rank degenerates. Applied uniformly --
+it is what retracts hopper-hop and what excludes JEPA.
