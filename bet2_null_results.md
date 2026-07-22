@@ -1178,3 +1178,51 @@ Dreamer n=1 @1.09M: van=806.0 strip=0.0 — strip NEVER scored (sparse underactu
 - value pathway ALONE ≈ full (502 vs 509), captures entire gap over SAC. WM consistency + planner add <2%. Planning hurt s61 (449<485).
 - CONCLUSION: on HopperHop the TD-MPC2 win = value-equivalent latent + off-policy value, NOT the world model or planner. Paper-2 seed. CAMPAIGN COMPLETE.
 - s61 finishes 5M ~18:20 (won't change conclusion). Boxes 44941373(4070 idle)+41649155(b3060) safe to spin down — all on GitHub.
+
+================================================================
+ACROBOT ESSENTIAL-TASK LADDER (2026-07-21) — WM-essential complement to HopperHop
+================================================================
+Harvested existing b3060 data + launched fresh config-matched n=3 ladder
+(run_arm_v2.sh, arms none+consistency, seeds 202/203/204, 5M, 4xGPU).
+Existing-data numbers (median of last-6 evals per seed):
+  strip(consistency)+pi   [VALUE PATHWAY] : 370.9 263.4 342.9 338.1  -> ~335 (n=4)
+  strip(consistency)+mppi [strip+plan]    : 7.0 42.0 60.7 55.4       -> ~48 COLLAPSE (n=4)
+  full(none)+pi : 388.1    full(none)+mppi : 395.0    (n=1, being robustified)
+  SAC (official tdmpc2 release) : 72
+READING: on acrobot (VBN says WM-ESSENTIAL) the value pathway alone recovers only ~86pct
+of full, AND planning through the stripped latent COLLAPSES (48 vs 395). The consistency
+loss is exactly what makes the learned dynamics good enough to plan through a chaotic
+double-pendulum. Mirror image of HopperHop (VBN redundant: value pathway = full, planning
+fine). VBN predicts which regime a task is in. => turns Paper 2 anecdote into a law.
+
+OUTLIER/BIMODAL EVIDENCE (Dreamer logs on b3060, full curves harvested):
+  ball-in-cup: van steady ~970-998 every episode; strip BIMODAL-PER-EPISODE (mostly 0,
+    occasional ~980), never consolidates, final 0. Not a value deficit (VBN: value maximally
+    compressible) — a consolidation/exploration failure under sparse catch reward.
+  pendulum: strip BIMODAL ACROSS SEEDS (some collapse to 0, some recover noisy ~800);
+    underactuated energy-pumping swing-up, exploration-limited. seed-1 collapse was one draw.
+
+--- ACROBOT LADDER: CONSOLIDATED HARVEST (2026-07-22, user chose harvest-now) ---
+Config-matched v2mppicol ladder harvested @2.45M (n=2, s202/s203) + existing.
+FINAL numbers:
+  value pathway (strip+pi): existing n=4@5M [263.4 370.9 338.1 342.9] + config-matched n=2@2.45M [353.6 349.2] -> ~345
+  strip+mppi (COLLAPSE): converged n=4@5M [42.0 7.0 55.4 60.7] -> ~49; config-matched n=2@2.45M [114.2 146.9] still deepening (SAME config as full => not a config artifact)
+  full (none): n=1 s201@4M pi/mppi 388.1/395.0 + config-matched n=2@2.45M pi/mppi [377.1 327.1]/[382.6 331.9] -> ~385 (planning ~= policy)
+  SAC (official): 72
+KEY: config-matched run CONFIRMS strip+mppi collapse is real (not a 512-vs-2048 mppi-sample artifact);
+collapse DEEPENS with training (131@2.45M -> 49@5M). Acrobot mirror of HopperHop is solid.
+Ladder left running in background (user: harvest-now, let finish). JEPA probe + GIFs next.
+
+--- JEPA GENERALIZATION: strip the JEPA latent-predictor (2026-07-22) ---
+H-JEPA (PointMaze nav, arm hjepa2), jepa_w=1.0 (full) vs jepa_w=0.0 (strip), n=3, 250k utd=4.
+Direct analog of TD-MPC2 consistency-strip / Dreamer dyn-strip, on a 3rd (JEPA) architecture.
+  jfull (jepa_w=1): fixed_eval_success 0.531, return -66.4, jepa_pred_loss_last ~0.001 (predictor trained)
+  jstrip(jepa_w=0): fixed_eval_success 0.531, return -66.5, jepa_pred_loss_last ~3.8 (predictor UNTRAINED = strip real)
+=> JEPA latent-predictor REDUNDANT on PointMaze: success identical with/without it (0.531 vs 0.531).
+Strip confirmed genuine (pred-loss 0.001 vs 3.8), so a TRUE null not a no-op flag. Both arms latent_collapsed=True
+(task carried by value/policy pathway). Generalizes thesis to a 3rd architecture: WM-component value is
+task-dependent, not architecture-dependent (Dreamer generative, TD-MPC2 value-equiv, H-JEPA JEPA-predictive).
+CAVEAT: single nav task, redundant-side only; latent collapse means not a pristine JEPA. Fast (~9min, 4xGPU).
+
+--- VSG fresh sweep (config-matched, 1.5M) harvest 2026-07-22 ---
+CheetahRun n=2: full pi/mppi=736/747, strip pi/mppi=566/504. Planner ~0 here (full pi≈mppi), WM helps repr (full 747 > strip 550). NOTE differs from archived 2.5M (full pi 368) — fresh sweep is the rigorous config-matched version; build paper numbers from it.
