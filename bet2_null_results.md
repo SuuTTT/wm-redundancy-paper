@@ -1234,3 +1234,8 @@ WalkerRun       735/742        651/531         1/1   repr +84
 FingerSpin      968/984        947/793         2/2   WM ~redundant (repr +21); planning-on-stripped hurts (947->793)
 PendulumSwingup 830/858        106/11          2/2   WM ESSENTIAL (strip collapses; strip+mppi=11)
 CAVEAT: in the FRESH config the planner adds ~0 everywhere (full pi~=full mppi), unlike archived 2.5M (Cheetah planner +299). => planning channel discriminates less in this sweep; Acrobot (planning-collapse) is the pending key test. Representation channel is the strong discriminator (Pendulum essential -> Finger redundant).
+
+--- VSG harvest update 2026-07-22 14:54 ---
+AcrobotSwingup n=1: full 376/387, strip 326/144 -> PLANNING COLLAPSE on strip (326 pi -> 144 mppi): planner needs the WM. Planning channel confirmed.
+HopperHop n=1: full 6/9 (!), strip 436/424 -> FULL MODEL COLLAPSED, value pathway wins by ~430. WM actively HURTS here. n=1 only + HopperHop known seed-unstable -> NEEDS n=3 before trusting (could be full-model divergence on one seed).
+WalkerRun n=3: 700/719 vs 647/510. Full repr gradient now: Pendulum(essential,+724) > Cheetah(+202) > Walker(+53) > Finger(+21) > Hopper(WM hurts, if n=1 holds).
