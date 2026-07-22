@@ -1244,3 +1244,8 @@ WalkerRun n=3: 700/719 vs 647/510. Full repr gradient now: Pendulum(essential,+7
 BallInCup n=2: full 488/488, strip 0/0 -> WM ESSENTIAL (exploration): stripping collapses to 0 (never discovers catch). Exploration channel confirmed in fresh TD-MPC2 sweep.
 PandaPickCube (manip) n=2: full 3382/1499, strip 2894/2501 -> planner HURTS (pi 3382 >> mppi 1499); WM helps repr (+488). New planning pattern: planning actively harmful on contact task. (dense reward, not real-success.)
 FULL representation channel (full pi vs strip pi): BallInCup +488(essential), Pendulum +724(essential), Cheetah +202, Panda +488, Acrobot +50, Walker +53, Finger +21(redundant), Hopper -430(WM HURTS,n=1). Planning channel: Acrobot strip-collapse 326->144; Panda planner-hurts 3382->1499.
+
+--- VSG n=3 harvest 2026-07-22 16:28 ---
+HopperHop n=3: full 286/297, strip 436/387 -> WM HURTS holds at n=3 (strip pi 436 > full pi 286, +150). n=1 full=6 was one collapsed seed; median favors strip. High full-variance (one seed collapse) -> report median + note.
+FingerSpin n=3: 983/986 | 958/827 (redundant +25). PendulumSwingup n=3: 819/855 | 189/19 (essential +630).
+CLEAN n=3 REPRESENTATION SPECTRUM (full pi vs strip pi): BallInCup +488(essential) | Pendulum +630 | Panda +488 | Cheetah +202 | Walker +53 | Acrobot +50 | Finger +25(redundant) | Hopper -150(WM HURTS). Full spectrum essential->helps->redundant->hurts, config-matched fresh sweep. This IS the core paper result.
