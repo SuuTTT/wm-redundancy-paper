@@ -1385,3 +1385,34 @@ vicreg weight ratio -- NOT more seeds.
 Stated inclusion criterion for any "removing the model helps" claim: exclude a
 run whose return or latent effective rank degenerates. Applied uniformly --
 it is what retracts hopper-hop and what excludes JEPA.
+
+## 2026-07-22 21:52 UTC — PENDULUM STRIP IS BIMODAL (completed n=3, per-seed)
+
+Read with the paper statistic (last-6-eval median, pi column), per seed at 1.5M:
+  full  s0=818.8  s1=842.0  s2=815.6   -> 3/3 SOLVE, tight (mean 825)
+  strip s0= 22.7  s1=188.7  s2=799.5   -> 1/3 SOLVES, BIMODAL
+
+The paper Table 1 reports strip pi = 189. That is the MEDIAN of {22.7, 188.7,
+799.5} = 188.7 -- i.e. the reported number is the middle of a bimodal arm and
+hides that one stripped seed fully solves the task at 799.5.
+
+This is the SAME pathology as BallInCup (where we already report mean +
+success-rate instead of median) and the same shape as the HopperHop collapse
+retracted earlier today: a stochastic all-or-nothing outcome summarized by a
+central statistic that no individual run resembles.
+
+CONSEQUENCE: pendulum is not a clean "representation: essential" case with a
+graded 819->189 deficit. It is a success-rate phenomenon: full 3/3 vs strip
+1/3. The effect is still real and still the strongest representation-channel
+evidence we have -- full solves every time, strip solves a third of the time --
+but it must be REPORTED as success-rate + per-seed, exactly like BallInCup,
+not as a median return.
+
+n=5 in progress on the 5060 (at 800k of 1.5M): full s3=834.3 (solving),
+full s4=6.9 (not yet); strip s3=0, strip s4=108.3. Too early to score --
+note that pendulum returns swing hard between evals (full s4 read 360 at 500k
+and 0 at 800k), which is exactly why the last-6 median rather than the last
+eval is the statistic. Decide at 1.5M.
+
+METHOD NOTE TO SELF: monitoring with `tail -1` on the CSV reads ONE eval and
+is not the paper statistic. Always compute the last-6 median per eval_type.

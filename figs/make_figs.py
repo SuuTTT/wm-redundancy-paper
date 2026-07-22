@@ -160,8 +160,10 @@ ax.set_yticklabels(["0", "25%", "50%", "75%", "100%"])
 ax.set_xlabel(r"value compressibility: VBN $D{=}16$ recovery")
 ax.set_ylabel("WM-dependence (return lost)")
 ax.spines[["top", "right"]].set_visible(False)
-ax.text(0.40, 1.05,
-        f"core $\\rho = {rho:.2f}$ ($n{{=}}6$)\nwith cup $\\rho = {rho_all:.2f}$ ($n{{=}}7$)",
+# legend box in the empty mid-left band (below acrobot, above cheetah) so it
+# never occludes the acrobot marker/label; n derived from the arrays.
+ax.text(0.385, 0.46,
+        f"core $\\rho = {rho:.2f}$ ($n{{=}}{len(x)}$)\nwith cup $\\rho = {rho_all:.2f}$ ($n{{=}}{len(xa)}$)",
         fontsize=8.0, va="top", ha="left",
         bbox=dict(boxstyle="round,pad=0.3", fc="#EEF2F8", ec="#C6D2E4", lw=0.6))
 ax.text(0.985, -0.13, "redundant", fontsize=7.4, color=C_RED, ha="right", va="bottom", weight="bold")
