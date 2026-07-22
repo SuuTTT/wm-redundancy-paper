@@ -1239,3 +1239,8 @@ CAVEAT: in the FRESH config the planner adds ~0 everywhere (full pi~=full mppi),
 AcrobotSwingup n=1: full 376/387, strip 326/144 -> PLANNING COLLAPSE on strip (326 pi -> 144 mppi): planner needs the WM. Planning channel confirmed.
 HopperHop n=1: full 6/9 (!), strip 436/424 -> FULL MODEL COLLAPSED, value pathway wins by ~430. WM actively HURTS here. n=1 only + HopperHop known seed-unstable -> NEEDS n=3 before trusting (could be full-model divergence on one seed).
 WalkerRun n=3: 700/719 vs 647/510. Full repr gradient now: Pendulum(essential,+724) > Cheetah(+202) > Walker(+53) > Finger(+21) > Hopper(WM hurts, if n=1 holds).
+
+--- VSG harvest 2026-07-22 15:41 ---
+BallInCup n=2: full 488/488, strip 0/0 -> WM ESSENTIAL (exploration): stripping collapses to 0 (never discovers catch). Exploration channel confirmed in fresh TD-MPC2 sweep.
+PandaPickCube (manip) n=2: full 3382/1499, strip 2894/2501 -> planner HURTS (pi 3382 >> mppi 1499); WM helps repr (+488). New planning pattern: planning actively harmful on contact task. (dense reward, not real-success.)
+FULL representation channel (full pi vs strip pi): BallInCup +488(essential), Pendulum +724(essential), Cheetah +202, Panda +488, Acrobot +50, Walker +53, Finger +21(redundant), Hopper -430(WM HURTS,n=1). Planning channel: Acrobot strip-collapse 326->144; Panda planner-hurts 3382->1499.
