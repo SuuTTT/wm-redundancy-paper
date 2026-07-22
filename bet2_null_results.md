@@ -1226,3 +1226,11 @@ CAVEAT: single nav task, redundant-side only; latent collapse means not a pristi
 
 --- VSG fresh sweep (config-matched, 1.5M) harvest 2026-07-22 ---
 CheetahRun n=2: full pi/mppi=736/747, strip pi/mppi=566/504. Planner ~0 here (full pi≈mppi), WM helps repr (full 747 > strip 550). NOTE differs from archived 2.5M (full pi 368) — fresh sweep is the rigorous config-matched version; build paper numbers from it.
+
+--- VSG fresh-sweep 4-cell (config-matched 1.5M) harvest 2026-07-22 14:06 ---
+task            full pi/mppi   strip pi/mppi   (n f/s)
+CheetahRun      746/749        544/493         3/3   repr +202, planner ~0
+WalkerRun       735/742        651/531         1/1   repr +84
+FingerSpin      968/984        947/793         2/2   WM ~redundant (repr +21); planning-on-stripped hurts (947->793)
+PendulumSwingup 830/858        106/11          2/2   WM ESSENTIAL (strip collapses; strip+mppi=11)
+CAVEAT: in the FRESH config the planner adds ~0 everywhere (full pi~=full mppi), unlike archived 2.5M (Cheetah planner +299). => planning channel discriminates less in this sweep; Acrobot (planning-collapse) is the pending key test. Representation channel is the strong discriminator (Pendulum essential -> Finger redundant).
