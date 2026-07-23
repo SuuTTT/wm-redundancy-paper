@@ -1793,3 +1793,47 @@ Self-prediction is what makes a latent safe to plan through.
 GPU: box1 finished acrobot and was refilled 08:38Z with WalkerRun seeds 8-11
 (n=12). Walker is the one remaining unstable representation cell (margin fell
 to 0.4 at n=5 then inverted); n=12 settles whether its graded gap is real.
+
+## 2026-07-23 09:50 UTC — ALL FOUR TD-MPC2 ARMS FINAL. COMBINED PAPER EDIT DONE (b23fda8).
+
+WALKER n=8 FINAL — the last arm:
+  full  {634.60,649.70,660.25,681.45,699.50,699.85,722.25,735.10}
+  strip {626.90,638.25,646.90,647.55,649.15,651.25,657.20,685.50}
+  12/64 inversions, mean +35.0, exact perm p = 0.0127
+  strip_s6 = 685.50 alone beats FOUR full seeds.
+
+WALKER IS THE BEST ARGUMENT IN THE PAPER FOR REPORTING MARGINS:
+  n=3  complete separation  p=0.050   margin +66
+  n=5  2/25 inversions     p=0.0119  margin +0.4
+  n=8  12/64 inversions    p=0.0127  margin -50.9
+The p-value is essentially CONSTANT while the margin swings from +66 to -51.
+Reporting "complete separation" at n=3 would have been TRUE and an ARTIFACT,
+and no p-value would have flagged it. Only the margin trajectory did.
+
+FINAL FOUR CELLS:
+  cheetah  n=8v8  0/64 inv, margin 92.85 UNMOVED from n=5, no degenerate seeds,
+                  p=7.8e-5 = the 8v8 FLOOR.            ROBUST SEPARATION
+  walker   n=8v8  12/64 inv, +35, p=0.0127.            GRADED GAP
+  finger   n=9v9  strip BIMODAL (3/9 at 641-703 vs six at 926-967);
+                  success rate 8/9 vs 6/9, Fisher p=0.29.  REDUNDANT
+  acrobot  n=9v9  Pi 0/81 inv p=2.1e-5 = the 9v9 floor, margin 8.3 (fell from
+                  105) -> separated IN RANK not gapped; pi indistinguishable
+                  once one collapsed strip run is set aside (+28 p=0.064;
+                  unscreened +62 p=0.032 carried by that seed).
+                  Planner effect: full mean +19 (7/9 neutral-or-better),
+                  strip HARMFUL on 9/9, sign test p=0.002.  PURE PLANNING
+
+THREE ROBUSTNESS CLASSES FROM THE SAME NOMINAL TEST — this is the methodology
+contribution and it is now in the paper:
+  margin UNMOVED under added seeds   -> separation is real (cheetah)
+  margin SHRINKING                   -> report rank, not gap (acrobot)
+  margin INVERTED                    -> graded overlap (walker)
+The p-values alone do not distinguish these; cheetah and acrobot BOTH sit at
+their design floor.
+
+Paper: Table 1 rows, both footnotes and the abstract updated to final n. Body
+still ends on page 7, 0 errors, 0 undefined refs.
+
+GPU: 5060 refilled 09:44Z with CheetahRun seeds 8-11 (n=12) — tests whether the
+unmoved margin stays unmoved. box1 on Walker s8-s11 (n=12). 4070 on Pendulum
+s5-s9 (n=10). mwm on DreamerV3 hopper n=5 (~11h).
