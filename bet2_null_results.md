@@ -1618,3 +1618,47 @@ cannot reach significance must not be presented as a cross-family confirmation.
 GENERAL LESSON (new, worth carrying): check the MINIMUM ACHIEVABLE p for a
 design BEFORE running it. n=2 vs n=2 is never worth running if the intent is a
 significance claim; it can only ever establish direction.
+
+## 2026-07-23 05:45 UTC — CORRECTION: I SCORED AN UNFINISHED DREAMER RUN
+
+My 05:12 entry recorded "van s1=244.5 s2=439.3, mean 341.9". WRONG: van_s1 was
+STILL RUNNING. DONE-gated audit:
+
+  strip_s1  DONE     last30med=194.7   zero_episodes 1/30
+  strip_s2  DONE     last30med=192.4   zero_episodes 0/30
+  van_s2    DONE     last30med=439.3   zero_episodes 0/30
+  van_s1    RUNNING  last30med=243.9   zero_episodes 2/30   <- NOT SCOREABLE
+
+So on COMPLETED runs the cell is van n=1 vs strip n=2. It is not merely
+underpowered — it is not yet a cell. The "+148 direction" I reported rests on
+one finished van seed.
+
+WHY I MISSED IT: my standing rule says never score an unfinished run, and I
+apply it rigorously to the TD-MPC2 CSVs by checking step==1500160. For Dreamer
+I read metrics.jsonl with no completion gate at all. The rule was intact; the
+MECHANISM was missing for that data source. Lesson: a method rule needs a
+concrete check per data source, not just an intention. Dreamer completion gate
+is the DONE marker, which is exit-code-gated (run_dreamer.sh ... && touch DONE)
+and so cannot be set by the driver moving on.
+
+SECOND CORRECTION (from the fork, and it improves the retraction). van_s1 is
+NOT a collapsed seed. The trailing `step` values in metrics.jsonl increment by
+1 — they are per-episode records inside the final eval batch, not training
+steps. van_s1 trajectory: 242, 251, 255, 0, 260, 197, 245, 242, 233, 188, 245,
+0 — a consistently mediocre policy that drops a fraction of episodes to zero
+(hopper falls immediately), averaging ~244. So the 195-point van spread is
+genuine seed-level POLICY-QUALITY variance, not one dead seed.
+
+CONSEQUENCE FOR THE COLLAPSE SCREEN (a real refinement): the screen is
+currently defined on seed-level return degeneration. It should also be defined
+at the EPISODE level — failure RATE within a run — because a run can average a
+respectable return while failing a fifth of its episodes. Observed zero-episode
+rates: van_s1 2/30, strip_s1 1/30, others 0/30. Both arms show intermittent
+episode failure at low rate on hopper, which is consistent with the official
+baselines showing hopper collapse-prone across methods.
+
+STATUS: all 6 additional seeds (van+strip s3,s4,s5) are queued and 3 are
+running; ~17h to n=5 per arm, min achievable p 0.004. Re-read the whole cell
+DONE-gated when they land. A driver race that had launched van_s3 on three
+GPUs at once was found and fixed by the fork — unfixed it would have burned
+two-thirds of the n=5 compute on duplicates.
