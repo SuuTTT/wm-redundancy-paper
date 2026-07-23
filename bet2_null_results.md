@@ -1662,3 +1662,46 @@ running; ~17h to n=5 per arm, min achievable p 0.004. Re-read the whole cell
 DONE-gated when they land. A driver race that had launched van_s3 on three
 GPUs at once was found and fixed by the fork — unfixed it would have burned
 two-thirds of the n=5 compute on duplicates.
+
+## 2026-07-23 06:30 UTC — FINGER: THE SAME DATA GIVES THREE SIGNS. A SCREEN APPLIED TO ONE ARM MANUFACTURES AN EFFECT.
+
+Finger full_s5 came back DONE at 1.5M with med=0.00 but PEAK=862.2 — it LEARNED
+the task and then COLLAPSED late. So BOTH arms now have a degenerate seed:
+  full  n=9: {953.9, 977.5, 981.7, 982.8, 983.3, 984.7, 985.1, 985.7, 0.00}
+             the 0.00 seed peaked at 862 -> learned-then-collapsed
+  strip n=5: {926.4, 930.5, 957.5, 966.7, 641.1}
+             the 641.1 seed peaked at 700 -> NEVER LEARNED (final ~ peak)
+
+THREE DEFENSIBLE ANALYSES, THREE DIFFERENT SIGNS:
+  (1) unscreened means            full 870.5 vs strip 884.4 -> STRIP WINS by 13.9, p=0.359
+  (2) drop only the full collapse full 979.3 vs strip 884.4 -> FULL WINS by 94.9, p=0.0023
+  (3) symmetric screen (drop the degenerate seed in BOTH arms)
+                                  full 979.3 vs strip 945.3 -> +34.1, p=0.0061, 2/32 inversions
+  (4) success-rate (>900)         full 8/9 vs strip 4/5 -> Fisher p=0.604
+
+MY OWN COLLAPSE SCREEN IS THE PROBLEM IN (2). As defined (exclude runs whose
+final is far below their peak) it drops full_s5 but NOT strip_s3, because
+strip_s3 never learned rather than learned-then-collapsed — its final IS its
+peak. Applying it as written therefore removes only the FULL arm failure and
+inflates the full arm by +95, manufacturing a significant effect out of a null.
+
+REFINEMENT (adopt): the screen must be symmetric in OUTCOME (a run that ends
+degenerate relative to its arm modal cluster), not in MECHANISM (collapsed vs
+never-learned). Screening on mechanism is not neutral between arms, because the
+two arms fail in different ways — the full agent collapses, the stripped agent
+fails to learn. That asymmetry is itself a finding, and it must not leak into
+the point estimate.
+
+VERDICT: FINGER IS REDUNDANT, unchanged. (3) gives +34.1 vs the n=3 value
++23.7, and (4) gives p=0.604 — both agree with the original label. Degenerate
+seed rate is comparable across arms (full 1/9 = 11 pct, strip 1/5 = 20 pct),
+which says finger instability is a property of the TASK, not of the ablation —
+a stronger statement than "the strip arm is unstable" from the last tick.
+
+This also retro-justifies the 04:40Z decision not to let strip_s3 flip the
+label: had we flipped, the full-arm collapse two hours later would have flipped
+it back.
+
+PAPER: no edit yet — finger strip s5-s8 are still running (rule vi: never edit
+on a partially-complete arm). Edit when strip n=9 lands, reporting (3) and (4)
+together and stating that (1) and (2) disagree in sign.
