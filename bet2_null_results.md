@@ -1751,3 +1751,45 @@ GPU: 4070 finished finger and was refilled 08:04Z with PendulumSwingup seeds
 (4/5 vs 2/5, p=0.26, labelled under-powered). At n=10 either it becomes
 significant or we can say we RAN n=10 and it still is not — both are better
 than the current "we lacked the seeds".
+
+## 2026-07-23 08:40 UTC — ACROBOT n=9 FINAL: PLANNING CHANNEL AT THE 9v9 FLOOR, AND THE PURE-PLANNING CLAIM HOLDS
+
+UNDER THE PLANNER (Pi), n=9 vs n=9:
+  full  {288.4, 340.3, 347.5, 360.7, 376.1, 383.1, 386.4, 386.6, 408.2}
+  strip {  5.0, 103.8, 106.4, 124.7, 144.3, 157.4, 183.2, 214.7, 280.1}
+  0/81 inversions, mean +217.5, exact permutation p = 0.0000206 = 1/48620 =
+  THE FLOOR for 9v9.
+
+CAUTION I AM APPLYING TO MYSELF: the MARGIN is only 8.30 (min full Pi 288.45 vs
+max strip Pi 280.15) and it SHRANK from 105.25 at n=5. That is the walker
+pattern, and rule (viii) says a shrinking margin is a warning. So I will NOT
+lean on "complete separation" as the descriptive claim for acrobot. The
+permutation p is RANK-based and does not depend on the margin — 0/81 inversions
+is 0/81 whether the gap is 8 points or 800 — so the p-value stands, but the
+prose must say "perfectly separated in RANK" not "cleanly gapped". Contrast
+cheetah, whose margin was 92.85 and did NOT move from n=5 to n=8: both sit at
+their design floor, but cheetah is robust and acrobot is rank-driven.
+
+UNDER THE POLICY ALONE (pi):
+  unscreened  full 345.1 vs strip 283.2 (+61.9)  perm p = 0.0320  SIGNIFICANT
+  strip pi sorted: {12.2, 257.4, 286.2, 308.4, 319.4, 322.6, 326.5, 333.4, 382.6}
+  -> ONE seed at 12.2, EIGHT in 257-383. That is 1/9 = a ONE-OFF defect, NOT a
+     reproducible mode, so screening IS licensed (rule ix bars screening a 3/9
+     MODE like finger, not a 1/9 defect).
+  screened    full 345.1 vs strip 317.1 (+28.0)  perm p = 0.0640  NOT significant
+
+So the pi-level difference is carried entirely by the single collapsed seed.
+Screened, pi is not significant while Pi sits at the design floor => THE PURE
+PLANNING CLAIM HOLDS AT n=9. Report both pi numbers.
+
+THE MECHANISM IS NOW OVERWHELMING. Per-seed planner effect (Pi - pi):
+  full  [+41.6, -17.7, +10.7, -7.4, +37.1, +49.3, +6.6, +6.4, +45.1]  mean +19.1
+  strip [-151.0, -199.4, -182.2, -229.7, -7.1, -39.2, -93.7, -161.5, -165.2] mean -136.5
+  full helps-or-neutral on 7/9; STRIP HURTS ON 9/9.
+  Sign test on strip: (1/2)^9 = 0.00195.
+For the stripped agent the planner makes things worse on EVERY SINGLE SEED.
+Self-prediction is what makes a latent safe to plan through.
+
+GPU: box1 finished acrobot and was refilled 08:38Z with WalkerRun seeds 8-11
+(n=12). Walker is the one remaining unstable representation cell (margin fell
+to 0.4 at n=5 then inverted); n=12 settles whether its graded gap is real.
