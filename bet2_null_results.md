@@ -1915,3 +1915,27 @@ frees in ~15 min (ball-in-cup n=18 strip at 1.4M/1.5M). PREDICTION, pre-
 committed: on acrobot, if R2 collapses like R1 -> planning needs an ACCURATE
 model; if R2 ~ R0 -> even a random model suffices and the planning benefit is
 about rollout STRUCTURE not prediction accuracy. Either is a real result.
+
+## 2026-07-23 20:20 UTC — DOSE-RESPONSE, PRELIMINARY (partial, n=1-3, NOT a result)
+
+Only c=1.5 (n=3) and c=1.0 (n=1) DONE; c=0.5 and c=0.25 (the informative low
+end) still running. Do NOT cite — recorded as a lab note.
+
+CHEETAH pi last-6-median vs consistency_coef:
+  c=2.0 (full n=12) ~758 | c=1.5 {682.8,732.4,750.8} ~722 | c=1.0 {760.2}
+  ... c=0.0 (strip n=12) ~595
+  Endpoints cleanly separated; intermediates in between but not cleanly
+  ordered yet at this n.
+
+ACROBOT mppi(Pi) last-6-median:
+  c=2.0 (full) ~376 | c=1.5 {370.8,432.0,482.7} ~428 | c=1.0 {408.8}
+  ... c=0.0 (strip) ~146
+  STRIKING: every NONZERO consistency sits in the 370-480 band; only c=0.0
+  collapses to 146. HINTS a THRESHOLD (planning needs SOME self-prediction,
+  not a graded amount) rather than a smooth dose-response — but c=0.25/0.5
+  will decide it. If acrobot stays high at c=0.25, planning needs only weak
+  self-prediction; if it collapses somewhere in (0, 0.25], there is a knee.
+  n=1-3 — provisional.
+
+R2 acrobot at 700k/1.5M — too early. Dreamer s5 ~4h. Disk fixed (fork pruned
+replay buffers, 6.7G->15G).
