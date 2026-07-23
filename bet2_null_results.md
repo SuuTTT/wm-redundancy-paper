@@ -1877,3 +1877,41 @@ seeds accumulated — hopper (retracted), pendulum (null), walker (margin
 +66 -> -51), finger (significance was outlier-driven). CHEETAH IS THE SOLE
 EXCEPTION, and its margin did not move by a single point across ten added
 runs. That asymmetry is itself evidence about which result to trust.
+
+## 2026-07-23 19:15 UTC — R2 FROZEN-DYNAMICS CONTROL BUILT AND VERIFIED (the true WM-function test)
+
+A fork built --freeze_dynamics on the BOX code (NOT the local copy — the box
+runs a newer iter-27/30 version; local /home/ubuntu/helios-rl is STALE, do not
+trust it for code claims). Mechanism: gradient-zeroing of the dyn network in
+multi_step (reuses a pre-existing FREEZE_DYN=1 env hook), Python-conditional so
+freeze_dynamics=False is byte-identical to baseline. The planner still rolls
+through the frozen random dyn (make_mppi_fn reads online params["dyn"]).
+enc/rew/q/pi train normally.
+
+SMOKE TEST PASSED, two independent ways (CPU, seed 0):
+  unit test on make_update_fn (3008 steps): freeze=True -> dyn hash UNCHANGED,
+    pi+enc CHANGED; freeze=False -> dyn CHANGED (freeze is load-bearing).
+  end-to-end run_benchmark.py (3000 steps, CartpoleBalance), 3 runs:
+    D1 edited-off vs original-backup-off: full param tree EXACT-EQUAL (edits
+       provably inert when flag off).
+    D2 with --freeze_dynamics: C.dyn == fresh init (|dyn|=29603.10 identical),
+       C.pi != init (20086->20317), C.enc != init (21000->21403).
+
+WHAT R2 ISOLATES:
+  R0 full   consistency=2.0, dyn trains (self-pred + reward + value) -- HAVE (cheetah n=12, acrobot n=9)
+  R1 strip  consistency=0.0, dyn trains (reward + value only)        -- HAVE
+  R2 frozen consistency=2.0 + --freeze_dynamics, dyn NEVER trains    -- NEW
+  R2 vs R0: does the model PREDICTIONS being accurate matter, or just the
+            architecture/rollout structure? THE true world-model-function test.
+  R2 vs R1: does reward/value shaping of the latent dynamics matter?
+(consistency_coef is IRRELEVANT under freeze -- with dyn frozen the consistency
+loss produces zero gradient to anything trainable -- so R2 uses c=2.0 to differ
+from R0 ONLY in the freeze.)
+
+LAUNCH: driver_r2.sh shipped to box1 (TASKS="AcrobotSwingup CheetahRun"
+SEEDS="0 1 2 3", tag r2frozen_${Task}_s${seed}). Acrobot first -- planning is
+where R1 already collapses, so R2 vs R0 vs R1 there is the sharpest test. box1
+frees in ~15 min (ball-in-cup n=18 strip at 1.4M/1.5M). PREDICTION, pre-
+committed: on acrobot, if R2 collapses like R1 -> planning needs an ACCURATE
+model; if R2 ~ R0 -> even a random model suffices and the planning benefit is
+about rollout STRUCTURE not prediction accuracy. Either is a real result.
