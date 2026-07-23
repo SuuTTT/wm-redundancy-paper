@@ -1557,3 +1557,34 @@ seeds 5,6,7 (12 jobs) to take the representation core to n=8 — walker margin
 shrank from n=3 to n=5, so more seeds test whether that is trend or noise.
 PandaPickCube (the "planner hurts" cell, still n=2) is NOT runnable via
 driver_vsg.sh — different harness, task name absent from run_benchmark.py.
+
+## 2026-07-23 04:40 UTC — FINGER n=5: OUTLIER-DRIVEN SIGNIFICANCE, LABEL KEPT
+
+  full  {953.9, 982.8, 983.3, 984.7, 985.1}   min 953.9
+  strip {641.1, 926.4, 930.5, 957.5, 966.7}   max 966.7
+  2/25 inversions, mean +93.5, median +52.8, exact perm p = 0.0119
+  n=3 was: gap +23.7, p = 0.150  -> REDUNDANT
+
+The ENTIRE change comes from one strip seed at 641.1, a 285-point outlier from
+the other four (926-967). Exclude it: gap +32.7, essentially the n=3 value.
+
+This is the hopper hazard with the sign REVERSED — and the first time the
+standing rule cost us a result we would have LIKED. Taking p=0.0119 at face
+value would have upgraded finger from "redundant" to "helps, significant" on
+the strength of a single degraded run. Decision: do NOT drop the seed (that is
+cherry-picking), do NOT flip the label. Report all ten per-seed values, both
+gaps (+33 excluding / +94 including), state that significance is
+outlier-driven, keep "redundant" because the modal behaviour is overlap.
+
+FIFTH instance of a single anomalous seed trying to invert a conclusion:
+  hopper    collapsed seed manufactured "WM hurts"
+  pendulum  bimodal median manufactured a graded representation deficit
+  ballincup mean over a bimodal arm hid an all-or-nothing effect
+  walker    0.4-point margin nearly justified a "complete separation" claim
+  finger    285-point outlier manufactured significance
+
+OPEN QUESTION now testing: is the 641 seed a one-off, or does finger have a
+degraded stripped mode at ~20 pct rate? FingerSpin seeds 5-8 launched on the
+4070 at 04:37Z (n=9). If the mode recurs, finger stops being a clean graded
+datapoint under H1 taxonomy (representation requires UNIMODAL per-seed values)
+and would move out of the representation row — the same move pendulum made.
