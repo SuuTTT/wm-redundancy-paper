@@ -1837,3 +1837,43 @@ still ends on page 7, 0 errors, 0 undefined refs.
 GPU: 5060 refilled 09:44Z with CheetahRun seeds 8-11 (n=12) — tests whether the
 unmoved margin stays unmoved. box1 on Walker s8-s11 (n=12). 4070 on Pendulum
 s5-s9 (n=10). mwm on DreamerV3 hopper n=5 (~11h).
+
+## 2026-07-23 12:40 UTC — PENDULUM n=10 FINAL: A NULL (paper bb5ccf1)
+
+  full  solve 7/10 {808.3, 815.6, 818.8, 842.0, 852.3, 868.4, 884.8}
+        fail  3/10 {0.0, 7.3, 24.1}
+  strip solve 5/10 {661.8, 769.3, 799.5, 801.2, 862.9}
+        fail  5/10 {0.0, 6.6, 7.1, 22.7, 188.7}
+  Fisher one-tailed 7/10 vs 5/10 = 0.325   NOT SIGNIFICANT
+
+Landed in the MIDDLE of the interval pre-registered two ticks earlier
+{4/10 -> 0.185, 5/10 -> 0.325, 6/10 -> 0.500}. The pre-commitment held.
+
+THE DRIFT IS THE FINDING. At n=5 pendulum read full 4/5 (80 pct) vs strip 2/5
+(40 pct), p=0.262, and the paper called it UNDER-POWERED — i.e. a real effect
+we lacked seeds to resolve. Doubling n resolved it the OTHER way: the STRIPPED
+rate ROSE 40 -> 50 pct while the FULL rate FELL 80 -> 70 pct. The arms
+converged. "Under-powered" and "no effect" are different claims and only the
+second is true.
+
+PAPER: every occurrence replaced — abstract, contributions, Table 1 row (now
+7/10 vs 5/10, labelled "no effect"), caption footnote, the reclassification
+paragraph, and Limitations. Body still ends on page 7, 0 errors.
+
+STRUCTURAL CONSEQUENCE: THE EXPLORATION CHANNEL NOW RESTS ON BALL-IN-CUP
+ALONE (8/14 vs 0/14, p=0.00097). A channel supported by ONE task is a claim
+about that task until a second agrees. The paper says so explicitly.
+
+CARTPOLE-SWINGUP-SPARSE is the test of that, running at n=2 per arm on the
+4070 (s3 GPU0/GPU3, s4 GPU1/GPU2, pinned single jobs not driver_vsg.sh). At
+650k BOTH arms have peak = 0.0 — neither has EVER recorded a non-zero
+evaluation. If that holds it BOUNDS the channel rather than failing to extend
+it: the model helps you FIND reward only where reward is findable at all.
+Note n=2 gives min achievable Fisher p = 0.167, so it can only establish
+DIRECTION; extend only if the direction is interesting.
+
+DRIFT TALLY, now worth stating in the paper: FOUR of five effects shrank as
+seeds accumulated — hopper (retracted), pendulum (null), walker (margin
++66 -> -51), finger (significance was outlier-driven). CHEETAH IS THE SOLE
+EXCEPTION, and its margin did not move by a single point across ten added
+runs. That asymmetry is itself evidence about which result to trust.
