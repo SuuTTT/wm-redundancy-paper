@@ -1458,3 +1458,39 @@ independent Dreamer + SAC evidence; TD-MPC2 per-seed now confirms it in-family.
 ### GPU: 5060 refilled
 Pendulum done 23:05Z -> launched CheetahRun + WalkerRun seeds 3,4 (8 jobs) to
 take the representation channel to n=5, since it is now the paper core.
+
+## 2026-07-23 01:20 UTC — BALLINCUP n=14 FINAL: EXPLORATION CHANNEL IS DECISIVE
+
+full arm COMPLETE, all 14 seeds at 1.5M (pi last-6-eval median):
+  SOLVE : s0=975.5 s3=976 s6=976 s8=974 s9=975.5 s11=972.5 s12=974 s13=975.5
+  FAIL  : s1 s2 s4 s5 s7 s10 = 0
+  -> 8/14 (57 pct). Every solving run scores 972-976: it solves OUTRIGHT.
+
+strip arm: 0/10 complete at 1.5M (s0-s9), s10-s13 launched.
+STRONGER THAN THE SUCCESS RATE: the MAXIMUM over EVERY evaluation in EVERY
+stripped run is exactly 0.0. The stripped agent never once scores, at any
+checkpoint, in any of 10 runs.
+
+  Fisher one-tailed 8/14 vs 0/10 -> p = 0.0041   ALREADY SIGNIFICANT
+                    8/14 vs 0/14 -> p = 0.0010   on strip completion
+
+This cell was p=1.0 at n=3 and was the paper weakest leg. It is now the
+best-evidenced claim in the paper. Table row changed from returns (325 vs 0 --
+a mean over a bimodal arm) to success-rates 8/14 vs 0/14, per the taxonomy rule
+that exploration is read as a success-rate, never a mean or median.
+
+Paper commit 97cdbee. Body is now EXACTLY 7 pages (page 8 starts at References).
+
+### Standing of the three channels after today
+  representation : cheetah + walker COMPLETE SEED SEPARATION, exact perm
+                   p=0.050 at n=3; n=5 running (if separation holds, p=0.004)
+  exploration    : ball-in-cup 8/14 vs 0/14, p=0.001  <-- STRONGEST
+                   pendulum 4/5 vs 2/5, p=0.26, under-powered, stated as such
+  planning       : acrobot stripped planner collapses 387 -> 144, n=3
+
+### Cheetah n=5 provisional (1.0M of 1.5M) — WATCH, gap is narrowing
+  full  s3=735.5 s4=700.9   (n=3 range 710-763)
+  strip s3=594.8 s4=617.8   (n=3 max was 587.6 -- new strip seeds are HIGHER)
+  separation still holds (min full 700.9 > max strip 617.8) but is NOT safe
+  until 1.5M. If it breaks, the representation claim reverts to a graded-gap
+  claim without complete separation and must be restated.
