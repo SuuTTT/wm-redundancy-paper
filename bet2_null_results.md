@@ -1588,3 +1588,33 @@ degraded stripped mode at ~20 pct rate? FingerSpin seeds 5-8 launched on the
 4070 at 04:37Z (n=9). If the mode recurs, finger stops being a clean graded
 datapoint under H1 taxonomy (representation requires UNIMODAL per-seed values)
 and would move out of the representation row — the same move pendulum made.
+
+## 2026-07-23 05:12 UTC — DREAMER HOPPER CELL IS UNDERPOWERED BY CONSTRUCTION
+
+At 1.089M of ~1.1M (last-30-episode median):
+  van   s1=244.5  s2=439.3   mean 341.9   spread 194.8
+  strip s1=194.7  s2=192.4   mean 193.6   spread   2.3
+  direction: van > strip by +148
+
+USEFUL: neither family shows the stripped agent winning on hopper, so the
+retraction holds cross-family. TD-MPC2 gave a null; Dreamer favours the full
+model. Neither gives "stripping helps".
+
+BUT THE CELL CANNOT SUPPORT A SIGNIFICANCE CLAIM. At n=2 vs n=2 a permutation
+test has only C(4,2)=6 arrangements, so the MINIMUM achievable one-tailed p is
+1/6 = 0.167. No gap size can make this cell significant. Minimum-p by arm size:
+  n=2 -> 0.167   n=3 -> 0.050   n=4 -> 0.014   n=5 -> 0.004
+
+Compounding it: the cell sits on HOPPER, the one task the official baselines
+show is collapse-prone across methods (tdmpc-v1 2/3, sac 1/3) — the very
+instability that caused our TD-MPC2 retraction. The van arm spread of 194.8 at
+n=2 is that instability reappearing.
+
+ACTION: asked fork ae674abd to queue hopper van+strip seeds 3,4,5 (6 jobs,
+~17h, lands inside the Jul 28 deadline) -> n=5 per arm, min p 0.004. If the box
+cannot take them, DROP the Dreamer hopper cell from the paper. A cell that
+cannot reach significance must not be presented as a cross-family confirmation.
+
+GENERAL LESSON (new, worth carrying): check the MINIMUM ACHIEVABLE p for a
+design BEFORE running it. n=2 vs n=2 is never worth running if the intent is a
+significance claim; it can only ever establish direction.
