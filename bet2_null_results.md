@@ -1523,3 +1523,37 @@ That is now 14 stripped runs with not one non-zero evaluation.
 ACROBOT n=5 at 500k (planning leg, mppi last-6-med): full s3=265.5 s4=286.4 vs
 strip s3=147.7 s4=5.0 — directionally consistent with the n=3 claim (full Pi
 387 vs strip Pi 144). Early.
+
+## 2026-07-23 03:35 UTC — WALKER n=5: COMPLETE SEPARATION BROKE (pre-committed call honoured)
+
+  full  {649.70, 681.45, 699.50, 699.90, 735.10}   min = 649.70
+  strip {638.30, 646.90, 647.55, 651.25, 657.20}   max = 657.20
+  2/25 inversions (strip s3 = 657.2 beats full s4 = 649.7)
+  mean 648.2 -> 693.1  (+44.9)   exact permutation p = 0.0119  STILL SIGNIFICANT
+
+One tick earlier walker read min(full)=651.70 vs max(strip)=651.30 — a margin of
+0.40 points. I pre-committed THEN to reporting it as a graded gap regardless of
+which side it landed on, because a sharp all-or-nothing statistic resting on a
+0.4-point margin is the same error corrected three times already in this
+campaign. It landed on the wrong side, so the pre-commitment cost nothing — but
+it would have been the same call either way. Recording this because the value of
+the pre-commitment is that it was made BEFORE the outcome was known.
+
+CHEETAH n=5 for contrast (held):
+  full  {710.30, 728.05, 746.15, 754.30, 762.50}   min = 710.30
+  strip {498.30, 543.45, 587.55, 615.65, 617.45}   max = 617.45
+  0/25 inversions, margin 92.85, mean +167.8, exact perm p = 0.00397
+
+So the representation channel at n=5:
+  cheetah  COMPLETE SEPARATION, p=0.004   <- carries the strong claim alone
+  walker   graded gap, 2/25 inversions, p=0.012
+  finger   arms overlap, p=0.150          <- what "redundant" means
+  hopper   null
+The monotone ordering survives; only the sharpness of walker changed.
+Paper commit b64097b, body still ends on page 7.
+
+GPU: 5060 finished walker 03:12Z and was refilled 03:29Z with Cheetah+Walker
+seeds 5,6,7 (12 jobs) to take the representation core to n=8 — walker margin
+shrank from n=3 to n=5, so more seeds test whether that is trend or noise.
+PandaPickCube (the "planner hurts" cell, still n=2) is NOT runnable via
+driver_vsg.sh — different harness, task name absent from run_benchmark.py.
