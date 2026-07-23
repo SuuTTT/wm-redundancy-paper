@@ -1705,3 +1705,49 @@ it back.
 PAPER: no edit yet — finger strip s5-s8 are still running (rule vi: never edit
 on a partially-complete arm). Edit when strip n=9 lands, reporting (3) and (4)
 together and stating that (1) and (2) disagree in sign.
+
+## 2026-07-23 08:05 UTC — FINGER n=9 FINAL: THE DEGRADED STRIPPED MODE RECURS. H1 PREDICTED THIS.
+
+strip n=9: {641.1, 701.3, 702.6, 926.4, 930.5, 948.9, 953.9, 957.5, 966.7}
+  LOW  mode n=3: {641.1, 701.3, 702.6}  peaks 700.6/750.6/738.8 -> never learned
+  HIGH mode n=6: {926.4, 930.5, 948.9, 953.9, 957.5, 966.7}
+  BIMODAL: 3/9 = 33 pct in the low mode, 223.8-point gap between modes.
+
+full n=9: {0.00, 953.9, 977.5, 981.7, 982.8, 983.3, 984.7, 985.1, 985.7}
+  unimodal (8 seeds in 953.9-985.7) plus ONE collapse (0.00, peak 862 =
+  learned then lost). 1/9 = 11 pct.
+
+ANALYSES:
+  unscreened means    full 870.5 vs strip 858.8 (+11.8)   perm p = 0.472
+  symmetric screen    full 979.3 (n=8) vs strip 947.3 (n=6) (+32.0)  p = 0.0013
+  SUCCESS-RATE (>900) full 8/9 vs strip 6/9   Fisher p = 0.288   <- H1 prescribes this
+
+TWO TICKS AGO H1 MADE A PREDICTION: "if the degraded stripped mode recurs at
+~20 pct, finger stops being a graded representation datapoint — the same move
+pendulum made." It recurred at 33 pct. So finger is RE-CHARACTERISED, not
+removed: its stripped arm is bimodal, therefore the valid statistic is a
+success rate, and by that statistic full 8/9 vs strip 6/9 is NOT significant.
+
+The REDUNDANT label survives and is now far better justified than at n=3 (where
+it rested on three overlapping seeds and p=0.150). The stripped agent reaches
+full performance 6 times in 9; when it does not, it lands in a distinct lower
+mode rather than degrading smoothly. That is a categorically different
+statement from "the gap is small".
+
+NOTE the symmetric screen gives p=0.0013 here — significant. We do NOT use it,
+because screening presupposes the discarded runs are defects; when 33 pct of an
+arm lands in a reproducible second mode, that mode IS the behaviour, not a
+defect. Screening is licensed for a 1/9 one-off collapse, not for a 3/9 mode.
+That distinction is now part of the stated criterion.
+
+STATUS OF THE REPRESENTATION ROW after finger moves out of "graded":
+  cheetah  n=8v8  complete separation, 0/64 inversions, p = 0.0000777 (the 8v8 floor)
+  walker   n=8 landing (n=5 was graded, 2/25 inversions, p=0.0119)
+  finger   REDUNDANT by success rate, 8/9 vs 6/9, p = 0.288
+  hopper   null
+
+GPU: 4070 finished finger and was refilled 08:04Z with PendulumSwingup seeds
+5-9 (10 jobs) -> n=10. Pendulum is now the weakest remaining claim in the paper
+(4/5 vs 2/5, p=0.26, labelled under-powered). At n=10 either it becomes
+significant or we can say we RAN n=10 and it still is not — both are better
+than the current "we lacked the seeds".
