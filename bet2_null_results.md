@@ -1494,3 +1494,32 @@ Paper commit 97cdbee. Body is now EXACTLY 7 pages (page 8 starts at References).
   separation still holds (min full 700.9 > max strip 617.8) but is NOT safe
   until 1.5M. If it breaks, the representation claim reverts to a graded-gap
   claim without complete separation and must be restated.
+
+## 2026-07-23 01:55 UTC — CHEETAH n=5: COMPLETE SEPARATION HOLDS, p=0.004
+
+All 5 seeds at 1.5M (pi last-6-eval median):
+  full  {710.30, 728.05, 746.15, 754.30, 762.50}   min = 710.30
+  strip {498.30, 543.45, 587.55, 615.65, 617.45}   max = 617.45
+  COMPLETE SEPARATION holds, gap = 92.85
+  exact permutation p = 0.00397 (= 1/252)
+  mean 572.5 -> 740.3 (+167.8)
+
+Was n=3 complete separation p=0.050; now n=5 p=0.004 — a 12x strengthening of
+the paper core representation claim. The earlier worry was justified but did
+not materialise: the two NEW strip seeds (617.45, 615.65) did land above the
+old strip max (587.55), narrowing the gap, but they stayed below the full arm
+minimum (710.30).
+
+WALKER n=5 STILL AT RISK — only at 450-500k of 1.5M. Its n=3 gap was just 66
+(vs cheetah 196), so it has far less margin. Current partials: full s3=633.35
+@500k, s4=510.45 @450k; strip s3=603.60, s4=576.45 @450k. full s4 is currently
+BELOW strip s3, though full is also behind in steps. Decide at 1.5M (~03:50Z).
+Holding the paper edit until walker lands so both tasks update in ONE pass —
+the body is at exactly 7pp and every edit costs a page-fitting cycle.
+
+BALLINCUP strip s10-s13 at 400-450k: max over every eval still exactly 0.0.
+That is now 14 stripped runs with not one non-zero evaluation.
+
+ACROBOT n=5 at 500k (planning leg, mppi last-6-med): full s3=265.5 s4=286.4 vs
+strip s3=147.7 s4=5.0 — directionally consistent with the n=3 claim (full Pi
+387 vs strip Pi 144). Early.
