@@ -2111,3 +2111,27 @@ SCORING: same protocol (last-6-eval median per arm; essential = (full-strip)/ful
 strip collapse). Added to score_prereg.py PREREG as batch 2. Full held-out set now 8 tasks:
 essential {FingerTurnHard, ReacherHard(MISSED), AcrobotSwingupSparse}, redundant {FishSwim,
 HopperStand, WalkerWalk, CartpoleSwingup, FingerTurnEasy}. Report hits AND misses honestly.
+
+## 2026-07-24 — PRE-REGISTERED BATCH 3: two novel-modality held-out tasks (leakage-free, BEFORE launch on mwm 4x3060)
+Written before any full/strip return for these 2 tasks exists (launching now, driver_vsg.sh,
+full+strip seeds 0-2, 1.5M, 4-wide on the freed mwm box). Extends held-out probe to 10 tasks
+and adds two DOMAINS not previously tested (humanoid, swimmer) => tests cross-domain breadth.
+
+  HumanoidStand -> ESSENTIAL (r ~2).  21-DoF, high-dimensional proprioception. The value-
+    equivalent (strip) model must represent a large state WITHOUT the self-prediction anchor;
+    high-dim representation is exactly where the consistency loss should earn its keep. Predict
+    strip degrades >20% (rank near FingerTurnHard/AcrobotSwingupSparse). FLOOR-RISK NOTED: if
+    1.5M on a 3060 under-trains BOTH arms to ~0, the task cannot discriminate — report honestly
+    as budget-limited, do NOT score a floor as a hit. If strip stands fine => essential MISS
+    (representation self-prediction not load-bearing for standing) = informative either way.
+
+  SwimmerSwimmer6 -> REDUNDANT (r ~5).  Dense distance/velocity reward, 6-link but low-dim
+    actuation. Dense shaping gives model-free value learning a strong gradient everywhere =>
+    self-prediction adds little. Predict helps <20%. CAVEAT: multi-link coordination could make
+    the forward model useful; if strip degrades >20%, the "dense=>redundant" heuristic fails on
+    coordination-heavy control (informative boundary).
+
+SCORING: same protocol (last-6-eval median per arm; essential=(full-strip)/full>0.20 OR collapse).
+Added to score_prereg.py PREREG batch 3. Full held-out set now 10: essential {FingerTurnHard,
+ReacherHard(MISSED), AcrobotSwingupSparse, HumanoidStand}, redundant {FishSwim, HopperStand,
+WalkerWalk, CartpoleSwingup, FingerTurnEasy, SwimmerSwimmer6}. Report hits AND misses honestly.
