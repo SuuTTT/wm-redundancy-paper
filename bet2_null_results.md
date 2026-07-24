@@ -2268,3 +2268,11 @@ SCORECARD: 9 landed, 5/8 SCORABLE hits (+1 floor), rho=+0.30 (p=0.24, n=8). Stil
 easy-redundant (Hopper/Walker/Cartpole/FingerEasy) + Acrobot(floor-adj); the discriminating essential preds
 (ReacherHard, FishSwim, FingerTurnHard) all MISS. A "always-redundant" baseline scores similarly on redundant-
 heavy DMC — the probe adds no discriminating power. 1 pending (SwimmerSwimmer6) -> final at 9 scorable.
+
+## 2026-07-24 — BONUS (extended set, NOT in headline hit-rate): ReacherEasy = redundant (HIT)
+ReacherEasy 6/6: full {981.4,984.3,978.7} med 981.4 ; strip {971.1,981.8,977.9} med 977.9. dep +0.36% => REDUNDANT.
+Predicted REDUNDANT => bonus HIT. Matched control for ReacherHard: BOTH reacher difficulties are WM-redundant,
+so ReacherHard redundancy is NOT a difficulty artifact. Kept OUT of the original-10 headline (batch4/5 are all
+pred-redundant easy tasks; folding them in would inflate the non-discriminating hit-rate). Headline verdict
+unchanged: original-10 = 5/8 scorable, rho=+0.30(p.24), discrimination FAILS on the essential side.
+Extended redundant confirmations so far: HopperStand, WalkerWalk, CartpoleSwingup, FingerTurnEasy, ReacherEasy.
