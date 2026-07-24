@@ -2276,3 +2276,10 @@ so ReacherHard redundancy is NOT a difficulty artifact. Kept OUT of the original
 pred-redundant easy tasks; folding them in would inflate the non-discriminating hit-rate). Headline verdict
 unchanged: original-10 = 5/8 scorable, rho=+0.30(p.24), discrimination FAILS on the essential side.
 Extended redundant confirmations so far: HopperStand, WalkerWalk, CartpoleSwingup, FingerTurnEasy, ReacherEasy.
+
+## 2026-07-24 — BONUS: CartpoleBalanceSparse = redundant (HIT) — sparsity!=essential CONFIRMED
+CartpoleBalanceSparse 6/6: full {1000,1000,1000} ; strip {1000,1000,1000}. dep 0% (both ceiling) => REDUNDANT.
+Predicted REDUNDANT => bonus HIT. Directly tests the sparse-reward confound behind my ReacherHard/AcrobotSparse
+MISSES: a SPARSE reward on a TRIVIAL task (balance, starts upright) is REDUNDANT. So sparsity alone does NOT
+drive WM-dependence — task difficulty/dynamics do. (Caveat: ceiling-saturated, both arms max the task.) Kept out
+of headline (bonus). Reinforces the negative result: reward-structure heuristics do not predict WM-need.
