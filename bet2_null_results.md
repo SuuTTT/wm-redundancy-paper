@@ -2170,3 +2170,11 @@ WM-dependence = (907.6-917.1)/907.6 = -1.0% (strip ~= full, both ~910) => REDUND
 Running: 3/10 scored, hit-rate 1/3 (ReacherHard MISS, FishSwim MISS, HopperStand HIT). Spearman rho=0.00 (n=3).
 Still ~chance; 7 pending. HopperStand redundancy is unsurprising (dense height reward, easy) — the predictor
 gets the EASY redundant calls right; its failures are on the discriminating cases (ReacherHard, FishSwim).
+
+## 2026-07-24 — HELD-OUT task 4/10: WalkerWalk = HIT
+WalkerWalk 6/6: full {971.7,972.8,970.6} med 971.7 ; strip {956.0,957.6,967.1} med 957.6.
+WM-dep = (971.7-957.6)/971.7 = +1.45% (strip ~= full, both ~965) => REDUNDANT. Predicted REDUNDANT => **HIT**.
+Running: 4/10, hit-rate 2/4 (ReacherHard MISS, FishSwim MISS, HopperStand HIT, WalkerWalk HIT). Both hits are
+EASY dense-locomotion redundant calls (HopperStand, WalkerWalk); both misses are the discriminating cases.
+Spearman(pred rank vs measured dep) n=4 rho=-0.32 (WRONG SIGN so far). Pattern persists: predictor works on
+obvious-redundant, fails where it would matter. 6 pending — AcrobotSwingupSparse/FingerTurn pair are the key tests.
