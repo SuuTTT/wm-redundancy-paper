@@ -2135,3 +2135,31 @@ SCORING: same protocol (last-6-eval median per arm; essential=(full-strip)/full>
 Added to score_prereg.py PREREG batch 3. Full held-out set now 10: essential {FingerTurnHard,
 ReacherHard(MISSED), AcrobotSwingupSparse, HumanoidStand}, redundant {FishSwim, HopperStand,
 WalkerWalk, CartpoleSwingup, FingerTurnEasy, SwimmerSwimmer6}. Report hits AND misses honestly.
+
+## 2026-07-24 — HELD-OUT SCORECARD task 2/10: FishSwim = MISS (opposite direction to ReacherHard)
+FishSwim 6/6 at 1500160 (last-6-eval median per seed):
+  full  s0/1/2 = 207.3 / 272.0 / 187.1  -> arm median 207.3
+  strip s0/1/2 =  90.8 /  91.4 / 102.2  -> arm median  91.4
+  WM-dependence = (207.3-91.4)/207.3 = +55.9%  => MEASURED = ESSENTIAL (strip loses 56%).
+
+PRE-REGISTERED (8277615): FishSwim = REDUNDANT ("dense distance reward => helps <20%").
+=> **MISS** (predicted redundant, measured strongly essential).
+
+**KEY EMERGING PATTERN (2/10 scored, hit-rate 0/2) — the predictor is failing in BOTH
+directions:**
+  ReacherHard: predicted ESSENTIAL, measured REDUNDANT (ceiling saturation).
+  FishSwim:    predicted REDUNDANT, measured ESSENTIAL (dense reward did NOT imply redundant;
+               high-dim hydrodynamic forward dynamics apparently NEED the self-prediction model).
+The two errors are not a consistent bias (over- or under-calling) — they are opposite, which is
+exactly what an UNINFORMATIVE prior looks like out of sample. My a-priori "reward-density + task-
+type" heuristic is so far NOT tracking measured WM-dependence on unseen tasks.
+
+IMPLICATION FOR THE PAPER (do NOT bury this): if the hit-rate stays near chance through 10 tasks,
+the "PREDICTIVE PROBE" headline is FALSIFIED. The rho=-0.90 in the paper is then confirmed as an
+IN-SAMPLE/biased prior that does NOT generalize, and the honest claim must retreat to: "WM-
+dependence is real and task-conditional (the ablation cells stand), but we CANNOT yet predict which
+tasks need a world model from simple task descriptors — prospective prediction fails." That is a
+weaker but HONEST contribution (a negative result about predictability), and it is the whole point
+of running the held-out test instead of reporting the in-sample correlation. n=2/10 — 8 pending on
+all 4 boxes; do not finalize the verdict yet, but this is the headline to watch. Scorer updated
+(scratchpad/score_prereg.py, now 10-task aware).
