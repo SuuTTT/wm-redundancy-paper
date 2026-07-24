@@ -2163,3 +2163,10 @@ weaker but HONEST contribution (a negative result about predictability), and it 
 of running the held-out test instead of reporting the in-sample correlation. n=2/10 — 8 pending on
 all 4 boxes; do not finalize the verdict yet, but this is the headline to watch. Scorer updated
 (scratchpad/score_prereg.py, now 10-task aware).
+
+## 2026-07-24 — HELD-OUT task 3/10: HopperStand = HIT (first hit)
+HopperStand 6/6 (last-6-eval median/seed): full {937.5,906.5,907.6} med 907.6 ; strip {917.1,934.6,908.7} med 917.1.
+WM-dependence = (907.6-917.1)/907.6 = -1.0% (strip ~= full, both ~910) => REDUNDANT. Predicted REDUNDANT => **HIT**.
+Running: 3/10 scored, hit-rate 1/3 (ReacherHard MISS, FishSwim MISS, HopperStand HIT). Spearman rho=0.00 (n=3).
+Still ~chance; 7 pending. HopperStand redundancy is unsurprising (dense height reward, easy) — the predictor
+gets the EASY redundant calls right; its failures are on the discriminating cases (ReacherHard, FishSwim).
