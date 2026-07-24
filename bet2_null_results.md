@@ -2178,3 +2178,24 @@ Running: 4/10, hit-rate 2/4 (ReacherHard MISS, FishSwim MISS, HopperStand HIT, W
 EASY dense-locomotion redundant calls (HopperStand, WalkerWalk); both misses are the discriminating cases.
 Spearman(pred rank vs measured dep) n=4 rho=-0.32 (WRONG SIGN so far). Pattern persists: predictor works on
 obvious-redundant, fails where it would matter. 6 pending — AcrobotSwingupSparse/FingerTurn pair are the key tests.
+
+## 2026-07-24 — HELD-OUT tasks 5-6/10: FingerTurnHard=MISS, AcrobotSwingupSparse=HIT(floor)
+FingerTurnHard 6/6: full {975.8,964.7,970.0} med 970.0 ; strip {969.4,780.7,964.4} med 964.4. dep +0.58%
+  => REDUNDANT by median (one strip seed 780 lower, but 2/3 near-full). Predicted ESSENTIAL => **MISS**.
+  Kills the precision-difficulty story: I predicted FingerTurnHard=essential / FingerTurnEasy=redundant;
+  Hard already comes back REDUNDANT, so the within-domain discrimination fails on the Hard side.
+AcrobotSwingupSparse 6/6: full {34,156.1,0} med 34.0 ; strip {6.4,8.7,1.3} med 6.4. dep +81%.
+  *** FLOOR CAVEAT (loud): BOTH arms are far below the ~1000 task ceiling — sparse Acrobot is not
+  solved by either at 1.5M. The +81% is a ratio of near-zero numbers. What is real: strip NEVER reaches
+  the goal (all seeds <9) while full reaches it intermittently (34-156). Under the pre-registered
+  criterion ("strip degrades >20% OR fails to reach goal/collapse") this counts ESSENTIAL => **HIT**,
+  but it is "WM enables intermittent goal-reaching vs strip near-zero", NOT a clean performance gap.
+  A skeptic could fairly call it floor-noise; flagged as floor-adjacent. ***
+
+SCORECARD 6/10, hit-rate 3/6 (=chance), Spearman rho=+0.05 (NO rank correlation).
+  Measured dep order: AcrobotSparse +81%(FLOOR,ESS-pred) > FishSwim +56%(RED-pred,MISS) >> WalkerWalk
+  +1%(red) ~ FingerTurnHard +1%(ESS-pred,MISS) ~ ReacherHard +0%(ESS-pred,MISS) ~ HopperStand -1%(red).
+  The two CLEAN essential predictions (ReacherHard, FingerTurnHard) are at the BOTTOM of measured
+  dependence; the one real high-dep task (FishSwim) was called redundant. The a-priori taxonomy does
+  NOT predict WM-dependence out of sample. NEGATIVE RESULT solidifying. 4 pending (CartpoleSwingup,
+  FingerTurnEasy, HumanoidStand[floor-risk], SwimmerSwimmer6) — finalize verdict at 10/10.
