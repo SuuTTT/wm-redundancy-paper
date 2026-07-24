@@ -2088,3 +2088,26 @@ n=1/6 — a single miss does not condemn the predictor (rule i analogue); the ho
 read comes at 6/6. But this miss is real and stays in the scorecard. Running scorecard:
 1/6 landed, hit-rate 0/1. Remaining: FingerTurnHard, FishSwim, HopperStand, WalkerWalk,
 CartpoleSwingup. Scorer: scratchpad/score_prereg.py (MEASURED updated).
+
+## 2026-07-24 — PRE-REGISTERED BATCH 2: two matched-pair held-out tasks (leakage-free, BEFORE launch)
+Written before any full/strip return for these 2 tasks exists (launching now on box1,
+driver_vsg.sh, full+strip seeds 0-2, 1.5M). Widens the held-out probe from 6 to 8 tasks
+and — unlike a stack of easy redundant calls — each is a WITHIN-DOMAIN discrimination test.
+
+  FingerTurnEasy    -> REDUNDANT (r ~4-5).  Same finger-turn control as FingerTurnHard
+    (pred ESSENTIAL) but with a LARGER target tolerance. Precision demand relaxed =>
+    model-free control suffices => strip ~= full, dependence <20%. Tests whether the
+    predictor tracks PRECISION DIFFICULTY within one domain (Hard essential / Easy redundant).
+    If Easy also comes back essential, the "precision->WM" story is wrong.
+
+  AcrobotSwingupSparse -> ESSENTIAL (r ~1-2).  Underactuated double pendulum, SPARSE reward
+    (signal only near upright). Long-horizon credit assignment + hard exploration. Core
+    DENSE Acrobot already showed planning is essential (planner harms strip 9/9, p=2.1e-5);
+    sparsifying the reward should AMPLIFY WM/planning dependence. Predict strip degrades
+    >20% OR fails to reach the goal (collapse). If strip matches full, the planning-essential
+    result is dense-Acrobot-specific.
+
+SCORING: same protocol (last-6-eval median per arm; essential = (full-strip)/full>0.20 OR
+strip collapse). Added to score_prereg.py PREREG as batch 2. Full held-out set now 8 tasks:
+essential {FingerTurnHard, ReacherHard(MISSED), AcrobotSwingupSparse}, redundant {FishSwim,
+HopperStand, WalkerWalk, CartpoleSwingup, FingerTurnEasy}. Report hits AND misses honestly.
