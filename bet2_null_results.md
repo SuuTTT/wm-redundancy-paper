@@ -2235,3 +2235,11 @@ score_prereg.py (a-priori scorecard), curves.txt+core_curves.txt (early-vs-final
 NOTE: some core final-deps here (BallInCup 0%, WalkerRun 3%) are RETURN-based & lower than the
 SUCCESS-based core results (ballincup 8/14v0/14) — return vs success-rate differ on sparse tasks;
 do not overwrite the core cells with these. a-priori held-out scorecard still finalizing at 10/10.
+
+## 2026-07-24 — HELD-OUT task 7/10: CartpoleSwingup = HIT
+CartpoleSwingup 6/6: full {824.1,807.1,76.1} med 807.1 (one full seed collapsed to 76) ; strip {830.6,858.4,629.9} med 830.6.
+WM-dep = (807.1-830.6)/807.1 = -2.9% (strip >= full) => REDUNDANT. Predicted REDUNDANT => **HIT**.
+SCORECARD 7/10, hit 4/7. Spearman jumped 0.05->0.44 (p=0.16, n=7) but UNSTABLE: driven by easy-redundant
+tasks (Cartpole, Walker, Hopper) correctly at the BOTTOM + AcrobotSparse floor at top; the discriminating
+MIDDLE is still wrong (ReacherHard/FingerTurnHard ESS-pred but low dep; FishSwim RED-pred but high dep).
+Binary hit still ~chance. Negative result holds; rho noisy at this n. 3 pending -> 10/10 soon.
