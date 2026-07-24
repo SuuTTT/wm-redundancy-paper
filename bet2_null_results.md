@@ -2041,3 +2041,26 @@ return literally counts success-frames (in-cup / balanced) — the return IS the
 success measure and needs no threshold defense. Only pendulum (shaped reward)
 needed this check, and it passed. Add one sentence to the pendulum footnote:
 "the null is invariant to the success cutoff across [200,660]".
+
+## 2026-07-24 — DREAMER HOPPER n=5 CROSS-FAMILY (DONE-gated, complete)
+  van   {243.9, 256.4, 274.3, 439.3, 464.1}  mean 335.6
+  strip {179.0, 192.4, 194.7, 270.1, 350.0}  mean 237.2
+  van - strip = +98.4 | 5/25 inversions | exact perm p = 0.079 (n=5 min 0.004)
+
+TWO honest reads:
+  1. The HOPPER RETRACTION HOLDS CROSS-FAMILY: neither family shows stripping
+     HELP. TD-MPC2 was a null; Dreamer is van>strip. Nowhere does removing the
+     WM improve hopper. The "WM hurts" claim is dead in both families.
+  2. The Dreamer WM-BENEFIT on hopper is DIRECTIONAL BUT NOT SIGNIFICANT
+     (p=0.079). Do NOT claim a significant Dreamer hopper effect at n=5.
+
+CAVEAT (must accompany any Dreamer-vs-TDMPC2 gap comparison): Dreamer trains
+actor+critic ENTIRELY in imagination, so loss_scales.dyn=0 is far more
+destructive than TD-MPC2 consistency_coef=0. A larger Dreamer gap is ablation
+LEVERAGE, not evidence that generative WMs "matter more".
+
+PAPER: do NOT add a significant Dreamer-hopper claim. The cross-family
+reproduction rests on the existing 9-task Dreamer gradient (Table cross), not
+hopper significance. Extending to n=8 delegated to fork ae674abd (box owner);
+if it reaches p<0.05 we can state "Dreamer WM significantly helps on hopper,
+confirming the retraction is a TD-MPC2-specific null not a WM-hurts effect".
