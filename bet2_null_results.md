@@ -2248,3 +2248,13 @@ Binary hit still ~chance. Negative result holds; rho noisy at this n. 3 pending 
   WalkerStand -> REDUNDANT (r ~5). Easiest walker task (just stand), dense reward; model-free solves. dep<20%.
   CartpoleBalance -> REDUNDANT (r ~5). Starts upright, only needs to not fall; trivial dense; model-free solves. dep<20%.
 Held-out set -> 14 tasks. Both predicted redundant (rounds out breadth; DMC is redundant-heavy = the paper point).
+
+## 2026-07-24 — HELD-OUT task 8/10: HumanoidStand = FLOOR (excluded, as pre-registered)
+HumanoidStand 6/6: full {19.4, 21.6, NaN} ; strip {87.0, 35.2, 24.4}. Both arms ~20-35 vs humanoid-stand
+ceiling ~1000 => NEITHER learned to stand at 1.5M on a 3060 (one full seed diverged to NaN). Strip nominally
+> full but both are floor-garbage. Per the batch-3 pre-registration ("if 1.5M under-trains BOTH arms, report
+budget-limited, do NOT score a floor as a hit"): **FLOOR / EXCLUDED from hit-rate**. If force-scored it would
+be a MISS (pred essential, strip>full). Scorer updated to flag floor=True and exclude from hit-rate + rank.
+SCORECARD: 4/7 scorable hits (+1 floor-excluded), rho=+0.44 (p=0.16, n=7, unstable/extremes-driven).
+2 scorable pending (FingerTurnEasy, SwimmerSwimmer6) -> final over 9 scorable of the original 10.
+Note: HumanoidStand needs ~5-20M steps; our 1.5M budget on a 3060 cannot test it. Honest limitation.
