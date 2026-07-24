@@ -2243,3 +2243,8 @@ SCORECARD 7/10, hit 4/7. Spearman jumped 0.05->0.44 (p=0.16, n=7) but UNSTABLE: 
 tasks (Cartpole, Walker, Hopper) correctly at the BOTTOM + AcrobotSparse floor at top; the discriminating
 MIDDLE is still wrong (ReacherHard/FingerTurnHard ESS-pred but low dep; FishSwim RED-pred but high dep).
 Binary hit still ~chance. Negative result holds; rho noisy at this n. 3 pending -> 10/10 soon.
+
+## 2026-07-24 — PRE-REGISTERED BATCH 5 (leakage-free, BEFORE launch on freed 5060)
+  WalkerStand -> REDUNDANT (r ~5). Easiest walker task (just stand), dense reward; model-free solves. dep<20%.
+  CartpoleBalance -> REDUNDANT (r ~5). Starts upright, only needs to not fall; trivial dense; model-free solves. dep<20%.
+Held-out set -> 14 tasks. Both predicted redundant (rounds out breadth; DMC is redundant-heavy = the paper point).
