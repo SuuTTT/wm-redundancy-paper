@@ -1981,3 +1981,38 @@ NOT free (random fails).
 REFILLED: R2 acrobot+cheetah seeds 4-7 (box1, to n=8); cheetah/acrobot dose
 seeds 3-4 (4070/5060, to n=5). n=4 R2 already gives complete separation p=0.0014
 on acrobot; extending to solidify. Dreamer s5 still running (fork will ping).
+
+## 2026-07-24 — PRE-REGISTERED PROSPECTIVE PREDICTION (user idea: leakage-free held-out test of the probe)
+### Written BEFORE any full/strip return for these 6 tasks was observed. I have seen ONLY step counts, never returns. This commit timestamps the prediction; the ablations are running now (4070 at 100k, 5060 early).
+
+The rho=-0.90 correlation in the paper is DESCRIPTIVE (fit on the same 5 tasks it reports) — a
+reviewer will call it a biased prior / overfit. This is a genuine OUT-OF-SAMPLE test: predict
+WM-dependence for 6 UNSEEN tasks from task PROPERTIES ALONE (reward density, precision vs
+locomotion, underactuation), then check against the ablation once it lands.
+
+PREDICTOR (a-priori, no trained agent, no leakage): dense-reward locomotion -> REDUNDANT
+(self-prediction adds little); sparse/precision/hard-to-reach reward -> ESSENTIAL (representation
+and/or exploration). Binary call = does stripping cost >20% of full return (or collapse via
+failed exploration)?
+
+PRE-REGISTERED CALLS (essential = strip loses >20% OR exploration-collapses):
+  FingerTurnHard   -> ESSENTIAL  (precision, small target, sparse-ish; predict strip degrades a lot)
+  ReacherHard      -> ESSENTIAL/EXPLORATION (sparse precision reach; SAC-solvable per paper Tab.sac,
+                      so exploration-influenced; predict strip degrades or is high-variance)
+  FishSwim         -> HELPS but <20% (dense distance reward, high-dim continuous; graded small gap)
+  HopperStand      -> REDUNDANT (dense height reward, less chaotic than HopperHop; strip near full)
+  WalkerWalk       -> REDUNDANT (dense locomotion, easier than WalkerRun which was graded; strip near full)
+  CartpoleSwingup  -> REDUNDANT/MARGINAL (dense low-dim easy; strip ~= full, ~0% dependence)
+
+Predicted DEPENDENCE ORDER (most -> least): FingerTurnHard > ReacherHard > FishSwim ~ HopperStand
+  > WalkerWalk > CartpoleSwingup.
+
+SCORING when the ablations land: (1) binary hit-rate on the 6 essential/redundant calls; (2) does
+the predicted rank order match the measured (full-strip)/full order (Spearman)? A high hit-rate /
+rank match = the taxonomy PREDICTS unseen tasks, converting a descriptive correlation into a
+prospective claim. Any miss is reported honestly as a boundary of the predictor.
+
+NOTE on "learnable predictor" (user Q): at n~14 tasks a rich learnable model OVERFITS. The honest
+formal version is (a) this pre-registered prospective test, and (b) leave-one-out CV on a SIMPLE
+predictor (1 feature -> dependence) once VBN features exist for all tasks. A genuinely learnable
+predictor from many tasks + cheap descriptors is strong FUTURE WORK, not claimable at this n.
