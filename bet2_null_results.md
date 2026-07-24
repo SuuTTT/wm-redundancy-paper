@@ -2064,3 +2064,27 @@ reproduction rests on the existing 9-task Dreamer gradient (Table cross), not
 hopper significance. Extending to n=8 delegated to fork ae674abd (box owner);
 if it reaches p<0.05 we can state "Dreamer WM significantly helps on hopper,
 confirming the retraction is a TD-MPC2-specific null not a WM-hurts effect".
+
+## 2026-07-24 — HELD-OUT PROBE SCORECARD, task 1/6: ReacherHard = MISS
+All 6 seeds at step==1500160 (last-6-eval median per seed):
+  full  s0/1/2 = 979.1 / 979.4 / 978.0  -> arm median 979.1
+  strip s0/1/2 = 974.7 / 978.5 / 974.3  -> arm median 974.7
+  WM-dependence = (full-strip)/full = +0.45%  => MEASURED = REDUNDANT.
+
+PRE-REGISTERED (8277615): ReacherHard = ESSENTIAL (rank 2). => **MISS** (predicted
+essential, measured redundant). Reported honestly as the first held-out outcome.
+
+WHY THE MISS (post-hoc, does NOT change the scored result): the pre-registration
+cited "SAC-solvable per paper Tab.sac" as evidence FOR essential (exploration-
+influenced). That logic is backwards at convergence: if a MODEL-FREE learner solves
+the task, the world model is by definition NOT load-bearing for final return. At
+1.5M BOTH arms saturate ReacherHard to near-ceiling (~975-979, task max ~1000);
+strip is tight (spread 974-978, no collapse). A task both arms solve to ceiling
+cannot express WM-dependence in final return. Refinement for the taxonomy: "essential"
+requires the strip arm to FALL SHORT of full — sparse/precision REWARD STRUCTURE is
+not sufficient grounds if the task is also easy enough for model-free to reach ceiling.
+
+n=1/6 — a single miss does not condemn the predictor (rule i analogue); the honest
+read comes at 6/6. But this miss is real and stays in the scorecard. Running scorecard:
+1/6 landed, hit-rate 0/1. Remaining: FingerTurnHard, FishSwim, HopperStand, WalkerWalk,
+CartpoleSwingup. Scorer: scratchpad/score_prereg.py (MEASURED updated).
