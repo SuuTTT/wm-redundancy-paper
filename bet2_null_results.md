@@ -2258,3 +2258,13 @@ be a MISS (pred essential, strip>full). Scorer updated to flag floor=True and ex
 SCORECARD: 4/7 scorable hits (+1 floor-excluded), rho=+0.44 (p=0.16, n=7, unstable/extremes-driven).
 2 scorable pending (FingerTurnEasy, SwimmerSwimmer6) -> final over 9 scorable of the original 10.
 Note: HumanoidStand needs ~5-20M steps; our 1.5M budget on a 3060 cannot test it. Honest limitation.
+
+## 2026-07-24 — HELD-OUT task 9/10: FingerTurnEasy = HIT ; FingerTurn precision-test CLOSED
+FingerTurnEasy 6/6: full {982.8,975.0,977.9} med 977.9 ; strip {971.8,962.7,966.8} med 966.8. dep +1.1% => REDUNDANT.
+Predicted REDUNDANT => **HIT**. FINGERTURN DISCRIMINATION TEST (pre-reg: Hard=essential / Easy=redundant):
+BOTH came back REDUNDANT (Hard +0.6%, Easy +1.1%). => the precision-difficulty hypothesis is DEAD; target
+precision does NOT create WM-dependence at either difficulty. Predictor got Easy (redundant) but not Hard.
+SCORECARD: 9 landed, 5/8 SCORABLE hits (+1 floor), rho=+0.30 (p=0.24, n=8). Still ~chance; ALL hits are
+easy-redundant (Hopper/Walker/Cartpole/FingerEasy) + Acrobot(floor-adj); the discriminating essential preds
+(ReacherHard, FishSwim, FingerTurnHard) all MISS. A "always-redundant" baseline scores similarly on redundant-
+heavy DMC — the probe adds no discriminating power. 1 pending (SwimmerSwimmer6) -> final at 9 scorable.
