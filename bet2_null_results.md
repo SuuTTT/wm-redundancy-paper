@@ -1939,3 +1939,45 @@ ACROBOT mppi(Pi) last-6-median:
 
 R2 acrobot at 700k/1.5M — too early. Dreamer s5 ~4h. Disk fixed (fork pruned
 replay buffers, 6.7G->15G).
+
+## 2026-07-24 — R2 + DOSE COMPLETE. THE TRUE WM-FUNCTION RESULT (n=4 / n=3, extending).
+
+### R2 FROZEN RANDOM DYNAMICS — planner collapses BELOW value-equivalent
+Acrobot planner (Pi), last-6-median:
+  R0 full   n=9 {288,340,347,361,376,383,386,387,408} mean 364
+  R1 strip  n=9 {5,104,106,124,144,157,183,215,280}    mean 146
+  R2 frozen n=4 {3,10,17,66}                            mean 24
+  R2 vs R0: COMPLETE SEPARATION (max 66 < min 288), perm p=0.0014.
+  R2 << R1: planning through a RANDOM model is WORSE than a value-equivalent one.
+Cheetah planner (Pi): R0 ~749, R1 ~493, R2 {6,6,7,28} mean 12 -> planner COLLAPSES.
+
+INTERPRETATION: the world model FUNCTIONS through PREDICTION ACCURACY. Planning
+through an inaccurate (random) model is not merely unhelpful, it is CATASTROPHIC
+-- worse than not planning through a learned forward model at all (R1 keeps a
+reward/value-shaped latent; R2 trusts garbage rollouts). This is the control the
+literature does not run, and it is the sharpest evidence that the model
+prediction is load-bearing, not just its architecture.
+
+### DOSE-RESPONSE — a THRESHOLD, not a dial (pre-registered prediction WRONG, result STRONGER)
+Cheetah pi by consistency_coef: c0=595 | c0.25=777 | c0.5=749 | c1.0=783 | c1.5=722 | c2.0=753.
+Acrobot Pi by coef:            c0=146 | c0.25=370 | c0.5=381 | c1.0=387 | c1.5=428 | c2.0=364.
+The benefit is a STEP at turning self-prediction ON: c=0 collapses, ANY c>=0.25
+(one eighth of the default) recovers essentially the full benefit, and c in
+[0.25,2.0] is FLAT. I predicted a monotone dose-response; it is not monotone --
+it saturates almost immediately. Self-prediction is CAUSAL (c=0 clearly worse)
+but a TINY amount of observation-grounding buys nearly all of the accuracy.
+
+### THE COMBINED STORY (the paper R2 + dose add):
+  Under the planner:  R2 random (24/12) << R1 value-equiv (146/493) << R0 accurate (364/749).
+  1. A random model is actively harmful -> predictions are load-bearing (R2).
+  2. Accuracy saturates fast -> a little self-prediction makes the latent
+     plannable; more does not help (dose threshold at c~0.25).
+  3. Value-equivalence alone is intermediate: better than random, worse than
+     any observation-grounding.
+This is the true world-model-FUNCTION result and it answers the ladder question:
+the model helps via prediction accuracy, and accuracy is cheap to obtain but
+NOT free (random fails).
+
+REFILLED: R2 acrobot+cheetah seeds 4-7 (box1, to n=8); cheetah/acrobot dose
+seeds 3-4 (4070/5060, to n=5). n=4 R2 already gives complete separation p=0.0014
+on acrobot; extending to solidify. Dreamer s5 still running (fork will ping).
