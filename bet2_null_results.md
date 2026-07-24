@@ -2211,3 +2211,27 @@ full/strip return exists for these.
     after ReacherHard & AcrobotSparse, I predict sparse-but-trivial = REDUNDANT (if it comes back
     essential, the sparse-reward confound is real and worth a paper sentence).
 Added to score_prereg.py batch 4. Held-out set now 12 tasks.
+
+## 2026-07-24 — EMPIRICAL-PROBE TEST (user Q: change hypothesis or algo?) — n=10, on existing curves
+Question: can a CHEAP EARLY signal (full-strip gap at ~200-600k) predict FINAL WM-dependence,
+rescuing the predictive-probe headline after a-priori task-descriptors failed (rho=+0.05)?
+Data: 6 held-out + 4 core anchors (Cheetah, WalkerRun, BallInCup, Pendulum), early-vs-final dep.
+
+RESULT — NO. The correlation is UNSTABLE across probe points (this instability IS the finding):
+  Spearman(early-dep, final-dep):  200k +0.38 | 300k +0.83 | 400k +0.08 | 600k +0.83.
+  The "good" 0.83 is not robust (adjacent 400k gives 0.08) = overfitting to a probe point.
+  Early gaps are LEARNING-SPEED NOISE, not dependence: Pendulum +100%@200k -> -354%@400k;
+  HopperStand -313%@200k; FingerTurnHard +36%early -> +1% final (full faster, strip catches up).
+  Binary LOO (early@400k>10% -> final>15%): 6/10 = ~chance.
+
+CONCLUSION (answers the strategic fork): do NOT change the algorithm. DROP the hypothesis that
+WM-dependence is CHEAPLY PREDICTABLE — falsified in BOTH forms: (a) a-priori task descriptors
+(rho=0.05, hit 3/6), (b) cheap early probe (unstable, noise-dominated). WM-dependence only
+stabilizes near convergence, by which point the cost is already paid. The ablation science is
+untouched. HONEST PAPER = rigorous ablations (WM value is real + strongly task-conditional) +
+this NEGATIVE PREDICTABILITY result (a cautionary contribution: "know your task" is harder than
+the field assumes; neither task type nor a short probe forecasts it). Scripts: scratchpad/
+score_prereg.py (a-priori scorecard), curves.txt+core_curves.txt (early-vs-final).
+NOTE: some core final-deps here (BallInCup 0%, WalkerRun 3%) are RETURN-based & lower than the
+SUCCESS-based core results (ballincup 8/14v0/14) — return vs success-rate differ on sparse tasks;
+do not overwrite the core cells with these. a-priori held-out scorecard still finalizing at 10/10.
