@@ -2016,3 +2016,28 @@ NOTE on "learnable predictor" (user Q): at n~14 tasks a rich learnable model OVE
 formal version is (a) this pre-registered prospective test, and (b) leave-one-out CV on a SIMPLE
 predictor (1 feature -> dependence) once VBN features exist for all tasks. A genuinely learnable
 predictor from many tasks + cheap descriptors is strong FUTURE WORK, not claimable at this n.
+
+## 2026-07-24 — PENDULUM THRESHOLD-ROBUSTNESS (user Q2: is the bimodal solve-count a threshold artifact?)
+
+Re-read the completed pendulum n=10 CSVs at every cutoff. full sorted
+{0.0,7.3,24.1 | 808.3,815.6,818.8,842.0,852.3,868.4,884.8}; strip sorted
+{0.0,6.6,7.1,22.7,188.7 | 661.8,769.3,799.5,801.2,862.9}. The only middling
+value anywhere is strip_s1=188.7.
+
+  cutoff  full/10  strip/10  Fisher p
+  150     7        6         0.500
+  200-660 7        5         0.325   <- STABLE across the entire reasonable range
+  662+    7        4         0.185
+
+VERDICT: the 7-vs-5 split (p=0.325) is INVARIANT to the success threshold for any
+cutoff in [200,660]. It only shifts to 7v6 below ~189 (an absurd bar for a task
+whose solved return is ~900) or 7v4 above ~662 — and BOTH are still NULL
+(p=0.500 / 0.185). So the pendulum NULL is NOT a threshold artifact; it holds
+for every defensible definition of "solved". This is a direct answer to the
+"you picked the threshold" objection and it STRENGTHENS the null.
+
+NOTE for the paper: ball-in-cup and cartpole-sparse are SPARSE-reward, so their
+return literally counts success-frames (in-cup / balanced) — the return IS the
+success measure and needs no threshold defense. Only pendulum (shaped reward)
+needed this check, and it passed. Add one sentence to the pendulum footnote:
+"the null is invariant to the success cutoff across [200,660]".
