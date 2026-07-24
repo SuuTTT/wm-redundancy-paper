@@ -2199,3 +2199,15 @@ SCORECARD 6/10, hit-rate 3/6 (=chance), Spearman rho=+0.05 (NO rank correlation)
   dependence; the one real high-dep task (FishSwim) was called redundant. The a-priori taxonomy does
   NOT predict WM-dependence out of sample. NEGATIVE RESULT solidifying. 4 pending (CartpoleSwingup,
   FingerTurnEasy, HumanoidStand[floor-risk], SwimmerSwimmer6) — finalize verdict at 10/10.
+
+## 2026-07-24 — PRE-REGISTERED BATCH 4 (leakage-free, BEFORE launch on freed 4070)
+Two learnable (non-floor) tasks to refill 4070 and extend held-out probe to 12. Written before any
+full/strip return exists for these.
+  ReacherEasy -> REDUNDANT (r ~5). Easy reach, large target, dense-ish; model-free solves easily
+    (ReacherHard already measured redundant). Predict dep <20%.
+  CartpoleBalanceSparse -> REDUNDANT (r ~5). Balance task STARTS upright; agent only needs to not
+    fall; trivial dynamics => model-free keeps it up despite sparse reward. Predict dep <20%.
+    DISCRIMINATING: explicitly tests whether SPARSE REWARD ALONE falsely triggers "essential" —
+    after ReacherHard & AcrobotSparse, I predict sparse-but-trivial = REDUNDANT (if it comes back
+    essential, the sparse-reward confound is real and worth a paper sentence).
+Added to score_prereg.py batch 4. Held-out set now 12 tasks.
