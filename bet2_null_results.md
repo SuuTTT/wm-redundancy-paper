@@ -2283,3 +2283,12 @@ Predicted REDUNDANT => bonus HIT. Directly tests the sparse-reward confound behi
 MISSES: a SPARSE reward on a TRIVIAL task (balance, starts upright) is REDUNDANT. So sparsity alone does NOT
 drive WM-dependence — task difficulty/dynamics do. (Caveat: ceiling-saturated, both arms max the task.) Kept out
 of headline (bonus). Reinforces the negative result: reward-structure heuristics do not predict WM-need.
+
+## 2026-07-25 — n-BOOST ROBUSTNESS: FishSwim dependence CONFIRMED at n=7 (headline unchanged)
+FishSwim n=7 (s0-6, both arms complete; s7/s8 strip finishing -> n=9 soon): full med 236.8 {187,202,207,237,268,272,379} ;
+strip med 102.2 {91,91,91,102,119,131,151}. WM-dep = (236.8-102.2)/236.8 = +56.9% == the n=3 value (+56%).
+The pred-REDUNDANT -> measured-ESSENTIAL surprise is ROBUST, not a 3-seed fluke. Hardens the negative
+result: FishSwim genuinely needs the WM (strip loses 57%), so the a-priori "dense reward -> redundant"
+call was a real error. Headline a-priori scorecard UNCHANGED (n=3, 5/8 scorable rho~0.30). n-boost is
+robustness only. (Other n-boosts ReacherHard n=9 / FingerTurnHard n=6 / WalkerWalk-HopperStand-CartpoleSwingup
+n=6 / anchors still running, harvest as they complete.)
