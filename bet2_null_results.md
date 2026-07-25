@@ -2300,3 +2300,26 @@ CONFIRMS ReacherHard is genuinely REDUNDANT (both arms near ceiling ~978); the a
 REAL error, not n=3 noise. => BOTH discriminating misses now hardened at higher n: FishSwim pred-RED->ESS +56.9%
 (n=7); ReacherHard pred-ESS->RED +0.22% (n=9). The predictor fails on the cases that matter, robustly. NEGATIVE
 RESULT SOLID. Headline a-priori scorecard UNCHANGED (n=3, 5/8 scorable rho~0.30); n-boost = robustness only.
+
+## 2026-07-25 vsg full-vs-strip harvest (seeds>=12, 4 boxes) — harvest/vsg_harvest_s12-18_jul25.csv
+
+Harvested the fleet's fresh full(cc=2.0)-vs-strip(cc=0.0) seeds via harvest/harvest_vsg.py
+(last-6-eval median per run). Raw per-seed rows committed. Read as EVIDENCE, not paper edits;
+labels stay as-is pending review. Findings:
+
+- HARDENS positive: CheetahRun +2 seeds (full 711/750 vs strip 485/586) — separation holds.
+- HARDENS exploration: BallInCup full solves 3/6 new seeds (s12-14 ~975; s15-17 =0), strip 0/6
+  — direction holds (full solves some, strip none) but full solve-rate is LOWER at s15-17. FLAG.
+- CONFIRMS retraction: HopperHop strip >= full on several seeds, very noisy (6-eval short runs).
+- CONFIRMS redundant/ceiling: CartpoleBalance both arms ~970 (tie).
+- CONFIRMS weak: WalkerRun near-tie (662 vs 666; 654 vs 633).
+- FLAG (tension w/ "redundant"): FingerSpin full > strip at s12,13 on 2 boxes (912/980 vs 844/708).
+- FLAG (tension w/ pendulum NULL): PendulumSwingup full 3/4 solve (~850) vs strip 0/4 (=0) —
+  suggestive exploration effect but n=4 Fisher p~0.14, n.s.; consistent w/ bimodal-cliff null,
+  directionally strong. Do NOT reclassify on n=4; report as-is.
+- AcrobotSwingup rows are DENSE return (mostly tie, s14 full+118) — NOT the planning-gap cell;
+  do not conflate with the 0/81 planner-side result.
+- DATA HYGIENE: some seeds replicated across boxes (FingerSpin/HopperHop s12,13 on 2 boxes) give
+  slightly different returns (GPU/JAX nondeterminism) -> treat as independent replicates; seed#
+  is not a unique key. Aggregation must dedup or explicitly pool.
+- Does NOT change rho=-0.90 (that is over 5 TASKS; more seeds cannot add a 6th). rho stays n=5.

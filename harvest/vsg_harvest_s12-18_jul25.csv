@@ -1,0 +1,67 @@
+# vsg full-vs-strip harvest, seeds>=12, collected 2026-07-25 from 4 vast.ai boxes
+# stat: last-6-eval MEDIAN of eval reward per run (campaign discipline). DONE=last step>=1500160.
+# NOTE: some seeds were replicated across boxes (ad-hoc refill) -> same seed# on 2 boxes gives
+#   slightly different returns (GPU/JAX nondeterminism); recorded per-box as independent runs.
+# produced by tools/harvest_vsg.py (committed alongside). Cols: task,arm,seed,box,n_eval,last6_median,status
+task,arm,seed,box,n_eval,last6_median,status
+CheetahRun,full,12,4070,60,711.18,DONE
+CheetahRun,full,13,4070,60,749.76,DONE
+CheetahRun,strip,12,4070,60,484.84,DONE
+CheetahRun,strip,13,4070,60,586.27,DONE
+CheetahRun,full,14,box1,25,742.24,part
+WalkerRun,full,12,5060,30,662.91,DONE
+WalkerRun,full,13,5060,30,653.62,DONE
+WalkerRun,strip,12,5060,30,665.80,DONE
+WalkerRun,strip,13,5060,30,633.44,DONE
+FingerSpin,full,12,4070,30,912.70,DONE
+FingerSpin,full,13,4070,30,980.00,DONE
+FingerSpin,strip,12,4070,30,844.00,DONE
+FingerSpin,strip,13,4070,30,708.50,DONE
+FingerSpin,full,12,5060,60,923.10,DONE
+FingerSpin,full,13,5060,60,983.10,DONE
+FingerSpin,strip,12,5060,33,707.30,part
+FingerSpin,strip,13,5060,30,731.80,part
+AcrobotSwingup,full,12,4070,30,376.27,DONE
+AcrobotSwingup,full,13,4070,30,342.89,DONE
+AcrobotSwingup,full,14,4070,30,388.35,DONE
+AcrobotSwingup,strip,12,4070,30,368.90,DONE
+AcrobotSwingup,strip,13,4070,30,337.77,DONE
+AcrobotSwingup,strip,14,4070,30,270.29,DONE
+HopperHop,full,12,4070,6,217.82,DONE
+HopperHop,full,13,4070,6,370.08,DONE
+HopperHop,strip,12,4070,6,410.40,DONE
+HopperHop,strip,13,4070,6,255.75,DONE
+HopperHop,full,12,5060,6,195.36,DONE
+HopperHop,full,13,5060,6,25.66,DONE
+HopperHop,strip,12,5060,6,422.47,DONE
+HopperHop,strip,13,5060,6,249.42,DONE
+HopperStand,full,12,4070,35,0.00,part
+HopperStand,full,13,4070,19,3.83,part
+BallInCup,full,12,box1,30,974.00,DONE
+BallInCup,full,13,box1,30,975.50,DONE
+BallInCup,full,14,box1,30,976.00,DONE
+BallInCup,full,15,box1,30,0.00,DONE
+BallInCup,full,16,box1,30,0.00,DONE
+BallInCup,full,17,box1,30,0.00,DONE
+BallInCup,strip,12,box1,30,0.00,DONE
+BallInCup,strip,13,box1,30,0.00,DONE
+BallInCup,strip,14,box1,30,0.00,DONE
+BallInCup,strip,15,box1,30,0.00,DONE
+BallInCup,strip,16,box1,30,0.00,DONE
+BallInCup,strip,17,box1,30,0.00,DONE
+CartpoleBalance,full,12,mwm,30,972.78,DONE
+CartpoleBalance,full,13,mwm,30,958.67,DONE
+CartpoleBalance,full,14,mwm,30,985.20,DONE
+CartpoleBalance,full,15,mwm,30,970.51,DONE
+CartpoleBalance,strip,12,mwm,30,989.65,DONE
+CartpoleBalance,strip,13,mwm,30,938.31,DONE
+CartpoleBalance,strip,14,mwm,30,976.56,DONE
+CartpoleBalance,strip,15,mwm,30,970.92,DONE
+PendulumSwingup,full,12,mwm,30,854.60,DONE
+PendulumSwingup,full,13,mwm,30,281.30,DONE
+PendulumSwingup,full,14,mwm,30,864.50,DONE
+PendulumSwingup,full,15,mwm,30,829.00,DONE
+PendulumSwingup,strip,12,mwm,30,0.00,DONE
+PendulumSwingup,strip,13,mwm,30,7.30,DONE
+PendulumSwingup,strip,14,mwm,30,14.30,DONE
+PendulumSwingup,strip,15,mwm,30,0.00,DONE
