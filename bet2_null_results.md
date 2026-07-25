@@ -2292,3 +2292,11 @@ result: FishSwim genuinely needs the WM (strip loses 57%), so the a-priori "dens
 call was a real error. Headline a-priori scorecard UNCHANGED (n=3, 5/8 scorable rho~0.30). n-boost is
 robustness only. (Other n-boosts ReacherHard n=9 / FingerTurnHard n=6 / WalkerWalk-HopperStand-CartpoleSwingup
 n=6 / anchors still running, harvest as they complete.)
+
+## 2026-07-25 — n-BOOST ROBUSTNESS: ReacherHard dependence CONFIRMED at n=9 (headline unchanged)
+ReacherHard n=9 (s0-8, both arms complete): full med 979.4 {974,978,978,979,979,980,981,982,982} ;
+strip med 977.2 {966,974,975,976,977,978,979,980,982}. WM-dep = (979.4-977.2)/979.4 = +0.22% (n=3 was +0.45%).
+CONFIRMS ReacherHard is genuinely REDUNDANT (both arms near ceiling ~978); the a-priori ESSENTIAL call was a
+REAL error, not n=3 noise. => BOTH discriminating misses now hardened at higher n: FishSwim pred-RED->ESS +56.9%
+(n=7); ReacherHard pred-ESS->RED +0.22% (n=9). The predictor fails on the cases that matter, robustly. NEGATIVE
+RESULT SOLID. Headline a-priori scorecard UNCHANGED (n=3, 5/8 scorable rho~0.30); n-boost = robustness only.
