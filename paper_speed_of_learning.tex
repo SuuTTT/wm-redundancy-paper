@@ -88,7 +88,10 @@ $0.0$ --- a NULL that holds under a corrected critic and a feasible Cartesian
 $8$-seed long-horizon navigation task) cleanly attributes to the unlearnable
 sub-centimeter contact primitive rather than to a broken hierarchy: the same
 2-level H-JEPA machinery reliably reaches the raw-observation ceiling on nav
-($0.941 \pm 0.137$ vs.\ flat $0.971 \pm 0.048$). Every abstraction lever we tested
+($0.941 \pm 0.137$ vs.\ flat $0.971 \pm 0.048$; this number supersedes an earlier
+retracted, non-reproducible run --- see provenance
+caveat\footref{fn:posctrlprovenance} in \S\ref{sec:results-hier}). Every
+abstraction lever we tested
 buys \emph{speed} (or budget-bounded \emph{escape}), not asymptotic
 \emph{capacity}, and the only hierarchy that buys competence on PandaPickCube is
 the one with an \emph{injected} low-level primitive. We position this inside the
@@ -112,10 +115,24 @@ efficiency} given priors and experience~\citep{chollet2019measure}. On this view
 the question ``does abstraction help?'' is under-specified until one names the
 axis.
 
-Our prior work (\todo{cite the two prior papers --- Paper A
-representation-redundancy; Paper B behavioral-abstraction --- once
-arXiv/OpenReview ids exist}) accidentally operationalizes exactly this
-distinction.
+Our prior work --- a companion manuscript in this repository,
+\emph{When Is Explicit Abstraction Redundant for a World Model? A Negative
+Campaign and the Limits of a Value-Decodability Criterion} (\texttt{main.tex}),
+which runs the matched-control representation-redundancy campaign referenced
+below --- accidentally operationalizes exactly this distinction.
+%TODO(camera-ready): main.tex has no external identifier yet (it still
+% carries a placeholder OpenReview id "XXXX" as of this writing), so the
+% reference above is an in-repository cross-reference, not a formal \citep.
+% Replace with a real \citep once main.tex is posted/accepted. Re: the
+% original todo's second reference, "Paper B (behavioral-abstraction)" --
+% evidence/manipulation_methods.json in this repository is headed "title":
+% "Manipulation methods benchmark (Paper B headline table)", and its content
+% (OpenCabinet/PickCube behavioral-abstraction numbers) IS the material in
+% \S\ref{sec:results-matched}--\S\ref{sec:taxonomy} of THIS document -- i.e.
+% "Paper B" appears to be this manuscript's own internal working title, not
+% a separate paper to cite. Confirmed no self-citation is needed; flagging
+% here rather than silently deleting the ambiguity in case a genuinely
+% separate "Paper B" manuscript existed elsewhere that we did not locate.
 In a \emph{matched-control} negative campaign --- holding the value-sufficient
 TD-MPC2/SimNorm latent~\citep{hansen2024tdmpc2} fixed and varying only the
 abstraction structure --- explicit single-level abstraction was \emph{redundant
@@ -197,8 +214,11 @@ requiring an anti-collapse term. Solutions span contrastive
 (Barlow Twins,~\citealp{zbontar2021barlow}; VICReg,~\citealp{bardes2022vicreg}),
 and architectural asymmetry (BYOL,~\citealp{grill2020byol}). A 2023 LV-EBM
 write-up restates the position paper in explicit latent-variable energy-based
-language~\citep{dawid2023lvebm}. \todo{verify arXiv id 2306.02572 and authorship
-of the LV-EBM restatement before camera-ready (flagged unverified in source).}
+language~\citep{dawid2023lvebm}.
+% Verified 2026-08-06: arXiv:2306.02572 = Dawid & LeCun, "Introduction to
+% Latent Variable Energy-Based Models: A Path Towards Autonomous Machine
+% Intelligence" (Les Houches 2022 lecture notes). Id and authorship confirmed
+% against the arXiv abstract page; bib note's UNVERIFIED flag removed below.
 
 \paragraph{The impossibility of measuring information.}
 Anti-collapse \emph{should} be ``maximize information carried by the
@@ -235,9 +255,20 @@ formalizes intelligence as skill-acquisition efficiency; and the modern world-mo
 line~\citep{ha2018worldmodels} is justified primarily by learning efficiency. Our
 contribution is not inventing this axis but \emph{applying it as the
 discriminating axis in a matched-control study} where asymptote is held equal by
-construction. \todo{verify arXiv ids 1703.03400 (MAML) and 2111.00210
-(EfficientZero), flagged unverified in source; also anchor LeCun's exact
-``speed of learning'' phrasing to a dated, quotable talk + position-paper section.}
+construction.
+% Verified 2026-08-06 against arXiv abstract pages: arXiv:1703.03400 = Finn,
+% Abbeel & Levine, "Model-Agnostic Meta-Learning for Fast Adaptation of Deep
+% Networks" (ICML 2017) -- matches finn2017maml. arXiv:2111.00210 = Ye, Liu,
+% Kurutach, Abbeel & Gao, "Mastering Atari Games with Limited Data"
+% (EfficientZero, NeurIPS 2021) -- matches ye2021efficientzero. Both ids and
+% authorships confirmed; UNVERIFIED flags removed from references_speed.bib.
+%TODO(camera-ready): the "speed of learning" phrasing is anchored to
+% \citep{lecun2022path} (LeCun, "A Path Towards Autonomous Machine
+% Intelligence", OpenReview v0.9.2, 2022) at its first use above -- a dated,
+% versioned position paper, which is the closest quotable anchor a bounded
+% search (2026-08-06) turned up. It does NOT pin an exact verbatim quote or
+% section number for "speed of learning"; a targeted re-read of that PDF for
+% the precise section is still open and was not done here.
 
 % =====================================================================
 \section{The Two-Bet Decomposition}
@@ -305,16 +336,43 @@ temporal (jumpy multi-step models). The baselines are flat PPO~\citep{schulman20
 and the flat TD-MPC2 monolith. For the hierarchy test (\S\ref{sec:results-hier})
 the arms are a flat single-level WM and 2-level subgoal/skill hierarchies (a
 high-level subgoal/skill emitter plus a low-level achiever), ablated over number
-of levels and subgoal horizon. \todo{add the exact env-step budgets, seed counts,
-ES hyperparameters (default / $\sigma{=}0.10$ / lr${=}0.02$), and eval protocol
-in a methods appendix from the source experiment configs.}
+of levels and subgoal horizon.
+%TODO(camera-ready): a consolidated methods appendix (exact env-step budgets,
+% seed counts, ES hyperparameters, eval protocol per arm) is still missing.
+% Checked 2026-08-06: per-arm $n$/step-budget numbers ARE already stated
+% inline throughout \S\ref{sec:results-matched}--\S\ref{sec:results-hier}
+% (e.g. Tables~\ref{tab:behavioral},~\ref{tab:taxonomy},~\ref{tab:pareto},~
+% \ref{tab:hier} and their surrounding prose), but they are scattered, not
+% consolidated into one appendix table. The specific ES hyperparameters
+% named in the original todo ($\sigma{=}0.10$, lr$=0.02$) could NOT be
+% verified against any script committed to this repository -- grepped all
+% \texttt{*.py}/\texttt{*.sh} under the repo root and
+% \texttt{locomotion\_class\_build/} for these values and found no match;
+% the training configs that used them apparently lived only on the now
+% spun-down GPU boxes (\texttt{b3060}/\texttt{b3060b}/4070, per project
+% memory) and are not recoverable from this repository. Do not state those
+% two numbers as fact in a methods appendix without re-deriving them from a
+% surviving config.
 
 \paragraph{Reporting discipline.}
 Every number reported below is a deterministic, multi-seed, disk-backed
 measurement copied from the source experiment ledgers; ``beats'' is always
-qualified by the axis on which it holds. \todo{attach the underlying evidence
-JSONs (HIER\_VERDICT.json and the cross-program tables) to this repo and
-footnote each table as in \texttt{main.tex}.}
+qualified by the axis on which it holds.
+%TODO(camera-ready): checked 2026-08-06 -- most cited evidence JSONs (the
+% SE/graph/value-probe files footnoted in main.tex's shared \texttt{evidence/}
+% directory, e.g. se_attn_trained.json, gate0b_vcoupling.json, p1_*.json,
+% value_probe_*.json, manipulation_methods.json, dmc_glass_vs_tdmpc2.json)
+% ARE already committed to this repository under \texttt{evidence/}, but
+% THIS document's own tables (behavioral/taxonomy/pareto/hier) cite only
+% markdown synthesis docs (SYNTHESIS_beat_ppo.md, NEXT_PAPER_PROPOSAL.md) in
+% their captions, not per-table JSON footnotes in main.tex's style.
+% \texttt{HIER\_VERDICT.json} specifically (cited in Table~\ref{tab:hier}'s
+% caption) was searched for across this repo, \texttt{/home/ubuntu}, and the
+% full filesystem and does NOT exist anywhere on this box; even
+% NEXT_PAPER_PROPOSAL.md's own text says it will be folded in "once it
+% lands" -- it apparently never did. The raw per-seed hierarchy-test data
+% this table's numbers derive from is therefore not independently
+% verifiable from this repository as it stands.
 
 % =====================================================================
 \section{Results I: Cross-Program Matched Control (Bet 1)}
@@ -349,6 +407,7 @@ fits and can explore the task; its wins are sample-efficiency (fit prior) or
 budget-bounded escape (exploration-hard task). Source:
 \texttt{SYNTHESIS\_beat\_ppo.md}.}
 \label{tab:behavioral}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lll}
 \toprule
 Regime & Asymptotic return & Sample-efficiency / escape \\
@@ -360,8 +419,26 @@ Sparse swing-up (CartpoleSwingupSparse, full force) & tie (both solve) & resid $
 Pendulum swing-up (energy-shaping, $n=5$) & \textbf{resid wins} (peak 836 vs.\ 47; vanilla 0/5 ever reach thr) & resid competent at first ckpt; vanilla never escapes \\
 OpenCabinet (hard manipulation)         & tie (0.987 vs.\ 0.988) & \textbf{resid wins ${\sim}7\times$} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
+
+\paragraph{A zero-training illustration of the same law.}
+Table~\ref{tab:behavioral}'s OpenCabinet row reports the \emph{learned}-residual
+route (structured-skill bootstrap, still trained, just $7\times$ cheaper). The
+same task also has a purely \emph{analytic} data point that sharpens the
+sample-efficiency reading further: the phase-structured controller alone ---
+reach $\to$ grasp $\to$ close $\to$ drag, \emph{no training at all} --- scores
+$0.827\pm0.013$ (n$=$4 seeds, 150-step protocol), within reach of PPO's trained
+ceiling ($0.832$ peak / $0.719$ final at the matched, longer-run PPO config) at
+zero sample cost.\footnote{Evidence: \texttt{evidence/manipulation\_methods.json}
+(\texttt{PandaOpenCabinet.TAMP\_alone}), sourced from
+\texttt{evidence/manipulation\_src/tamp\_opencab\_b3060b/RESULTS.json}, in the
+paper repository.} This does not change the chapter's asymptote finding --- the
+learned residual still edges out the zero-training controller on success rate
+--- but it is the sharpest single illustration of the mechanism: on a task
+where the analytic prior captures the control-relevant substructure, it buys
+essentially all of PPO's competence \emph{before any gradient step is taken.}
 
 \paragraph{Temporal abstraction and the PPO axis tradeoff.}
 TD-MPC2's own SimNorm latent + learned model + planning is the abstraction that
@@ -417,6 +494,7 @@ exploration difficulty). A structured prior buys sample-efficiency where it fits
 budget-bounded escape where the baseline is exploration-bottlenecked, and is dead
 weight where it neither fits nor is needed. Source: \texttt{SYNTHESIS\_beat\_ppo.md}.}
 \label{tab:taxonomy}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lll}
 \toprule
 Cell & Exemplar (seeds) & Verdict \\
@@ -425,7 +503,8 @@ Cell & Exemplar (seeds) & Verdict \\
 \textbf{Speed-lever} (easy explore, fit prior) & ReacherHard; cartpole full-force ($n=5$) & asymptote tie ($981$ vs.\ $977$); resid ${\sim}2$--$3\times$ faster \\
 \textbf{Escape} (hard explore, strong prior)   & Pendulum swing-up ($n=5$); cartpole low-force & vanilla never escapes in budget; resid competent --- a \emph{practical}-capacity win \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \begin{figure}[t]
@@ -534,7 +613,10 @@ Table~\ref{tab:hier}.
 (\texttt{box\_target}$\geq 0.9$, deterministic eval). Success rises monotonically
 with abstraction depth, but no hierarchical arm crosses 0.5 and all trail PPO's
 0.66 ceiling. Source: \texttt{NEXT\_PAPER\_PROPOSAL.md} (folded-in
-\texttt{HIER\_VERDICT.json}, run 2026-06-28).}
+\texttt{HIER\_VERDICT.json}, run 2026-06-28). \emph{Caveat:} the raw
+\texttt{HIER\_VERDICT.json} is not currently committed to this repository
+(checked 2026-08-06); the numbers above rest on the markdown synthesis in
+\texttt{NEXT\_PAPER\_PROPOSAL.md} only.}
 \label{tab:hier}
 \begin{tabular}{lllr}
 \toprule
@@ -681,7 +763,31 @@ on raw observations \emph{reliably reaches the raw-observation ceiling}
 indistinguishable from the flat identity-encoder ceiling ($0.971 \pm 0.048$).
 \textbf{Verdict GO:} the H-JEPA hierarchy + low-level controller are sound, so the
 PandaPickCube $0.0$ is cleanly attributable to the contact-primitive wall, not a
-broken implementation.
+broken implementation.\footnote{\label{fn:posctrlprovenance}\textbf{Provenance
+caveat.} This positive control has a documented retraction history: an earlier
+run of the same experiment reported a suspicious $1.00$ success rate and was
+explicitly retracted as non-reproducible (project ledger, 2026-06-29 entry,
+\emph{``the nav positive control `1.00' is NON-REPRODUCIBLE''}) after re-runs
+under non-deterministic XLA/TF32 settings gave $0.0$--$0.16$ across seeds. The
+root cause (GPU-kernel-autotuning + TF32 matmul nondeterminism, not RNG) was
+diagnosed and fixed, and the $8$-seed rigorous rerun reported here
+(\texttt{posctrl\_rigorous\_VERDICT.json}, run 2026-06-29) is the corrected,
+determinism-controlled replacement for that retracted number. However, we were
+unable to locate the raw \texttt{posctrl\_rigorous\_VERDICT.json} file itself
+anywhere in this paper's repository, on this machine, or on the archived source
+host as of this writing (2026-08-06) --- we searched this repository, its
+uncommitted local working copy, the repository's raw-data \texttt{.tgz}
+backups, and the full filesystem; the original source server was unreachable
+over the network at time of writing and no live compute instance referencing
+this experiment was found. The number therefore currently rests only on the
+markdown synthesis in \texttt{bet2\_null\_results.md} (quoted verbatim in this
+footnote and in Table~\ref{tab:bet2posctrl}'s source line), not on an
+independently re-checkable per-seed JSON in this repository. This does not
+retract the number --- the synthesis document's account of the fix and rerun is
+specific and internally consistent --- but readers who need to independently
+verify it should request \texttt{posctrl\_rigorous\_VERDICT.json} from the
+authors or the original experiment host rather than treat this footnote's
+absence-of-file as itself a retraction.}
 
 \begin{table}[t]
 \centering
@@ -866,9 +972,31 @@ training-eval vs.\ deterministic distinction per table rather than blurring it.
 PickCube ceiling is physical), so we measure speed to a reachable threshold, not
 the ceiling. (vii) The entity-graph OOD result and several graph-side measurements
 are single-seed / synthetic with documented caveats. (viii) The crowded 2026
-JEPA-derivative space requires a fresh related-work sweep at submission.
-\todo{run the submission-time related-work sweep over 2602/2603 arXiv stems; do not
-cite post-cutoff derivatives without verification.}
+JEPA-derivative space requires a fresh related-work sweep at submission. A bounded
+sweep (2026-08-06, web search + arXiv abstract-page verification, restricted to
+the 2601--2607 arXiv stems covering the months since this campaign's experiments
+were run) surfaces several directly relevant, verified, contemporaneous papers we
+had not engaged with: \citet{hwm2026} runs hierarchical model-predictive control
+over a multi-scale latent world model and reports macro-actions that lift
+long-horizon manipulation success from $0$ to $70\%$ where single-level planning
+fails --- a positive hierarchical-JEPA result on a task shape close to our
+PandaPickCube hierarchy test, worth direct engagement at camera-ready;
+\citet{maes2026leworldmodel} report a two-loss end-to-end JEPA trained stably
+from pixels; and \citet{nam2026causaljepa} apply object-level latent masking to
+discourage the shortcut solutions our anti-collapse discussion above is
+concerned with. None of these were available when this paper's experiments were
+run, so none are empirically compared against here --- they are noted for
+camera-ready discussion only.
+%TODO(camera-ready): this sweep is bounded (one search session, three papers
+% verified against arXiv abstract pages: hwm2026=arXiv:2604.03208,
+% maes2026leworldmodel=arXiv:2603.19312, nam2026causaljepa=arXiv:2602.11389),
+% not exhaustive. The search also surfaced arXiv:2602.10098 (VLA-JEPA),
+% arXiv:2605.26379 ("When Does LeJEPA Learn a World Model?"), and
+% arXiv:2601.00844 (value-guided JEPA planning) as plausibly relevant but
+% these were NOT individually verified/read and are deliberately not cited
+% above -- do not cite them without checking. A full submission-time sweep
+% (broader query set, full-text skim of each hit, not just abstracts) is
+% still owed before camera-ready.
 
 % =====================================================================
 \section{Conclusion}
@@ -901,7 +1029,10 @@ remaining cleanest disentanglement is a Director-style generative \emph{2-level}
 baseline that would isolate generativity at fixed hierarchy depth.
 
 \subsubsection*{Acknowledgments}
-\todo{acknowledgments / funding (omit for double-blind submission).}
+% [Acknowledgments / funding placeholder -- omit for double-blind submission,
+% fill in at camera-ready. Left as a neutral comment rather than a rendered
+% \todo so it does not appear as alarming red text in the compiled PDF; this
+% is a human author's call, not resolved here.]
 
 \bibliographystyle{tmlr}
 \bibliography{references_speed}
